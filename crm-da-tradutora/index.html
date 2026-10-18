@@ -1,0 +1,1808 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CRM da tradutora demonstrativo</title>
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-size:14px;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<style>
+/* ----------------------------------------------------------------
+   Demonstração do CRM da tradutora.
+   Cópia separada da ferramenta de verdade: sem login, sem Firebase,
+   sem planilha e sem Drive. Os dados vivem só na memória da página.
+   Layout: cabeçalho com abas, faixa de aviso e o quadro de seis
+   colunas, exatamente como no sistema original.
+   Fonte de sistema e tema claro de propósito, porque é assim que a
+   ferramenta de verdade se apresenta.
+   ---------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --papel: #ffffff;
+  --superficie: #f3f4f6;
+  --borda: #d8dbe0;
+  --texto: #1c1f23;
+  --texto-fraco: #5f666e;
+
+  --tinta: #2b4c7e;
+  --tinta-clara: #e8eef7;
+  --ambar: #8a6114;
+  --ambar-clara: #faf1dd;
+  --verde: #2f6b4f;
+  --verde-clara: #dff0e6;
+  --alerta: #a62b2b;
+  --alerta-clara: #fbeaea;
+
+  --raio: 4px;
+
+  --fonte-app: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  font-family: var(--fonte-app);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--texto);
+  background: var(--superficie);
+}
+
+.numero { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* ---------- selo de demonstração ---------- */
+
+.topo-dir {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.demo-selo {
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--tinta);
+  background: var(--tinta-clara);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.aviso-demo {
+  margin: 0;
+  font-size: 13px;
+  color: var(--texto-fraco);
+  background: var(--tinta-clara);
+  border-bottom: 1px solid var(--borda);
+  padding-block: 7px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+#recomecar { font-size: 13px; padding: 5px 11px; }
+
+/* ---------- cabeçalho da ferramenta ---------- */
+
+.topo {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: var(--papel);
+  border-bottom: 1px solid var(--borda);
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.topo h1 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+
+.topo nav { display: flex; gap: 18px; flex: 1 1 auto; flex-wrap: wrap; }
+
+.topo nav button {
+  border: none;
+  background: none;
+  padding: 0 0 2px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--texto-fraco);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.topo nav button:hover { color: var(--texto); }
+.topo nav button.ativo { color: var(--texto); border-bottom-color: var(--tinta); }
+
+.quem { color: var(--texto-fraco); font-size: 13px; }
+
+.quem select {
+  width: auto;
+  padding: 3px 6px;
+  font-size: 13px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--papel);
+  color: var(--texto);
+}
+
+/* ---------- quadro ---------- */
+
+.quadro {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding-block: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.coluna {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+
+.coluna-topo { padding: 10px 12px; border-bottom: 1px solid var(--borda); }
+.coluna-topo h2 { margin: 0; font-size: 13px; font-weight: 600; }
+.coluna-resumo { color: var(--texto-fraco); font-size: 12px; margin-top: 2px; }
+
+.coluna[data-etapa="faturar_cartorio"] .coluna-topo { border-top: 3px solid var(--ambar); }
+.coluna[data-etapa="faturar_traducao"] .coluna-topo { border-top: 3px solid var(--tinta); }
+.coluna[data-etapa="faturado"] .coluna-topo { border-top: 3px solid var(--verde); }
+
+.coluna-corpo { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+
+.cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  cursor: grab;
+}
+
+.cartao:hover { border-color: var(--tinta); }
+.cartao.arrastando { opacity: .4; cursor: grabbing; }
+
+.cartao-link { background: none; border: none; padding: 0; font: inherit; text-align: left; color: inherit; cursor: pointer; display: block; }
+.cartao-numero { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-weight: 600; font-size: 13px; }
+.cartao-cliente { display: block; color: var(--texto-fraco); margin: 2px 0 4px; }
+.cartao-valor { display: block; font-size: 13px; }
+
+.selo { font-size: 12px; padding: 1px 6px; border-radius: var(--raio); white-space: nowrap; }
+.selo-traducao { background: var(--tinta-clara); color: var(--tinta); }
+.selo-cartorio { background: var(--ambar-clara); color: var(--ambar); }
+.selo-ok { background: var(--verde-clara); color: var(--verde); }
+.selo-parado { background: var(--superficie); color: var(--texto-fraco); }
+
+.vazio { padding: 14px 12px; color: var(--texto-fraco); font-size: 13px; }
+
+select.mover {
+  font-size: 12px;
+  padding: 3px 6px;
+  color: var(--texto-fraco);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  width: 100%;
+}
+
+.coluna.recebendo { background: var(--tinta-clara); }
+.coluna.recusando { background: var(--alerta-clara); }
+
+/* ---------- páginas ---------- */
+
+.pagina {
+  max-width: 1100px;
+  padding-block: 20px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.pagina.larga { max-width: none; }
+
+.faixa {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.faixa h1 { margin: 0; font-size: 18px; font-weight: 600; }
+.faixa-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.painel {
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.painel h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
+
+label { display: block; margin-bottom: 4px; color: var(--texto-fraco); }
+
+input, select, textarea, button { font-family: inherit; font-size: 14px; }
+
+input, select, textarea {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--papel);
+  color: var(--texto);
+}
+
+input:focus, select:focus, textarea:focus, button:focus-visible, .cartao-link:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: -1px;
+}
+
+.linha { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.linha > * { flex: 1 1 160px; min-width: 0; }
+.linha > .estreito { flex: 0 1 120px; }
+.linha > .botao-fim { flex: 0 0 auto; align-self: flex-end; }
+
+button {
+  padding: 8px 14px;
+  border: 1px solid var(--tinta);
+  border-radius: var(--raio);
+  background: var(--tinta);
+  color: var(--papel);
+  cursor: pointer;
+}
+
+button:hover { background: #23406c; }
+button.secundario { background: var(--papel); color: var(--texto); border-color: var(--borda); }
+button.secundario:hover { background: var(--superficie); }
+button.discreto { background: none; border: none; color: var(--alerta); padding: 4px 6px; }
+button.discreto:hover { background: var(--alerta-clara); }
+
+.campo-busca { position: relative; }
+
+.lista-flutuante {
+  position: absolute;
+  z-index: 10;
+  left: 0; right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--papel);
+  border: 1px solid var(--tinta);
+  border-top: none;
+  border-radius: 0 0 var(--raio) var(--raio);
+  box-shadow: 0 4px 10px rgba(28, 31, 35, .08);
+}
+
+.opcao { display: flex; justify-content: space-between; gap: 10px; padding: 6px 9px; cursor: pointer; }
+.opcao:hover, .opcao.destacada { background: var(--tinta-clara); }
+
+/* ---------- tabelas ---------- */
+
+.rolagem { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--texto-fraco);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--borda);
+  white-space: nowrap;
+}
+
+td { padding: 6px 8px; border-bottom: 1px solid var(--superficie); }
+td.direita, th.direita { text-align: right; }
+tr[data-categoria="cartorio"] { background: var(--ambar-clara); }
+
+input.na-linha, select.na-linha {
+  padding: 3px 6px;
+  font-size: 13px;
+  text-align: right;
+  background: transparent;
+  border-color: transparent;
+  min-width: 64px;
+}
+
+input.na-linha:hover, select.na-linha:hover { border-color: var(--borda); background: var(--papel); }
+input.na-linha:focus, select.na-linha:focus { background: var(--papel); }
+select.na-linha { text-align: left; }
+
+/* ---------- previsão ---------- */
+
+.previsao { border-left: 3px solid var(--tinta); }
+.previsao table td { border: none; padding: 3px 8px; }
+
+.total-linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px;
+  border-top: 1px solid var(--borda);
+  font-weight: 600;
+}
+
+.repasse { color: var(--texto-fraco); font-weight: 400; }
+
+.divergencia {
+  background: var(--alerta-clara);
+  border-left: 3px solid var(--alerta);
+  padding: 10px 12px;
+  border-radius: var(--raio);
+  margin-top: 10px;
+}
+
+.erro-item { color: var(--alerta); margin: 3px 0; }
+.aviso-item { color: var(--ambar); margin: 3px 0; }
+
+textarea.interna { background: #fdf8e8; border-color: #e0d3a8; }
+textarea.interna:focus { background: var(--papel); }
+
+/* ---------- nota e documento ---------- */
+
+table.copiavel th { width: 220px; vertical-align: top; color: var(--texto-fraco); font-weight: 400; border-bottom: 1px solid var(--superficie); white-space: normal; }
+td.para-copiar { cursor: copy; }
+td.para-copiar:hover { background: var(--tinta-clara); }
+td.copiada { background: var(--verde-clara); }
+
+.folha {
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 28px;
+  max-width: 760px;
+}
+
+.folha-topo { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--texto); padding-bottom: 10px; margin-bottom: 16px; }
+.folha-topo h2 { margin: 0 0 2px; font-size: 17px; }
+.folha-topo p { margin: 0; color: var(--texto-fraco); font-size: 13px; }
+.folha h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--texto-fraco); margin: 22px 0 8px; }
+.folha-pagamento { background: var(--superficie); border-radius: var(--raio); padding: 12px 14px; }
+.folha-pagamento p { margin: 0 0 2px; }
+
+.recado {
+  background: var(--tinta-clara);
+  border-left: 3px solid var(--tinta);
+  padding: 10px 12px;
+  border-radius: var(--raio);
+  margin-bottom: 16px;
+}
+
+.recado p { margin: 0; }
+
+.nota-rodape { color: var(--texto-fraco); font-size: 13px; margin-top: 10px; }
+
+@media (max-width: 760px) {
+  .quadro { flex-direction: column; }
+  .coluna { width: 100%; flex: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<header class="topo">
+  <h1>Isabella Fortunato Traduções</h1>
+  <nav id="menu"></nav>
+  <div class="topo-dir">
+    <span class="demo-selo">Demonstração com dados fictícios</span>
+    <span class="quem">
+      Perfil
+      <select id="perfil" aria-label="Perfil de quem está usando">
+        <option value="isabella">Isabella</option>
+        <option value="gabrielly">Gabrielly</option>
+      </select>
+    </span>
+    <button type="button" class="secundario" id="recomecar">Restaurar exemplo</button>
+  </div>
+</header>
+
+<p class="aviso-demo" id="status" aria-live="polite">Clientes, serviços e orçamentos são fictícios. As alterações desta demonstração não são salvas e tudo volta ao exemplo quando a página é recarregada.</p>
+
+<main id="tela"></main>
+
+<script>
+"use strict";
+
+/* ==================================================================
+   Dados de demonstração. Nomes, documentos e endereços são inventados.
+   ================================================================== */
+
+const ETAPAS = [
+  ["proposta", "Orçamento (Proposta)"],
+  ["em_execucao", "Em Execução"],
+  ["faturar_cartorio", "Faturar Cartório"],
+  ["follow_up", "Follow Up"],
+  ["faturar_traducao", "Faturar Tradução"],
+  ["faturado", "Faturado"],
+];
+const ETAPAS_MAPA = Object.fromEntries(ETAPAS);
+
+const ETAPAS_PERMITIDAS = {
+  traducao: ["proposta", "em_execucao", "follow_up", "faturar_traducao", "faturado"],
+  cartorio: ["proposta", "em_execucao", "faturar_cartorio", "faturado"],
+};
+
+const CATEGORIA_PARA_COLUNA = {
+  cartorio: "CARTORIO",
+  documento: "TRADUÇÃO",
+  parceiro_servico: "TRADUÇÃO",
+  modificador: "TRADUÇÃO",
+  despesa: "Correio/DHL",
+};
+
+const CATEGORIAS_DO_DOCUMENTO = {
+  traducao: ["documento", "parceiro_servico", "modificador", "diligencia", "despesa"],
+  cartorio: ["cartorio"],
+};
+
+const CHAVE_DILIGENCIA_CARTORIO = "srv_diligencia_cartorio";
+const CHAVE_DILIGENCIA_ENVIO = "srv_diligencia_envio";
+
+const CARTOES_POR_PERFIL = {
+  isabella: ["orcamentos", "clientes", "servicos", "faturamento"],
+  gabrielly: ["orcamentos", "clientes", "servicos", "faturamento"],
+};
+
+const PAGAMENTO = {
+  traducao: {
+    titulo: "Orçamento Tradução",
+    favorecido: "",
+    linhas: ["Banco: 000 - Banco Exemplo", "Agência 0001 C/C 00000-0", "Pix: demonstracao@exemplo.com"],
+  },
+  cartorio: {
+    titulo: "Orçamento Cartório",
+    favorecido: "Cartório Exemplo Serviços LTDA",
+    linhas: ["Banco: 000 - Banco Exemplo", "Agência 0002 C/C 11111-1", "Pix: cartorio@exemplo.com"],
+  },
+};
+
+const PARCEIROS = ["Traduções Bragança", "Carolina Vettori", "Estúdio Lusitano", "Marcos Tinoco"];
+
+function servicosIniciais() {
+  return [
+    { id: "s01", chave: "srv_por_ita_nascimento", descricao: "POR-ITA - Certidão de Nascimento", preco: 204.00, categoria: "documento", ativo: true },
+    { id: "s02", chave: "srv_por_ita_casamento", descricao: "POR-ITA - Certidão de Casamento", preco: 204.00, categoria: "documento", ativo: true },
+    { id: "s03", chave: "srv_por_ita_obito", descricao: "POR-ITA - Certidão de Óbito", preco: 204.00, categoria: "documento", ativo: true },
+    { id: "s04", chave: "srv_por_ita_processo", descricao: "POR-ITA - Processo Judicial (lauda)", preco: 118.00, categoria: "documento", ativo: true },
+    { id: "s05", chave: "srv_ita_por_nascimento", descricao: "ITA-POR - Certidão de Nascimento", preco: 204.00, categoria: "documento", ativo: true },
+    { id: "s06", chave: "srv_ita_por_processo", descricao: "ITA-POR - Processo Judicial (lauda)", preco: 118.00, categoria: "documento", ativo: true },
+    { id: "s07", chave: "srv_ita_por_diploma", descricao: "ITA-POR - Diploma e Histórico", preco: 266.00, categoria: "documento", ativo: true },
+    { id: "s08", chave: "srv_urgencia", descricao: "MOD - Urgência (48 horas)", preco: 150.00, categoria: "modificador", ativo: true },
+    { id: "s09", chave: "srv_parceiro_revisao", descricao: "PARC - Revisão por parceiro", preco: 95.00, categoria: "parceiro_servico", ativo: true },
+    { id: "s10", chave: "srv_cart_apostila", descricao: "CART - Apostila Tradução", preco: 151.92, categoria: "cartorio", ativo: true },
+    { id: "s11", chave: "srv_cart_apostila_original", descricao: "CART - Apostila Documento Original", preco: 151.92, categoria: "cartorio", ativo: true },
+    { id: "s12", chave: "srv_cart_firma", descricao: "CART - Reconhecimento de firma", preco: 16.87, categoria: "cartorio", ativo: true },
+    { id: "s13", chave: CHAVE_DILIGENCIA_CARTORIO, descricao: "SERV - Diligência de Cartório", preco: 25.00, categoria: "diligencia", ativo: true },
+    { id: "s14", chave: CHAVE_DILIGENCIA_ENVIO, descricao: "SERV - Diligência de Envio", preco: 25.00, categoria: "diligencia", ativo: true },
+    { id: "s15", chave: "srv_traducao_simples", descricao: "SIMP - Tradução simples (lauda)", preco: 88.00, categoria: "documento", ativo: false },
+  ];
+}
+
+function clientesIniciais() {
+  return [
+    {
+      id: "c01", nome: "Marina Albuquerque Rosa", cpf_cnpj: "111.222.333-44",
+      email: "marina.rosa@exemplo.com", telefone: "(21) 90000-0001",
+      endereco: { logradouro: "Rua das Laranjeiras", numero: "410", complemento: "apto 802", bairro: "Laranjeiras", cidade: "Rio de Janeiro", estado: "RJ", cep: "22240-003" },
+    },
+    {
+      id: "c02", nome: "Thiago Nakamura Dias", cpf_cnpj: "222.333.444-55",
+      email: "thiago.nd@exemplo.com", telefone: "(11) 90000-0002",
+      endereco: { logradouro: "Alameda dos Jacarandás", numero: "77", complemento: "", bairro: "Pinheiros", cidade: "São Paulo", estado: "SP", cep: "05422-010" },
+    },
+    {
+      id: "c03", nome: "Construtora Vale Verde LTDA", cpf_cnpj: "11.222.333/0001-44",
+      email: "contratos@valeverde.exemplo", telefone: "(31) 90000-0003",
+      endereco: { logradouro: "Avenida do Contorno", numero: "2150", complemento: "sala 12", bairro: "Funcionários", cidade: "Belo Horizonte", estado: "MG", cep: "30110-012" },
+    },
+    {
+      id: "c04", nome: "Lívia Marchetti Pontes", cpf_cnpj: "333.444.555-66",
+      email: "livia.mp@exemplo.com", telefone: "",
+      endereco: { logradouro: "", numero: "", complemento: "", bairro: "", cidade: "Niterói", estado: "RJ", cep: "" },
+    },
+    {
+      id: "c05", nome: "Rafael Boaventura Lima", cpf_cnpj: "",
+      email: "rafael.bl@exemplo.com", telefone: "(85) 90000-0005",
+      endereco: { logradouro: "Rua Pernambuco", numero: "58", complemento: "", bairro: "Aldeota", cidade: "Fortaleza", estado: "CE", cep: "60150-020" },
+    },
+  ];
+}
+
+function item(servico, quantidade, desconto, tipoDesconto) {
+  const bruto = quantidade * servico.preco;
+  const abatido = calcularDesconto(bruto, desconto || 0, tipoDesconto || "percentual");
+  return {
+    chave_servico: servico.chave,
+    descricao: servico.descricao,
+    categoria: servico.categoria,
+    quantidade: quantidade,
+    valor_unitario: servico.preco,
+    desconto: desconto || 0,
+    tipo_desconto: tipoDesconto || "percentual",
+    valor_total: arredondar(bruto - abatido),
+  };
+}
+
+function despesa(descricao, valor) {
+  return {
+    chave_servico: "despesa_reembolsavel",
+    descricao: descricao,
+    categoria: "despesa",
+    quantidade: 1,
+    valor_unitario: valor,
+    desconto: 0,
+    tipo_desconto: "percentual",
+    valor_total: arredondar(valor),
+  };
+}
+
+function orcamentosIniciais(servicos) {
+  const s = Object.fromEntries(servicos.map(x => [x.chave, x]));
+
+  const base = [
+    {
+      numero: "2610001", cliente_id: "c01", entrega: "2026-10-22", criado_por: "Gabrielly",
+      parceiro: "", aprovado: true,
+      observacoes_cliente: "Retirada no escritório a partir das 14h.",
+      observacoes_internas: "Cliente pediu as duas vias apostiladas.",
+      itens: [
+        item(s["srv_por_ita_casamento"], 1, 0, "percentual"),
+        item(s[CHAVE_DILIGENCIA_CARTORIO], 1, 0, "percentual"),
+        item(s["srv_cart_apostila"], 1, 0, "percentual"),
+        item(s["srv_cart_firma"], 1, 0, "percentual"),
+      ],
+      etapas: { traducao: "em_execucao", cartorio: "faturar_cartorio" },
+    },
+    {
+      numero: "2610002", cliente_id: "c02", entrega: "2026-10-24", criado_por: "Isabella",
+      parceiro: "Traduções Bragança", aprovado: true,
+      observacoes_cliente: "Envio por PDF assinado e via física pelos Correios.",
+      observacoes_internas: "",
+      itens: [
+        item(s["srv_ita_por_diploma"], 1, 10, "percentual"),
+        item(s["srv_parceiro_revisao"], 2, 0, "percentual"),
+        despesa("Correios Sedex para São Paulo", 48.50),
+      ],
+      etapas: { traducao: "faturar_traducao" },
+    },
+    {
+      numero: "2610003", cliente_id: "c03", entrega: "2026-10-30", criado_por: "Gabrielly",
+      parceiro: "", aprovado: true,
+      observacoes_cliente: "",
+      observacoes_internas: "Contrato longo, conferir numeração das laudas antes de entregar.",
+      itens: [
+        item(s["srv_ita_por_processo"], 14, 0, "percentual"),
+        item(s["srv_urgencia"], 1, 0, "percentual"),
+      ],
+      etapas: { traducao: "em_execucao" },
+    },
+    {
+      numero: "2610004", cliente_id: "c04", entrega: "", criado_por: "Gabrielly",
+      parceiro: "", aprovado: false,
+      observacoes_cliente: "",
+      observacoes_internas: "Pediu orçamento por WhatsApp e sumiu. Cobrar na sexta.",
+      itens: [
+        item(s["srv_por_ita_nascimento"], 2, 0, "percentual"),
+      ],
+      etapas: { traducao: "proposta" },
+    },
+    {
+      numero: "2610005", cliente_id: "c05", entrega: "2026-10-16", criado_por: "Isabella",
+      parceiro: "Carolina Vettori", aprovado: true,
+      observacoes_cliente: "Documento digitalizado enviado por e-mail.",
+      observacoes_internas: "",
+      itens: [
+        item(s["srv_por_ita_processo"], 6, 50, "valor"),
+        item(s["srv_parceiro_revisao"], 1, 0, "percentual"),
+        item(s[CHAVE_DILIGENCIA_ENVIO], 1, 0, "percentual"),
+        despesa("DHL para Milão", 212.00),
+      ],
+      etapas: { traducao: "faturado" },
+    },
+    {
+      numero: "2609014", cliente_id: "c02", entrega: "2026-09-26", criado_por: "Isabella",
+      parceiro: "Traduções Bragança", aprovado: true,
+      observacoes_cliente: "",
+      observacoes_internas: "",
+      itens: [
+        item(s["srv_ita_por_nascimento"], 3, 0, "percentual"),
+      ],
+      etapas: { traducao: "faturado" },
+    },
+  ];
+
+  return base.map(montarOrcamento);
+}
+
+/* ==================================================================
+   Cálculo. É a mesma regra do sistema de verdade.
+   ================================================================== */
+
+function arredondar(valor) { return Math.round((Number(valor) + Number.EPSILON) * 100) / 100; }
+
+function calcularDesconto(bruto, desconto, tipo) {
+  const d = Number(desconto) || 0;
+  if (d <= 0) return 0;
+  if (tipo === "valor") return Math.min(d, bruto);
+  return arredondar(bruto * Math.min(d, 100) / 100);
+}
+
+function recalcularItem(it) {
+  const bruto = Number(it.quantidade) * Number(it.valor_unitario);
+  const abatido = calcularDesconto(bruto, it.desconto, it.tipo_desconto);
+  it.valor_total = arredondar(bruto - abatido);
+  return it;
+}
+
+function calcularTotais(itens) {
+  let geral = 0, desconto = 0, paraTerceiro = 0, reembolsavel = 0;
+
+  for (const it of itens) {
+    const bruto = Number(it.quantidade) * Number(it.valor_unitario);
+    desconto += calcularDesconto(bruto, it.desconto, it.tipo_desconto);
+    geral += Number(it.valor_total);
+    if (it.categoria === "cartorio") paraTerceiro += Number(it.valor_total);
+    if (it.categoria === "despesa") reembolsavel += Number(it.valor_total);
+  }
+
+  return {
+    geral: arredondar(geral),
+    desconto: arredondar(desconto),
+    para_terceiro: arredondar(paraTerceiro),
+    reembolsavel: arredondar(reembolsavel),
+    receita: arredondar(geral - paraTerceiro - reembolsavel),
+  };
+}
+
+function separarDocumentos(itens) {
+  const documentos = {};
+  for (const [nome, categorias] of Object.entries(CATEGORIAS_DO_DOCUMENTO)) {
+    const deste = itens.filter(it => categorias.includes(it.categoria));
+    if (deste.length) {
+      documentos[nome] = { itens: deste, total: arredondar(deste.reduce((s, it) => s + Number(it.valor_total), 0)) };
+    }
+  }
+  return documentos;
+}
+
+function montarOrcamento(dados) {
+  const o = Object.assign({}, dados);
+  o.documentos = separarDocumentos(o.itens);
+  o.totais = calcularTotais(o.itens);
+  o.etapas = o.etapas || {};
+  for (const nome of Object.keys(o.documentos)) {
+    if (!o.etapas[nome]) o.etapas[nome] = "proposta";
+  }
+  for (const nome of Object.keys(o.etapas)) {
+    if (!o.documentos[nome]) delete o.etapas[nome];
+  }
+  return o;
+}
+
+function preverColunas(itens) {
+  const colunas = { "CARTORIO": 0, "TRADUÇÃO": 0, "Diligência Cartório": 0, "Diligência Envio": 0, "Correio/DHL": 0 };
+  const foraDaConta = [];
+
+  for (const it of itens) {
+    const valor = Number(it.valor_total) || 0;
+    if (it.categoria === "diligencia") {
+      if (it.chave_servico === CHAVE_DILIGENCIA_ENVIO) colunas["Diligência Envio"] += valor;
+      else if (it.chave_servico === CHAVE_DILIGENCIA_CARTORIO) colunas["Diligência Cartório"] += valor;
+      else foraDaConta.push(it);
+      continue;
+    }
+    const destino = CATEGORIA_PARA_COLUNA[it.categoria];
+    if (destino) colunas[destino] += valor;
+    else foraDaConta.push(it);
+  }
+
+  for (const k of Object.keys(colunas)) colunas[k] = arredondar(colunas[k]);
+
+  const somaColunas = arredondar(Object.values(colunas).reduce((a, b) => a + b, 0));
+  const somaItens = arredondar(itens.reduce((s, it) => s + (Number(it.valor_total) || 0), 0));
+
+  return { colunas, total_planilha: somaColunas, total_orcamento: somaItens, confere: Math.abs(somaColunas - somaItens) < 0.01, fora: foraDaConta };
+}
+
+function direcaoDaTraducao(itens) {
+  let porIta = false, itaPor = false;
+  for (const it of itens) {
+    const d = String(it.descricao || "").trim().toUpperCase();
+    if (d.startsWith("POR-ITA")) porIta = true;
+    if (d.startsWith("ITA-POR")) itaPor = true;
+  }
+  if (itaPor) return "ITA-POR";
+  if (porIta) return "POR-ITA";
+  return "";
+}
+
+function validarItens(itens) {
+  const erros = [], avisos = [];
+  if (!itens.length) return { ok: false, erros: ["O orçamento não tem nenhum item."], avisos };
+
+  itens.forEach((it, i) => {
+    const nome = it.descricao || ("item " + (i + 1));
+    if (!it.categoria) erros.push(nome + ": sem categoria, então não dá para saber em qual coluna da planilha o valor entraria.");
+    if (it.categoria === "diligencia" && ![CHAVE_DILIGENCIA_CARTORIO, CHAVE_DILIGENCIA_ENVIO].includes(it.chave_servico)) {
+      erros.push(nome + ": diligência sem definir se é de cartório ou de envio. São colunas diferentes na planilha.");
+    }
+    if (Number(it.quantidade) <= 0) erros.push(nome + ": quantidade precisa ser maior que zero.");
+    if (Number(it.valor_total) < 0) erros.push(nome + ": valor negativo.");
+    if (Number(it.valor_total) === 0) avisos.push(nome + ": valor zero. Confirme se é isento mesmo.");
+
+    const bruto = Number(it.quantidade) * Number(it.valor_unitario);
+    const abatido = calcularDesconto(bruto, it.desconto, it.tipo_desconto);
+    if (it.tipo_desconto === "percentual" && Number(it.desconto) > 100) erros.push(nome + ": desconto passa de cem por cento.");
+    if (it.tipo_desconto === "valor" && Number(it.desconto) > bruto) erros.push(nome + ": o desconto é maior que o próprio item.");
+    if (bruto && abatido / bruto >= 0.5) avisos.push(nome + ": desconto de " + moeda(abatido) + ", que é metade ou mais do valor do item. Confirme.");
+  });
+
+  return { ok: erros.length === 0, erros, avisos };
+}
+
+/* ==================================================================
+   Estado
+   ================================================================== */
+
+let estado;
+
+function comecar() {
+  const servicos = servicosIniciais();
+  estado = {
+    perfil: "isabella",
+    tela: "quadro",
+    servicos,
+    clientes: clientesIniciais(),
+    orcamentos: orcamentosIniciais(servicos),
+    rascunho: null,
+    numeroAberto: null,
+    documentoAberto: null,
+    parceiroEscolhido: PARCEIROS[0],
+    mesEscolhido: "2026-10",
+    recado: "",
+  };
+}
+
+function proximoNumero() {
+  const agora = new Date(2026, 9, 18);
+  const prefixo = String(agora.getFullYear() % 100).padStart(2, "0") + String(agora.getMonth() + 1).padStart(2, "0");
+  const doMes = estado.orcamentos.map(o => o.numero).filter(n => n.startsWith(prefixo));
+  const maior = doMes.length ? Math.max(...doMes.map(n => Number(n.slice(-3)))) : 0;
+  return prefixo + String(maior + 1).padStart(3, "0");
+}
+
+function acharOrcamento(numero) { return estado.orcamentos.find(o => o.numero === numero); }
+function acharCliente(id) { return estado.clientes.find(c => c.id === id); }
+
+/* ==================================================================
+   Utilidades de tela
+   ================================================================== */
+
+const formatador = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function moeda(v) { return "R$ " + formatador.format(Number(v) || 0); }
+
+function escapar(texto) {
+  return String(texto == null ? "" : texto)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function dataBonita(iso) {
+  if (!iso) return "";
+  const [a, m, d] = iso.split("-");
+  return d + "/" + m + "/" + a;
+}
+
+function ir(tela, extra) {
+  estado.tela = tela;
+  Object.assign(estado, extra || {});
+  estado.recado = "";
+  desenhar();
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+function avisar(texto) { estado.recado = texto; }
+
+/* ==================================================================
+   Menu
+   ================================================================== */
+
+const NOMES_DE_TELA = {
+  orcamentos: ["quadro", "Orçamentos"],
+  clientes: ["clientes", "Clientes"],
+  servicos: ["servicos", "Serviços"],
+  faturamento: ["faturamento", "Faturamento"],
+};
+
+function desenharMenu() {
+  const visiveis = CARTOES_POR_PERFIL[estado.perfil];
+  const telaAtual = estado.tela;
+  const grupo = {
+    quadro: "orcamentos", orcamento: "orcamentos", nota: "orcamentos", documento: "orcamentos",
+    clientes: "clientes", cliente: "clientes", servicos: "servicos", faturamento: "faturamento",
+  }[telaAtual];
+
+  document.getElementById("menu").innerHTML = visiveis.map(chave => {
+    const [destino, rotulo] = NOMES_DE_TELA[chave];
+    return `<button type="button" data-ir="${destino}" class="${grupo === chave ? "ativo" : ""}">${rotulo}</button>`;
+  }).join("");
+}
+
+/* ==================================================================
+   Tela: quadro
+   ================================================================== */
+
+function telaQuadro() {
+  const cartoes = [];
+  for (const o of estado.orcamentos) {
+    const cliente = acharCliente(o.cliente_id);
+    for (const [nome, doc] of Object.entries(o.documentos)) {
+      cartoes.push({ numero: o.numero, documento: nome, cliente: cliente ? cliente.nome : "sem cliente", valor: doc.total, etapa: o.etapas[nome] });
+    }
+  }
+
+  const colunas = ETAPAS.map(([chave, titulo]) => {
+    const lista = cartoes.filter(c => c.etapa === chave);
+    return { chave, titulo, lista, soma: arredondar(lista.reduce((s, c) => s + c.valor, 0)) };
+  });
+
+  return `
+    <div class="pagina larga" style="padding-bottom:0">
+      <div class="faixa">
+        <h1>Orçamentos</h1>
+        <div class="faixa-botoes"><button type="button" data-novo="1">Novo orçamento</button></div>
+      </div>
+      ${estado.recado ? `<div class="recado"><p>${escapar(estado.recado)}</p></div>` : ""}
+    </div>
+
+    <div class="quadro">
+      ${colunas.map(col => `
+        <section class="coluna" data-etapa="${col.chave}">
+          <div class="coluna-topo">
+            <h2>${col.titulo}</h2>
+            <div class="coluna-resumo numero">${col.lista.length ? col.lista.length + " · " + moeda(col.soma) : "nada aqui"}</div>
+          </div>
+          <div class="coluna-corpo">
+            ${col.lista.length ? col.lista.map(c => cartaoHtml(c)).join("") : `<p class="vazio">${col.chave === "proposta" ? "Comece criando um orçamento." : "Nada nesta etapa."}</p>`}
+          </div>
+        </section>
+      `).join("")}
+    </div>
+  `;
+}
+
+function cartaoHtml(c) {
+  const selo = c.documento === "cartorio"
+    ? '<span class="selo selo-cartorio">Cartório</span>'
+    : '<span class="selo selo-traducao">Tradução</span>';
+
+  const opcoes = ETAPAS
+    .filter(([chave]) => chave !== c.etapa && ETAPAS_PERMITIDAS[c.documento].includes(chave))
+    .map(([chave, titulo]) => `<option value="${chave}">${titulo}</option>`).join("");
+
+  return `
+    <div class="cartao" draggable="true" data-numero="${c.numero}" data-documento="${c.documento}">
+      <button type="button" class="cartao-link" data-abrir="${c.numero}">
+        <span class="cartao-numero numero">${c.numero} ${selo}</span>
+        <span class="cartao-cliente">${escapar(c.cliente)}</span>
+        <span class="numero cartao-valor">${moeda(c.valor)}</span>
+      </button>
+      <select class="mover" aria-label="Mover ${c.numero} para outra etapa">
+        <option value="">Mover para...</option>${opcoes}
+      </select>
+    </div>
+  `;
+}
+
+function moverEtapa(numero, documento, etapa) {
+  const o = acharOrcamento(numero);
+  if (!o || !o.documentos[documento]) return;
+  if (!ETAPAS_PERMITIDAS[documento].includes(etapa)) {
+    avisar("O documento de " + (documento === "cartorio" ? "cartório" : "tradução") + " não vai para a etapa " + ETAPAS_MAPA[etapa] + ".");
+    desenhar();
+    return;
+  }
+  o.etapas[documento] = etapa;
+  if (["em_execucao", "faturar_cartorio", "faturar_traducao", "faturado"].includes(etapa)) o.aprovado = true;
+  avisar("Orçamento " + numero + " movido para " + ETAPAS_MAPA[etapa] + ".");
+  desenhar();
+}
+
+/* ==================================================================
+   Tela: orçamento
+   ================================================================== */
+
+function abrirOrcamento(numero) {
+  const o = numero ? acharOrcamento(numero) : null;
+  estado.rascunho = o
+    ? { numero: o.numero, cliente_id: o.cliente_id, entrega: o.entrega, parceiro: o.parceiro || "", itens: o.itens.map(i => Object.assign({}, i)), observacoes_cliente: o.observacoes_cliente, observacoes_internas: o.observacoes_internas, criado_por: o.criado_por }
+    : { numero: "", cliente_id: "", entrega: "", parceiro: "", itens: [], observacoes_cliente: "", observacoes_internas: "", criado_por: estado.perfil === "isabella" ? "Isabella" : "Gabrielly" };
+  ir("orcamento");
+}
+
+function telaOrcamento() {
+  const r = estado.rascunho;
+  const previsao = preverColunas(r.itens);
+  const totais = calcularTotais(r.itens);
+  const checagem = validarItens(r.itens);
+  const documentos = separarDocumentos(r.itens);
+  const direcao = direcaoDaTraducao(r.itens);
+
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>${r.numero ? "Orçamento " + r.numero : "Novo orçamento"}</h1>
+        <div class="faixa-botoes">
+          <button type="button" data-salvar="1">Salvar orçamento</button>
+          <button type="button" class="secundario" data-ir="quadro">Voltar ao quadro</button>
+        </div>
+      </div>
+
+      ${estado.recado ? `<div class="recado"><p>${escapar(estado.recado)}</p></div>` : ""}
+
+      ${r.numero ? `
+      <section class="painel">
+        <h2>Documentos</h2>
+        <div class="linha">
+          ${Object.keys(documentos).length ? Object.entries(documentos).map(([nome, doc]) => `
+            <div>
+              <p style="margin:0 0 6px">
+                <span class="selo selo-${nome}">${nome === "cartorio" ? "Cartório" : "Tradução"}</span>
+                <span class="numero"> ${moeda(doc.total)}</span>
+              </p>
+              <div class="faixa-botoes">
+                <button type="button" class="secundario" data-documento="${nome}">Ver orçamento</button>
+                <button type="button" class="secundario" data-nota="${nome}">Dados para a nota</button>
+              </div>
+            </div>
+          `).join("") : `<p class="vazio">Adicione itens para o orçamento ganhar documentos.</p>`}
+        </div>
+      </section>` : ""}
+
+      <section class="painel">
+        <h2>Cliente</h2>
+        <div class="linha">
+          <div>
+            <label for="cliente">Quem está pedindo</label>
+            <select id="cliente" data-campo="cliente_id">
+              <option value="">Escolha um cliente</option>
+              ${estado.clientes.map(c => `<option value="${c.id}" ${c.id === r.cliente_id ? "selected" : ""}>${escapar(c.nome)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="estreito">
+            <label for="entrega">Data de entrega</label>
+            <input type="date" id="entrega" value="${r.entrega || ""}" data-campo="entrega">
+          </div>
+          <div>
+            <label for="parceiro">Parceiro (se houver)</label>
+            <select id="parceiro" data-campo="parceiro">
+              <option value="">Nenhum</option>
+              ${PARCEIROS.map(p => `<option value="${escapar(p)}" ${p === r.parceiro ? "selected" : ""}>${escapar(p)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Itens</h2>
+
+        <div class="linha">
+          <div class="campo-busca">
+            <label for="busca-servico">Serviço</label>
+            <input type="text" id="busca-servico" autocomplete="off" placeholder="Digite por para achar POR-ITA, ou casa para certidão de casamento">
+            <div id="sugestoes"></div>
+          </div>
+          <div class="estreito">
+            <label for="qtd">Quantidade</label>
+            <input type="number" id="qtd" min="1" step="1" value="1">
+          </div>
+          <div class="estreito">
+            <label for="unitario">Valor unitário</label>
+            <input type="number" id="unitario" min="0" step="0.01" value="0">
+          </div>
+          <div class="estreito">
+            <label for="desconto">Desconto</label>
+            <input type="number" id="desconto" min="0" step="0.01" value="0">
+          </div>
+          <div class="estreito">
+            <label for="tipo-desconto">Tipo</label>
+            <select id="tipo-desconto">
+              <option value="percentual">%</option>
+              <option value="valor">R$</option>
+            </select>
+          </div>
+          <div class="botao-fim"><button type="button" class="secundario" data-adicionar="1">Adicionar</button></div>
+        </div>
+
+        <div class="linha">
+          <div>
+            <label for="desc-despesa">Despesa reembolsável (Correio, DHL, Sedex)</label>
+            <input type="text" id="desc-despesa" placeholder="Ex: DHL para Milão">
+          </div>
+          <div class="estreito">
+            <label for="valor-despesa">Valor</label>
+            <input type="number" id="valor-despesa" min="0" step="0.01" value="0">
+          </div>
+          <div class="botao-fim"><button type="button" class="secundario" data-adicionar-despesa="1">Adicionar</button></div>
+        </div>
+
+        <div class="rolagem">
+          <table>
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th class="direita">Qtde</th>
+                <th class="direita">Valor unit.</th>
+                <th class="direita">Desconto</th>
+                <th class="direita">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${r.itens.length ? r.itens.map((it, i) => `
+                <tr data-categoria="${it.categoria}">
+                  <td>${escapar(it.descricao)}</td>
+                  <td class="direita"><input class="na-linha numero" type="number" min="0" step="1" value="${it.quantidade}" data-editar="quantidade" data-indice="${i}" aria-label="Quantidade de ${escapar(it.descricao)}"></td>
+                  <td class="direita"><input class="na-linha numero" type="number" min="0" step="0.01" value="${it.valor_unitario}" data-editar="valor_unitario" data-indice="${i}" aria-label="Valor unitário de ${escapar(it.descricao)}"></td>
+                  <td class="direita">
+                    <input class="na-linha numero" type="number" min="0" step="0.01" value="${it.desconto}" data-editar="desconto" data-indice="${i}" aria-label="Desconto de ${escapar(it.descricao)}">
+                    <select class="na-linha" data-editar="tipo_desconto" data-indice="${i}" aria-label="Tipo de desconto de ${escapar(it.descricao)}">
+                      <option value="percentual" ${it.tipo_desconto === "percentual" ? "selected" : ""}>%</option>
+                      <option value="valor" ${it.tipo_desconto === "valor" ? "selected" : ""}>R$</option>
+                    </select>
+                  </td>
+                  <td class="direita numero">${moeda(it.valor_total)}</td>
+                  <td class="direita"><button type="button" class="discreto" data-remover="${i}">remover</button></td>
+                </tr>
+              `).join("") : `<tr><td colspan="6" class="vazio">Nenhum item ainda.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Observações</h2>
+        <div class="linha">
+          <div>
+            <label for="obs-cliente">Para o cliente, sai no orçamento</label>
+            <textarea id="obs-cliente" rows="3" data-campo="observacoes_cliente">${escapar(r.observacoes_cliente)}</textarea>
+          </div>
+          <div>
+            <label for="obs-interna">Interna, nunca sai do sistema</label>
+            <textarea id="obs-interna" class="interna" rows="3" data-campo="observacoes_internas">${escapar(r.observacoes_internas)}</textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="painel previsao">
+        <h2>O que vai para a planilha</h2>
+        <table>
+          <tbody>
+            ${Object.entries(previsao.colunas).filter(([, v]) => v).map(([col, v]) => `
+              <tr><td>${col}</td><td class="direita numero">${moeda(v)}</td></tr>
+            `).join("") || `<tr><td class="vazio">Nada ainda.</td></tr>`}
+            ${direcao ? `<tr><td>LÍNGUA</td><td class="direita">${direcao}</td></tr>` : ""}
+          </tbody>
+        </table>
+
+        ${totais.desconto ? `<div class="total-linha repasse"><span>Desconto concedido</span><span class="numero">${moeda(totais.desconto)}</span></div>` : ""}
+        <div class="total-linha"><span>Total do orçamento</span><span class="numero">${moeda(totais.geral)}</span></div>
+        ${totais.para_terceiro ? `<div class="total-linha repasse"><span>Vai para o cartório (terceiro)</span><span class="numero">${moeda(totais.para_terceiro)}</span></div>` : ""}
+        ${totais.reembolsavel ? `<div class="total-linha repasse"><span>Reembolso de despesa</span><span class="numero">${moeda(totais.reembolsavel)}</span></div>` : ""}
+        <div class="total-linha"><span>Receita da empresa</span><span class="numero">${moeda(totais.receita)}</span></div>
+
+        ${!previsao.confere ? `<div class="divergencia">O orçamento soma ${moeda(previsao.total_orcamento)}, mas só ${moeda(previsao.total_planilha)} chegariam à planilha.</div>` : ""}
+        ${checagem.erros.map(e => `<p class="erro-item">${escapar(e)}</p>`).join("")}
+        ${checagem.avisos.map(a => `<p class="aviso-item">${escapar(a)}</p>`).join("")}
+      </section>
+    </div>
+  `;
+}
+
+function salvarRascunho() {
+  const r = estado.rascunho;
+  const checagem = validarItens(r.itens);
+
+  if (!r.cliente_id) { avisar("Escolha um cliente antes de salvar."); desenhar(); return; }
+  if (!checagem.ok) { avisar("Corrija os erros apontados abaixo antes de salvar."); desenhar(); return; }
+
+  const numero = r.numero || proximoNumero();
+  const existente = acharOrcamento(numero);
+
+  const dados = {
+    numero,
+    cliente_id: r.cliente_id,
+    entrega: r.entrega,
+    parceiro: r.parceiro,
+    criado_por: r.criado_por,
+    aprovado: existente ? existente.aprovado : false,
+    observacoes_cliente: r.observacoes_cliente,
+    observacoes_internas: r.observacoes_internas,
+    itens: r.itens,
+    etapas: existente ? Object.assign({}, existente.etapas) : {},
+  };
+
+  const novo = montarOrcamento(dados);
+
+  if (existente) estado.orcamentos[estado.orcamentos.indexOf(existente)] = novo;
+  else estado.orcamentos.unshift(novo);
+
+  estado.rascunho = { ...r, numero };
+  avisar("Orçamento " + numero + " salvo. Na ferramenta de verdade, é agora que a linha entraria na planilha Status clientes.");
+  desenhar();
+}
+
+/* ==================================================================
+   Tela: documento (o que vira PDF)
+   ================================================================== */
+
+function telaDocumento() {
+  const o = acharOrcamento(estado.numeroAberto);
+  const nome = estado.documentoAberto;
+  if (!o || !o.documentos[nome]) return `<div class="pagina"><p class="vazio">Documento não encontrado.</p></div>`;
+
+  const doc = o.documentos[nome];
+  const cliente = acharCliente(o.cliente_id) || {};
+  const pag = PAGAMENTO[nome];
+
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>${pag.titulo} ${o.numero}</h1>
+        <div class="faixa-botoes"><button type="button" class="secundario" data-voltar-orcamento="${o.numero}">Voltar ao orçamento</button></div>
+      </div>
+
+      <div class="recado"><p>Na ferramenta de verdade este documento sai em PDF e vai para a pasta do cliente no Drive. Aqui ele aparece na tela, porque a demonstração não grava arquivo nenhum.</p></div>
+
+      <div class="folha">
+        <div class="folha-topo">
+          <div>
+            <h2>Isabella Fortunato Traduções</h2>
+            <p>Tradutora pública e intérprete comercial</p>
+          </div>
+          <div style="text-align:right">
+            <p><strong>${pag.titulo}</strong></p>
+            <p class="numero">Nº ${o.numero}</p>
+            ${o.entrega ? `<p>Entrega ${dataBonita(o.entrega)}</p>` : ""}
+          </div>
+        </div>
+
+        <h3>Cliente</h3>
+        <p style="margin:0">${escapar(cliente.nome || "")}</p>
+        ${cliente.cpf_cnpj ? `<p style="margin:0" class="numero">${escapar(cliente.cpf_cnpj)}</p>` : ""}
+
+        <h3>Itens</h3>
+        <div class="rolagem">
+          <table>
+            <thead><tr><th>Descrição</th><th class="direita">Qtde</th><th class="direita">Valor unit.</th><th class="direita">Desconto</th><th class="direita">Total</th></tr></thead>
+            <tbody>
+              ${doc.itens.map(it => {
+                const bruto = Number(it.quantidade) * Number(it.valor_unitario);
+                const abatido = calcularDesconto(bruto, it.desconto, it.tipo_desconto);
+                return `<tr>
+                  <td>${escapar(it.descricao)}</td>
+                  <td class="direita numero">${it.quantidade}</td>
+                  <td class="direita numero">${moeda(it.valor_unitario)}</td>
+                  <td class="direita numero">${abatido ? "-" + moeda(abatido) : ""}</td>
+                  <td class="direita numero">${moeda(it.valor_total)}</td>
+                </tr>`;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="total-linha"><span>Total</span><span class="numero">${moeda(doc.total)}</span></div>
+
+        <h3>Pagamento</h3>
+        <div class="folha-pagamento">
+          ${pag.favorecido ? `<p><strong>Favorecido:</strong> ${escapar(pag.favorecido)}</p>` : ""}
+          ${pag.linhas.map(l => `<p>${escapar(l)}</p>`).join("")}
+        </div>
+
+        <h3>Prazo</h3>
+        <p style="margin:0">Prazo 5 dias úteis após aprovação.</p>
+
+        ${o.observacoes_cliente ? `<h3>Observações</h3><p style="margin:0">${escapar(o.observacoes_cliente)}</p>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+/* ==================================================================
+   Tela: dados para a nota
+   ================================================================== */
+
+function telaNota() {
+  const o = acharOrcamento(estado.numeroAberto);
+  const nome = estado.documentoAberto;
+  if (!o) return `<div class="pagina"><p class="vazio">Orçamento não encontrado.</p></div>`;
+
+  if (nome === "cartorio") {
+    return `
+      <div class="pagina">
+        <div class="faixa">
+          <h1>Dados para a nota</h1>
+          <div class="faixa-botoes"><button type="button" class="secundario" data-voltar-orcamento="${o.numero}">Voltar ao orçamento</button></div>
+        </div>
+        <div class="painel">
+          <p style="margin:0">O documento de cartório não gera nota fiscal, porque o valor é pago a terceiro e não é receita da empresa. A nota sai apenas sobre o documento de tradução.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  const doc = o.documentos.traducao;
+  const cliente = acharCliente(o.cliente_id) || {};
+  const end = cliente.endereco || {};
+
+  const faltando = [
+    ["CPF ou CNPJ", cliente.cpf_cnpj], ["logradouro", end.logradouro], ["número", end.numero],
+    ["bairro", end.bairro], ["cidade", end.cidade], ["UF", end.estado], ["CEP", end.cep],
+  ].filter(([, v]) => !v).map(([r]) => r);
+
+  const descricao = doc.itens.map(it => (Number(it.quantidade) !== 1 ? it.quantidade + "x " : "") + it.descricao).join("\n");
+
+  const campos = [
+    ["Tomador", cliente.nome],
+    ["CPF ou CNPJ", cliente.cpf_cnpj],
+    ["CEP", end.cep],
+    ["Logradouro", end.logradouro],
+    ["Número", end.numero],
+    ["Complemento", end.complemento],
+    ["Bairro", end.bairro],
+    ["Município", end.cidade],
+    ["UF", end.estado],
+    ["E-mail", cliente.email],
+    ["Descrição do serviço", descricao],
+    ["Valor do serviço", moeda(doc.total)],
+  ];
+
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>Dados para a nota — ${o.numero}</h1>
+        <div class="faixa-botoes"><button type="button" class="secundario" data-voltar-orcamento="${o.numero}">Voltar ao orçamento</button></div>
+      </div>
+
+      <div class="recado"><p>Os campos aparecem na ordem em que o Emissor Nacional pede. Clique em qualquer valor para copiar. O portal não aceita importação de planilha, então a emissão continua sendo feita à mão, e o que o sistema tira daqui é o erro de ler numa tela e digitar em outra.</p></div>
+
+      ${faltando.length ? `<div class="divergencia">Falta no cadastro do cliente: ${faltando.join(", ")}.</div>` : ""}
+
+      <div class="painel">
+        <div class="rolagem">
+          <table class="copiavel">
+            <tbody>
+              ${campos.map(([rotulo, valor]) => `
+                <tr>
+                  <th>${rotulo}</th>
+                  <td class="para-copiar" data-copiar="${escapar(valor || "")}">${valor ? escapar(valor).replace(/\n/g, "<br>") : '<span class="vazio" style="padding:0">vazio</span>'}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+        <p class="nota-rodape" id="aviso-copia">Clique num valor para copiar.</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ==================================================================
+   Tela: clientes
+   ================================================================== */
+
+function telaClientes() {
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>Clientes</h1>
+        <div class="faixa-botoes"><span class="quem">${estado.clientes.length} cadastrados</span></div>
+      </div>
+
+      <div class="painel">
+        <div class="rolagem">
+          <table>
+            <thead><tr><th>Nome</th><th>CPF ou CNPJ</th><th>Cidade</th><th>Cadastro</th><th></th></tr></thead>
+            <tbody>
+              ${estado.clientes.map(c => {
+                const end = c.endereco || {};
+                const completo = c.cpf_cnpj && end.logradouro && end.numero && end.bairro && end.cidade && end.estado && end.cep;
+                return `<tr>
+                  <td>${escapar(c.nome)}</td>
+                  <td class="numero">${escapar(c.cpf_cnpj) || "<span class='vazio' style='padding:0'>falta</span>"}</td>
+                  <td>${escapar(end.cidade || "")}</td>
+                  <td><span class="selo ${completo ? "selo-ok" : "selo-parado"}">${completo ? "completo" : "incompleto"}</span></td>
+                  <td class="direita"><button type="button" class="secundario" data-cliente="${c.id}">Abrir ficha</button></td>
+                </tr>`;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function telaCliente() {
+  const c = acharCliente(estado.numeroAberto);
+  if (!c) return `<div class="pagina"><p class="vazio">Cliente não encontrado.</p></div>`;
+  const end = c.endereco || {};
+  const meus = estado.orcamentos.filter(o => o.cliente_id === c.id);
+
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>${escapar(c.nome)}</h1>
+        <div class="faixa-botoes"><button type="button" class="secundario" data-ir="clientes">Voltar à lista</button></div>
+      </div>
+
+      <section class="painel">
+        <h2>Cadastro</h2>
+        <div class="linha">
+          <div><label for="f-doc">CPF ou CNPJ</label><input id="f-doc" value="${escapar(c.cpf_cnpj)}" data-cliente-campo="cpf_cnpj"></div>
+          <div><label for="f-email">E-mail</label><input id="f-email" value="${escapar(c.email)}" data-cliente-campo="email"></div>
+          <div><label for="f-tel">Telefone</label><input id="f-tel" value="${escapar(c.telefone)}" data-cliente-campo="telefone"></div>
+        </div>
+        <div class="linha">
+          <div><label for="f-log">Logradouro</label><input id="f-log" value="${escapar(end.logradouro)}" data-endereco-campo="logradouro"></div>
+          <div class="estreito"><label for="f-num">Número</label><input id="f-num" value="${escapar(end.numero)}" data-endereco-campo="numero"></div>
+          <div class="estreito"><label for="f-comp">Complemento</label><input id="f-comp" value="${escapar(end.complemento)}" data-endereco-campo="complemento"></div>
+        </div>
+        <div class="linha">
+          <div><label for="f-bairro">Bairro</label><input id="f-bairro" value="${escapar(end.bairro)}" data-endereco-campo="bairro"></div>
+          <div><label for="f-cidade">Cidade</label><input id="f-cidade" value="${escapar(end.cidade)}" data-endereco-campo="cidade"></div>
+          <div class="estreito"><label for="f-uf">UF</label><input id="f-uf" value="${escapar(end.estado)}" data-endereco-campo="estado"></div>
+          <div class="estreito"><label for="f-cep">CEP</label><input id="f-cep" value="${escapar(end.cep)}" data-endereco-campo="cep"></div>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Orçamentos deste cliente</h2>
+        ${meus.length ? `
+        <div class="rolagem">
+          <table>
+            <thead><tr><th>Número</th><th>Entrega</th><th class="direita">Total</th><th>Etapas</th><th></th></tr></thead>
+            <tbody>
+              ${meus.map(o => `<tr>
+                <td class="numero">${o.numero}</td>
+                <td>${dataBonita(o.entrega) || "sem data"}</td>
+                <td class="direita numero">${moeda(o.totais.geral)}</td>
+                <td>${Object.entries(o.etapas).map(([d, e]) => `<span class="selo selo-${d}">${ETAPAS_MAPA[e]}</span>`).join(" ")}</td>
+                <td class="direita"><button type="button" class="secundario" data-abrir="${o.numero}">Abrir</button></td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>` : `<p class="vazio">Nenhum orçamento ainda.</p>`}
+      </section>
+    </div>
+  `;
+}
+
+/* ==================================================================
+   Tela: serviços
+   ================================================================== */
+
+const ROTULO_CATEGORIA = {
+  documento: "Documento (tradução)",
+  parceiro_servico: "Serviço de parceiro",
+  modificador: "Modificador",
+  cartorio: "Cartório (terceiro)",
+  diligencia: "Diligência",
+  despesa: "Despesa reembolsável",
+};
+
+function telaServicos() {
+  const podeEditar = estado.perfil === "isabella";
+
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>Serviços</h1>
+        <div class="faixa-botoes"><span class="quem">${estado.servicos.filter(s => s.ativo).length} ativos de ${estado.servicos.length}</span></div>
+      </div>
+
+      ${!podeEditar ? `<div class="recado"><p>No perfil da Gabrielly os preços aparecem, mas a edição da tabela fica com a Isabella. Troque o perfil no canto do cabeçalho para ver a diferença.</p></div>` : ""}
+
+      <div class="painel">
+        <div class="rolagem">
+          <table>
+            <thead><tr><th>Descrição</th><th>Categoria</th><th>Vai para a coluna</th><th class="direita">Preço</th><th>Estado</th></tr></thead>
+            <tbody>
+              ${estado.servicos.map(s => {
+                const coluna = s.categoria === "diligencia"
+                  ? (s.chave === CHAVE_DILIGENCIA_ENVIO ? "Diligência Envio" : "Diligência Cartório")
+                  : CATEGORIA_PARA_COLUNA[s.categoria];
+                return `<tr data-categoria="${s.categoria}">
+                  <td>${escapar(s.descricao)}</td>
+                  <td>${ROTULO_CATEGORIA[s.categoria]}</td>
+                  <td>${coluna}</td>
+                  <td class="direita numero">${podeEditar
+                    ? `<input class="na-linha numero" type="number" min="0" step="0.01" value="${s.preco}" data-preco="${s.id}" aria-label="Preço de ${escapar(s.descricao)}">`
+                    : moeda(s.preco)}</td>
+                  <td>${podeEditar
+                    ? `<button type="button" class="secundario" data-ativar="${s.id}">${s.ativo ? "Desativar" : "Ativar"}</button>`
+                    : `<span class="selo ${s.ativo ? "selo-ok" : "selo-parado"}">${s.ativo ? "ativo" : "inativo"}</span>`}</td>
+                </tr>`;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ==================================================================
+   Tela: faturamento de parceiros
+   ================================================================== */
+
+function telaFaturamento() {
+  const parceiro = estado.parceiroEscolhido;
+  const mes = estado.mesEscolhido;
+
+  const doParceiro = estado.orcamentos.filter(o => o.parceiro === parceiro && (o.entrega || "").startsWith(mes));
+  const dentro = doParceiro.filter(o => o.aprovado);
+  const fora = doParceiro.filter(o => !o.aprovado);
+
+  const total = arredondar(dentro.reduce((s, o) => s + (o.documentos.traducao ? o.documentos.traducao.total : 0), 0));
+
+  return `
+    <div class="pagina">
+      <div class="faixa">
+        <h1>Faturamento de parceiros</h1>
+      </div>
+
+      ${estado.recado ? `<div class="recado"><p>${escapar(estado.recado)}</p></div>` : ""}
+
+      <section class="painel">
+        <div class="linha">
+          <div>
+            <label for="sel-parceiro">Parceiro</label>
+            <select id="sel-parceiro" data-campo-fatura="parceiroEscolhido">
+              ${PARCEIROS.map(p => `<option value="${escapar(p)}" ${p === parceiro ? "selected" : ""}>${escapar(p)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="estreito">
+            <label for="sel-mes">Mês</label>
+            <select id="sel-mes" data-campo-fatura="mesEscolhido">
+              <option value="2026-09" ${mes === "2026-09" ? "selected" : ""}>Setembro 2026</option>
+              <option value="2026-10" ${mes === "2026-10" ? "selected" : ""}>Outubro 2026</option>
+            </select>
+          </div>
+          <div class="botao-fim"><button type="button" data-gerar-fatura="1">Gerar fatura</button></div>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Entram na fatura</h2>
+        ${dentro.length ? `
+        <div class="rolagem">
+          <table>
+            <thead><tr><th>Número</th><th>Cliente</th><th>Entrega</th><th class="direita">Valor da tradução</th></tr></thead>
+            <tbody>
+              ${dentro.map(o => `<tr>
+                <td class="numero">${o.numero}</td>
+                <td>${escapar((acharCliente(o.cliente_id) || {}).nome || "")}</td>
+                <td>${dataBonita(o.entrega)}</td>
+                <td class="direita numero">${moeda(o.documentos.traducao ? o.documentos.traducao.total : 0)}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        <div class="total-linha"><span>Total da fatura</span><span class="numero">${moeda(total)}</span></div>
+        ` : `<p class="vazio">Nenhum orçamento aprovado deste parceiro neste mês.</p>`}
+      </section>
+
+      <section class="painel">
+        <h2>Fora da fatura</h2>
+        ${fora.length ? `
+        <div class="rolagem">
+          <table>
+            <thead><tr><th>Número</th><th>Cliente</th><th>Motivo</th></tr></thead>
+            <tbody>
+              ${fora.map(o => `<tr>
+                <td class="numero">${o.numero}</td>
+                <td>${escapar((acharCliente(o.cliente_id) || {}).nome || "")}</td>
+                <td>Ainda em proposta, sem aprovação</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>` : `<p class="vazio">Nada de fora neste mês.</p>`}
+      </section>
+    </div>
+  `;
+}
+
+/* ==================================================================
+   Desenho e eventos
+   ================================================================== */
+
+const TELAS = {
+  quadro: telaQuadro,
+  orcamento: telaOrcamento,
+  documento: telaDocumento,
+  nota: telaNota,
+  clientes: telaClientes,
+  cliente: telaCliente,
+  servicos: telaServicos,
+  faturamento: telaFaturamento,
+};
+
+function desenhar() {
+  desenharMenu();
+  document.getElementById("perfil").value = estado.perfil;
+  document.getElementById("tela").innerHTML = (TELAS[estado.tela] || telaQuadro)();
+  ligarArrastar();
+}
+
+/* ----- busca de serviço por digitação ----- */
+
+function sugerir(texto) {
+  const caixa = document.getElementById("sugestoes");
+  if (!caixa) return;
+
+  const termo = texto.trim().toLowerCase();
+  if (!termo) { caixa.innerHTML = ""; return; }
+
+  const achados = estado.servicos
+    .filter(s => s.ativo && s.descricao.toLowerCase().includes(termo))
+    .slice(0, 8);
+
+  caixa.innerHTML = achados.length
+    ? `<div class="lista-flutuante">${achados.map(s => `
+        <div class="opcao" data-escolher="${s.id}">
+          <span>${escapar(s.descricao)}</span>
+          <span class="numero">${moeda(s.preco)}</span>
+        </div>`).join("")}</div>`
+    : `<div class="lista-flutuante"><div class="opcao">Nenhum serviço com esse texto.</div></div>`;
+}
+
+function escolherServico(id) {
+  const s = estado.servicos.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById("busca-servico").value = s.descricao;
+  document.getElementById("busca-servico").dataset.escolhido = s.id;
+  document.getElementById("unitario").value = s.preco;
+  document.getElementById("sugestoes").innerHTML = "";
+  document.getElementById("qtd").focus();
+}
+
+function adicionarItem() {
+  const campo = document.getElementById("busca-servico");
+  const id = campo.dataset.escolhido;
+  const s = estado.servicos.find(x => x.id === id);
+
+  if (!s) { avisar("Escolha um serviço da lista antes de adicionar."); desenhar(); return; }
+
+  const quantidade = Number(document.getElementById("qtd").value) || 1;
+  const unitario = Number(document.getElementById("unitario").value) || 0;
+  const desconto = Number(document.getElementById("desconto").value) || 0;
+  const tipo = document.getElementById("tipo-desconto").value;
+
+  const novo = {
+    chave_servico: s.chave, descricao: s.descricao, categoria: s.categoria,
+    quantidade, valor_unitario: unitario, desconto, tipo_desconto: tipo, valor_total: 0,
+  };
+
+  estado.rascunho.itens.push(recalcularItem(novo));
+  desenhar();
+  document.getElementById("busca-servico").focus();
+}
+
+function adicionarDespesa() {
+  const descricao = document.getElementById("desc-despesa").value.trim();
+  const valor = Number(document.getElementById("valor-despesa").value) || 0;
+
+  if (!descricao) { avisar("Escreva do que é a despesa, para ela aparecer no orçamento do cliente."); desenhar(); return; }
+
+  estado.rascunho.itens.push(despesa(descricao, valor));
+  desenhar();
+}
+
+/* ----- arrastar cartões ----- */
+
+let arrastando = null;
+
+function ligarArrastar() {
+  document.querySelectorAll('.cartao[draggable="true"]').forEach(cartao => {
+    cartao.addEventListener("dragstart", () => {
+      arrastando = cartao;
+      cartao.classList.add("arrastando");
+    });
+    cartao.addEventListener("dragend", () => {
+      cartao.classList.remove("arrastando");
+      document.querySelectorAll(".coluna").forEach(c => c.classList.remove("recebendo", "recusando"));
+      arrastando = null;
+    });
+  });
+
+  document.querySelectorAll(".coluna").forEach(coluna => {
+    coluna.addEventListener("dragover", e => {
+      if (!arrastando) return;
+      e.preventDefault();
+      const aceita = ETAPAS_PERMITIDAS[arrastando.dataset.documento].includes(coluna.dataset.etapa);
+      coluna.classList.toggle("recebendo", aceita);
+      coluna.classList.toggle("recusando", !aceita);
+    });
+    coluna.addEventListener("dragleave", () => coluna.classList.remove("recebendo", "recusando"));
+    coluna.addEventListener("drop", e => {
+      e.preventDefault();
+      coluna.classList.remove("recebendo", "recusando");
+      if (!arrastando) return;
+      moverEtapa(arrastando.dataset.numero, arrastando.dataset.documento, coluna.dataset.etapa);
+    });
+  });
+}
+
+/* ----- cliques ----- */
+
+document.addEventListener("click", e => {
+  const alvo = e.target.closest("[data-ir],[data-novo],[data-abrir],[data-salvar],[data-adicionar],[data-adicionar-despesa],[data-remover],[data-escolher],[data-cliente],[data-ativar],[data-documento],[data-nota],[data-voltar-orcamento],[data-gerar-fatura],[data-copiar]");
+  if (!alvo) return;
+
+  const d = alvo.dataset;
+
+  if (d.ir) { ir(d.ir); return; }
+  if (d.novo) { abrirOrcamento(null); return; }
+  if (d.abrir) { abrirOrcamento(d.abrir); return; }
+  if (d.salvar) { salvarRascunho(); return; }
+  if (d.adicionar) { adicionarItem(); return; }
+  if (d.adicionarDespesa) { adicionarDespesa(); return; }
+  if (d.remover) { estado.rascunho.itens.splice(Number(d.remover), 1); desenhar(); return; }
+  if (d.escolher) { escolherServico(d.escolher); return; }
+  if (d.cliente) { ir("cliente", { numeroAberto: d.cliente }); return; }
+  if (d.documento) { ir("documento", { numeroAberto: estado.rascunho.numero, documentoAberto: d.documento }); return; }
+  if (d.nota) { ir("nota", { numeroAberto: estado.rascunho.numero, documentoAberto: d.nota }); return; }
+  if (d.voltarOrcamento) { abrirOrcamento(d.voltarOrcamento); return; }
+
+  if (d.ativar) {
+    const s = estado.servicos.find(x => x.id === d.ativar);
+    if (s) s.ativo = !s.ativo;
+    desenhar();
+    return;
+  }
+
+  if (d.gerarFatura) {
+    const dentro = estado.orcamentos.filter(o => o.parceiro === estado.parceiroEscolhido && (o.entrega || "").startsWith(estado.mesEscolhido) && o.aprovado);
+    const total = arredondar(dentro.reduce((s, o) => s + (o.documentos.traducao ? o.documentos.traducao.total : 0), 0));
+    avisar(dentro.length
+      ? `Fatura de ${estado.parceiroEscolhido} montada com ${dentro.length} orçamento(s), somando ${moeda(total)}. Na ferramenta de verdade sairiam agora o arquivo em Word e o PDF, a partir do modelo de fatura.`
+      : `Não há orçamento aprovado de ${estado.parceiroEscolhido} neste mês, então não há fatura a gerar.`);
+    desenhar();
+    return;
+  }
+
+  if (d.copiar !== undefined) {
+    const texto = d.copiar;
+    const celula = alvo;
+    const aviso = document.getElementById("aviso-copia");
+
+    const marcar = () => {
+      celula.classList.add("copiada");
+      if (aviso) aviso.textContent = "Copiado.";
+      setTimeout(() => celula.classList.remove("copiada"), 1200);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(marcar).catch(() => {
+        const faixa = document.createRange();
+        faixa.selectNodeContents(celula);
+        const selecao = window.getSelection();
+        selecao.removeAllRanges();
+        selecao.addRange(faixa);
+        if (aviso) aviso.textContent = "O navegador não deixou copiar sozinho. O texto já está selecionado, use Command mais C.";
+      });
+    } else {
+      const faixa = document.createRange();
+      faixa.selectNodeContents(celula);
+      const selecao = window.getSelection();
+      selecao.removeAllRanges();
+      selecao.addRange(faixa);
+      if (aviso) aviso.textContent = "O texto está selecionado, use Command mais C.";
+    }
+  }
+});
+
+/* ----- digitação e seleção ----- */
+
+document.addEventListener("input", e => {
+  const d = e.target.dataset;
+
+  if (e.target.id === "busca-servico") { delete e.target.dataset.escolhido; sugerir(e.target.value); return; }
+
+  if (d.campo && estado.rascunho) { estado.rascunho[d.campo] = e.target.value; return; }
+
+  if (d.editar !== undefined) {
+    const it = estado.rascunho.itens[Number(d.indice)];
+    if (!it) return;
+    it[d.editar] = d.editar === "tipo_desconto" ? e.target.value : Number(e.target.value);
+    recalcularItem(it);
+    const foco = { editar: d.editar, indice: d.indice };
+    desenhar();
+    const volta = document.querySelector(`[data-editar="${foco.editar}"][data-indice="${foco.indice}"]`);
+    if (volta) { volta.focus(); if (volta.select) volta.select(); }
+    return;
+  }
+
+  if (d.preco) {
+    const s = estado.servicos.find(x => x.id === d.preco);
+    if (s) s.preco = Number(e.target.value) || 0;
+    return;
+  }
+
+  if (d.clienteCampo) {
+    const c = acharCliente(estado.numeroAberto);
+    if (c) c[d.clienteCampo] = e.target.value;
+    return;
+  }
+
+  if (d.enderecoCampo) {
+    const c = acharCliente(estado.numeroAberto);
+    if (c) c.endereco[d.enderecoCampo] = e.target.value;
+    return;
+  }
+});
+
+document.addEventListener("change", e => {
+  const d = e.target.dataset;
+
+  if (e.target.id === "perfil") { estado.perfil = e.target.value; desenhar(); return; }
+
+  if (e.target.classList.contains("mover") && e.target.value) {
+    const cartao = e.target.closest(".cartao");
+    moverEtapa(cartao.dataset.numero, cartao.dataset.documento, e.target.value);
+    return;
+  }
+
+  if (d.campoFatura) { estado[d.campoFatura] = e.target.value; estado.recado = ""; desenhar(); return; }
+
+  if (d.campo && estado.rascunho) { estado.rascunho[d.campo] = e.target.value; desenhar(); return; }
+});
+
+const botaoRecomecar = document.getElementById("recomecar");
+
+botaoRecomecar.addEventListener("click", () => {
+  if (botaoRecomecar.dataset.ok !== "1") {
+    botaoRecomecar.dataset.ok = "1";
+    botaoRecomecar.textContent = "Confirmar: apagar alterações";
+    setTimeout(() => {
+      botaoRecomecar.dataset.ok = "";
+      botaoRecomecar.textContent = "Restaurar exemplo";
+    }, 4000);
+    return;
+  }
+  botaoRecomecar.dataset.ok = "";
+  botaoRecomecar.textContent = "Restaurar exemplo";
+  comecar();
+  desenhar();
+});
+
+comecar();
+desenhar();
+</script>
+
+</body>
+</html>
