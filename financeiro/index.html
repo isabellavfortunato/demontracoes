@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Financeiro demonstrativo</title>
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJGaW5hbmNlaXJvIj4KICA8dGl0bGU+RmluYW5jZWlybzwvdGl0bGU+CiAgPCEtLSBSJCBicmFuY28gc29icmUgdGVsaGEsIG5vIG1lc21vIGRlc2VuaG8gZG8gw61jb25lIGRlIGPDqWR1bGEgZGUgcmVmZXLDqm5jaWE6CiAgICAgICBmdW5kbyBjb20gbGV2ZSBkZWdyYWTDqiwgdW0gYW5lbCBjbGFybyBlIGFzIGxldHJhcyBlbSBzZXJpZmEgbmVncml0YS4KICAgICAgIEFzIGxldHJhcyBlc3TDo28gZW0gY29udG9ybm8gdmV0b3JpYWwsIGVudMOjbyBuw6NvIGRlcGVuZGVtIGRlIGZvbnRlIGluc3RhbGFkYS4gLS0+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRlbGhhIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0MyNjAzQSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNBMjQ4MkEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjciIGZpbGw9InVybCgjdGVsaGEpIi8+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTIuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utb3BhY2l0eT0iLjM1IiBzdHJva2Utd2lkdGg9IjEuMSIvPgogIDxnIGZpbGw9IiNGRkZGRkYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYuNjUwIDIwLjY2NCkgc2NhbGUoMC4wMDYyNDggLTAuMDA2MjQ4KSI+PHBhdGggdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAwKSIgZD0iTTEwODcgNzI5UTExNzYgNzE2IDEyMzcuMCA2NzAuMFExMjk4IDYyNCAxMzQzIDUzN0wxNTYxIDEyMUgxNzE0VjBIMTIyM0w5ODUgNDUxUTkxNiA1OTEgODY3LjUgNjI5LjVRODE5IDY2OCA3MzMgNjY4SDY3MlYxMjFIODY0VjBIOTZWMTIxSDI4N1YxMzcySDk2VjE0OTNIOTQ4UTEyMDggMTQ5MyAxMzQ5LjUgMTM4OC41UTE0OTEgMTI4NCAxNDkxIDEwOTJRMTQ5MSA5MzYgMTM5MC41IDg0NS41UTEyOTAgNzU1IDEwODcgNzI5Wk02NzIgNzg4SDgwM1E5NDMgNzg4IDEwMTguNSA4NjQuMFExMDk0IDk0MCAxMDk0IDEwODFRMTA5NCAxMjIyIDEwMTguNSAxMjk3LjBROTQzIDEzNzIgODAzIDEzNzJINjcyWiIvPjxwYXRoIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2NDIgMCkiIGQ9Ik0xOTUgNTlWMzUwSDMxNVEzMzIgMjE2IDQxMC41IDE1MC4wUTQ4OSA4NCA2MzMgODRINjQ3VjQ4OVEzOTggNTQ0IDI5MC4wIDYzOS4wUTE4MiA3MzQgMTgyIDg5N1ExODIgMTA3NyAzMDQuNSAxMTgwLjVRNDI3IDEyODQgNjQ3IDEyOTBWMTU1OUg3NjhWMTI5MFE4ODAgMTI4NCA5ODIuNSAxMjYyLjVRMTA4NSAxMjQxIDExODIgMTIwMlY5MzBIMTA2MVExMDQ1IDEwNDYgOTY4LjUgMTExMC41UTg5MiAxMTc1IDc2OCAxMTc3VjgwNVExMDM3IDc0NiAxMTQ2LjAgNjQ2LjVRMTI1NSA1NDcgMTI1NSAzNjdRMTI1NSAxODIgMTEyOC41IDc5LjVRMTAwMiAtMjMgNzY4IC0yOVYtMjk5SDY0N1YtMjlRNTM3IC0yNyA0MjQuMCAtNS4wUTMxMSAxNyAxOTUgNTlaTTY0NyAxMTc4UTU2MiAxMTY3IDUxMi41IDExMjUuMFE0NjMgMTA4MyA0NjMgMTAyMlE0NjMgOTUyIDUwNS41IDkwOS4wUTU0OCA4NjYgNjQ3IDgzOFpNNzY4IDg0UTg2OSA5NSA5MjEuMCAxMzguNVE5NzMgMTgyIDk3MyAyNTZROTczIDMzMCA5MjQuNSAzNzguMFE4NzYgNDI2IDc2OCA0NTdaIi8+PC9nPgo8L3N2Zz4K">
+<meta name="apple-mobile-web-app-title" content="Financeiro">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#5B3E8E">
+<meta name="description" content="Demonstração, com dados fictícios, de um painel de despesas e conciliação bancária de uma empresa de tradução.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#EDEAE4; --papel-alto:#F6F4F0; --tinta:#1A1D26; --tinta-fraca:#6B6A66;
+  --hairline:#CFCAC0; --carimbo:#5B3E8E; --entrada:#2E6B5E; --saida:#A33B32;
+  --neutro:#8A6B1F; --venda:#1F5673;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.folha{max-width:1120px;margin:0 auto;padding:36px 28px 80px}
+
+/* cabeçalho */
+.cabecalho{border-bottom:2px solid var(--tinta);padding-bottom:16px;margin-bottom:22px}
+.sobrenome{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--tinta-fraca);margin-bottom:9px}
+h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(28px,5vw,42px);
+  line-height:1.05;margin:0 0 6px;letter-spacing:-.01em}
+.periodo{font-size:14px;color:var(--tinta-fraca);margin:0}
+
+/* carregar arquivos */
+.entrada-arquivos{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:14px;margin-bottom:16px}
+.solta{border:1.5px dashed var(--hairline);border-radius:4px;background:var(--papel-alto);
+  padding:18px;cursor:pointer;transition:.18s;display:block}
+.solta:hover,.solta.sobre{border-color:var(--carimbo);background:#F0ECF6}
+.solta.pronto{border-style:solid;border-color:var(--entrada)}
+.solta .titulo{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--carimbo);display:block;margin-bottom:8px}
+.solta.pronto .titulo{color:var(--entrada)}
+.solta .ajuda{font-size:13px;color:var(--tinta-fraca);display:block}
+.solta .arquivo{font-size:13.5px;display:block;margin-top:5px;word-break:break-all}
+.solta input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+.memoria{font-size:12.5px;color:var(--tinta-fraca);margin:0 0 14px;display:flex;gap:10px;
+  align-items:baseline;flex-wrap:wrap}
+.link{background:none;border:none;padding:0;font:inherit;color:var(--carimbo);
+  text-decoration:underline;cursor:pointer}
+.link:hover{color:var(--tinta)}
+.aviso{font-size:13px;padding:10px 13px;border-radius:3px;margin:0 0 16px;border:1px solid}
+.aviso.erro{color:var(--saida);border-color:var(--saida);background:#F7EFEE}
+.aviso.ok{color:var(--entrada);border-color:var(--entrada);background:#EDF3F1}
+.aviso.atencao{color:var(--neutro);border-color:var(--neutro);background:#F7F2E4}
+#aviso{display:flex;align-items:flex-start;gap:12px}
+#aviso.escondido{display:none}
+#aviso span{flex:1}
+.aviso .fechar{background:none;border:none;color:inherit;font-size:20px;line-height:1;
+  padding:0 2px;cursor:pointer;opacity:.7}
+.aviso .fechar:hover{opacity:1}
+/* a caixa do arquivo que falta chama atenção no lugar de um aviso em cada mês */
+/* nuvem */
+.nuvem{margin:0 0 10px}
+.nuvem-linha{font-size:12.5px;color:var(--tinta-fraca);margin:0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.nuvem-ponto{width:8px;height:8px;border-radius:50%;background:var(--hairline);display:inline-block;flex:0 0 auto;transform:translateY(-1px)}
+.nuvem[data-situacao=ok] .nuvem-ponto{background:var(--entrada)}
+.nuvem[data-situacao=salvando] .nuvem-ponto{background:var(--neutro)}
+.nuvem[data-situacao=erro] .nuvem-ponto{background:var(--saida)}
+.nuvem-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.nuvem-form.escondido{display:none}
+.nuvem-form input{flex:1 1 200px;background:var(--papel-alto);border:1px solid var(--hairline);border-radius:3px;
+  padding:9px 12px;font-family:inherit;font-size:14px;color:var(--tinta)}
+.nuvem-form input:focus{outline:2px solid var(--carimbo);outline-offset:1px}
+.nuvem-erro{flex-basis:100%;font-size:12.5px;color:var(--saida)}
+.nuvem-erro:empty{display:none}
+
+/* devoluções sem par */
+#caixaDevolucoes{display:flex;flex-direction:column;gap:8px}
+#caixaDevolucoes.escondido{display:none}
+.devolucao-titulo{margin:0 0 2px}
+.devolucao{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;
+  border-top:1px solid rgba(138,107,31,.25);padding-top:8px}
+.devolucao-texto{flex:1 1 260px;color:var(--tinta)}
+.devolucao select{border:1px solid var(--neutro);background:var(--papel-alto);color:var(--tinta);
+  font-style:normal;padding:6px 8px}
+.conferidas{font-size:12.5px;color:var(--tinta-fraca);margin:-6px 0 16px;display:flex;flex-direction:column;gap:6px}
+.conferidas.escondido{display:none}
+.conferidas > span{display:inline}
+.conferidas .devolucao{border-top-color:var(--hairline)}
+.solta.falta{border-color:var(--neutro);border-style:dashed;background:#F7F2E4}
+.solta.falta .titulo{color:var(--neutro)}
+.solta .pedido{display:none;font-size:13px;color:var(--neutro);font-weight:500;margin-top:6px}
+.solta.falta .pedido{display:block}
+
+/* abas */
+.barra-abas{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;
+  border-bottom:1px solid var(--hairline);margin-bottom:26px}
+.barra-abas .abas{border-bottom:none;margin-bottom:0}
+.acoes-impressao{display:flex;align-items:center;gap:12px;padding-bottom:8px;flex-wrap:wrap}
+.caixinha{font-size:12.5px;color:var(--tinta-fraca);display:flex;align-items:center;gap:6px;cursor:pointer}
+.caixinha input{accent-color:var(--carimbo);cursor:pointer}
+.so-papel{display:none}
+.abas{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;border-bottom:1px solid var(--hairline);padding-bottom:0}
+.abas button{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;padding:11px 17px;border:none;border-bottom:2.5px solid transparent;
+  background:transparent;color:var(--tinta-fraca);cursor:pointer;transition:.18s}
+.abas button:hover{color:var(--tinta)}
+.abas button[aria-selected=true]{color:var(--tinta);border-bottom-color:var(--carimbo)}
+.abas button:disabled{opacity:.35;cursor:not-allowed}
+
+/* abas dos meses */
+.abas-meses{display:flex;gap:4px;overflow-x:auto;margin:0 0 18px;padding-bottom:2px;
+  scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.abas-meses button{flex:0 0 auto;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;
+  letter-spacing:.12em;padding:9px 13px 8px;border:1.5px solid var(--hairline);border-radius:3px;
+  background:var(--papel-alto);color:var(--tinta-fraca);cursor:pointer;transition:.18s;line-height:1.2;
+  display:flex;flex-direction:column;align-items:center;min-width:64px}
+.abas-meses button small{font-size:9.5px;letter-spacing:.04em;text-transform:none;margin-top:3px;color:var(--neutro)}
+.abas-meses button:hover{border-color:var(--carimbo);color:var(--tinta)}
+.abas-meses button[aria-selected=true]{background:var(--carimbo);border-color:var(--carimbo);color:var(--papel)}
+.abas-meses button[aria-selected=true] small{color:var(--papel)}
+.abas-meses button.sem-extrato{border-style:dashed}
+
+/* demonstração */
+.demo-barra{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin:-12px 0 22px;padding:10px 0;border-bottom:1px dashed var(--hairline)}
+.demo-selo{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--papel);background:var(--carimbo);border-radius:999px;padding:6px 13px}
+#btnRestaurar[data-ok="1"]{background:var(--saida);border-color:var(--saida);color:var(--papel)}
+#nuvem,#memoria,#btnSalvar,#btnCarregar{display:none!important}
+.solta{cursor:default}
+
+/* cards */
+.carimbos{display:grid;grid-template-columns:repeat(auto-fit,minmax(194px,1fr));gap:14px;margin-bottom:14px}
+.carimbo{background:var(--papel-alto);border:1.5px solid var(--carimbo);border-radius:3px;padding:17px;
+  box-shadow:inset 0 0 0 3px var(--papel-alto),inset 0 0 0 4.5px var(--carimbo)}
+.carimbo .rotulo{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--carimbo);margin-bottom:10px;display:block}
+.carimbo .cifra{font-family:"Fraunces",Georgia,serif;font-size:clamp(20px,2.9vw,27px);font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em;display:block}
+.carimbo .nota{font-size:12px;color:var(--tinta-fraca);margin-top:8px;display:block}
+.carimbo.verde{border-color:var(--entrada);box-shadow:inset 0 0 0 3px var(--papel-alto),inset 0 0 0 4.5px var(--entrada)}
+.carimbo.verde .rotulo,.carimbo.verde .cifra{color:var(--entrada)}
+.carimbo.vermelho{border-color:var(--saida);box-shadow:inset 0 0 0 3px var(--papel-alto),inset 0 0 0 4.5px var(--saida)}
+.carimbo.vermelho .rotulo,.carimbo.vermelho .cifra{color:var(--saida)}
+.carimbo.azul{border-color:var(--venda);box-shadow:inset 0 0 0 3px var(--papel-alto),inset 0 0 0 4.5px var(--venda)}
+.carimbo.azul .rotulo,.carimbo.azul .cifra{color:var(--venda)}
+.rodape-carimbos{font-size:12.5px;color:var(--tinta-fraca);border-top:1px solid var(--hairline);
+  padding-top:12px;margin:0 0 42px}
+
+h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+.subtitulo{font-size:13.5px;color:var(--tinta-fraca);margin:0 0 18px;max-width:66ch}
+section{margin-bottom:46px}
+
+/* conciliação */
+.ponte{display:flex;flex-direction:column}
+.ponte .passo{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:14px;
+  padding:9px 0;border-bottom:1px solid var(--hairline)}
+.ponte .passo .texto{font-size:14px}
+.ponte .passo .texto small{display:block;font-size:12px;color:var(--tinta-fraca);margin-top:2px}
+.ponte .passo .cifra{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ponte .passo.base .texto,.ponte .passo.base .cifra{font-weight:600}
+.ponte .passo.menos .cifra{color:var(--saida)}
+.ponte .passo.mais .cifra{color:var(--entrada)}
+.ponte .passo.fecho{border-bottom:none;border-top:1.5px solid var(--tinta);margin-top:4px;padding-top:11px}
+.ponte .passo.fecho .texto,.ponte .passo.fecho .cifra{font-weight:600}
+
+/* gráfico de barras horizontal */
+.grafico{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.linha-barra{display:grid;grid-template-columns:minmax(120px,210px) 1fr minmax(96px,auto);
+  align-items:center;gap:14px;padding:5px 0;border-radius:3px;cursor:default}
+.linha-barra:hover{background:var(--papel-alto)}
+.linha-barra .rotulo-cat{font-size:13.5px;line-height:1.3}
+.linha-barra .rotulo-cat small{display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px;color:var(--tinta-fraca);margin-top:1px}
+.linha-barra .pista{height:19px;background:transparent;position:relative}
+.linha-barra .marca{height:100%;background:var(--carimbo);border-radius:0 4px 4px 0;
+  transition:width .3s ease;min-width:3px}
+.linha-barra.pendente .marca{background:var(--neutro)}
+.linha-barra.atual .marca{background:var(--venda)}
+.linha-barra.atual .rotulo-cat{font-weight:600}
+.linha-barra.clicavel{cursor:pointer}
+.linha-barra .cifra-cat{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px;
+  font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.dica{position:fixed;z-index:20;background:var(--tinta);color:var(--papel);
+  font-size:12.5px;line-height:1.45;padding:8px 11px;border-radius:4px;max-width:280px;
+  pointer-events:none;box-shadow:0 4px 14px rgba(26,29,38,.22)}
+.dica b{font-weight:600}
+.dica .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* barras */
+.barras{display:flex;flex-direction:column;gap:9px}
+.barra{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:14px;
+  border-bottom:1px solid var(--hairline);padding-bottom:7px}
+.barra .nome{font-size:14px}
+.barra .qtd{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--tinta-fraca);margin-left:8px}
+.barra .val{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px;font-variant-numeric:tabular-nums}
+.barra .trilho{grid-column:1/-1;height:4px;background:var(--hairline);border-radius:2px;overflow:hidden}
+.barra .preenche{height:100%;background:var(--carimbo);border-radius:2px;transition:width .3s ease}
+.barra .preenche.venda{background:var(--venda)}
+
+/* ferramentas e tabelas */
+.ferramentas{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+input[type=search]{flex:1 1 220px;min-width:170px;background:var(--papel-alto);border:1px solid var(--hairline);
+  border-radius:3px;padding:9px 12px;font-family:inherit;font-size:14px;color:var(--tinta)}
+input[type=search]:focus{outline:2px solid var(--carimbo);outline-offset:1px}
+.legenda{font-size:12.5px;color:var(--tinta-fraca)}
+.botao{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:9px 14px;border:1.5px solid var(--carimbo);background:transparent;
+  color:var(--carimbo);border-radius:3px;cursor:pointer;transition:.18s}
+.botao:hover{background:var(--carimbo);color:var(--papel)}
+
+table{width:100%;border-collapse:collapse}
+thead th{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--tinta-fraca);font-weight:500;text-align:left;
+  padding:0 10px 9px;border-bottom:1.5px solid var(--tinta);white-space:nowrap}
+thead th.num{text-align:right}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--hairline);vertical-align:middle}
+tbody tr:hover{background:var(--papel-alto)}
+td.data{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;color:var(--tinta-fraca);white-space:nowrap}
+td.desc{font-size:14px;min-width:180px}
+td.desc .tipo{display:block;font-size:11.5px;color:var(--tinta-fraca)}
+td.obs{font-size:12.5px;color:var(--tinta-fraca)}
+td.valor{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px;text-align:right;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+td.valor.mais{color:var(--entrada)}
+td.valor.menos{color:var(--saida)}
+select{font-family:inherit;font-size:13px;color:var(--tinta);background:transparent;
+  border:1px solid transparent;border-bottom:1px dashed var(--hairline);border-radius:2px;
+  padding:4px 6px;max-width:100%;cursor:pointer}
+select:hover{border-color:var(--hairline);background:var(--papel-alto)}
+select:focus{outline:2px solid var(--carimbo);outline-offset:1px}
+select.pendente{color:var(--neutro);font-style:italic}
+select.seletor-mes{border:1.5px solid var(--hairline);border-radius:3px;padding:8px 11px;font-size:13.5px}
+
+.vazio{padding:24px 10px;color:var(--tinta-fraca);font-size:14px}
+.nota-fim{margin-top:30px;padding-top:16px;border-top:1px solid var(--hairline);
+  font-size:12.5px;color:var(--tinta-fraca);max-width:76ch}
+.escondido{display:none}
+.tabela-rolagem{overflow-x:auto}
+
+@media (max-width:640px){
+  .folha{padding:24px 15px 60px}
+  td.data{font-size:12px}
+  thead th{font-size:9px;letter-spacing:.1em}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- relatório impresso ---------- */
+@page{margin:14mm 12mm}
+@media print{
+  :root{--papel:#fff;--papel-alto:#fff}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;font-size:10.5pt}
+  .folha{max-width:none;padding:0}
+
+  /* fora do papel: tudo que só serve para operar a página */
+  .demo-barra,.cabecalho,.entrada-arquivos,.nuvem,#aviso,.memoria,.barra-abas,.abas-meses,.ferramentas,.escondido{display:none!important}
+  .aviso{font-size:8.5pt;padding:6px 9px}
+  select{display:none!important}
+
+  .so-papel{display:block;border-bottom:2px solid var(--tinta);padding-bottom:12px;margin-bottom:18px}
+  .so-papel h1{font-size:25pt;margin-bottom:4px}
+  .so-papel .periodo{font-size:9.5pt}
+
+  /* as duas telas saem juntas, independentemente da aba aberta */
+  #telaMes,#telaVendas{display:block!important}
+  #telaVendas{break-before:page}
+
+  section{margin-bottom:18px;break-inside:auto}
+  h2{break-after:avoid}
+  .linha-barra,.passo{break-inside:avoid}
+  h2{font-size:13pt;margin-bottom:3px}
+  .subtitulo{font-size:9pt;margin-bottom:10px;max-width:none}
+  .carimbos{grid-template-columns:repeat(5,1fr);gap:7px;break-inside:avoid}
+  .carimbo{padding:9px;box-shadow:none;border-width:1pt}
+  .carimbo .rotulo{font-size:6.5pt;letter-spacing:.1em;margin-bottom:5px}
+  .carimbo .cifra{font-size:13pt}
+  .carimbo .nota{font-size:7.5pt;margin-top:4px}
+  .rodape-carimbos{font-size:8.5pt;margin-bottom:22px}
+
+  .ponte .passo{padding:5px 0}
+  .ponte .passo .texto{font-size:9.5pt}
+  .ponte .passo .texto small{font-size:8pt}
+  .ponte .passo .cifra{font-size:9.5pt}
+
+  .barra{padding-bottom:4px}
+  .barra .nome,.barra .val{font-size:9.5pt}
+  .barra .qtd{font-size:8pt}
+  .dica{display:none!important}
+  .linha-barra{padding:3px 0;grid-template-columns:minmax(110px,180px) 1fr minmax(86px,auto)}
+  .linha-barra:hover{background:none}
+  .linha-barra .rotulo-cat{font-size:9pt}
+  .linha-barra .rotulo-cat small{font-size:7.5pt}
+  .linha-barra .pista{height:13px}
+  .linha-barra .cifra-cat{font-size:9pt}
+
+  table{font-size:9pt;break-inside:auto}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+  thead th{font-size:6.5pt;padding-bottom:5px}
+  tbody td{padding:4px 7px}
+  td.data,td.desc,td.valor,td.obs{font-size:9pt}
+  td.desc .tipo{font-size:7.5pt}
+  /* a categoria vira texto puro, já que o seletor não imprime */
+  td .cat-papel{display:inline!important}
+  .nota-fim{font-size:8pt;margin-top:16px}
+  .vazio{font-size:9pt}
+
+  /* as tabelas longas só entram quando a pessoa pede */
+  body:not(.com-tabelas) #secSaidas,
+  body:not(.com-tabelas) #secEntradas,
+  body:not(.com-tabelas) #secPessoal{display:none!important}
+  .so-tela{display:none!important}
+}
+.cat-papel{display:none}
+</style>
+</head>
+<body>
+<div class="folha">
+
+  <div class="demo-barra">
+    <span class="demo-selo">Demonstração com dados fictícios</span>
+    <button type="button" class="botao" id="btnRestaurar">Restaurar exemplo</button>
+  </div>
+
+  <header class="cabecalho">
+    <span class="sobrenome">Banco Inter &middot; Tradutora Exemplo Ltda</span>
+    <h1>Financeiro</h1>
+    <p class="periodo">Painel de despesas e conciliação bancária de uma empresa de tradução inventada. O extrato do Inter e a planilha de status de clientes já vêm carregados com dados fictícios de janeiro a outubro. Escolha o mês nas abas, troque categorias e confira as devoluções: nada é salvo, e tudo volta ao exemplo quando a página é recarregada.</p>
+  </header>
+
+  <div class="entrada-arquivos">
+    <label class="solta" id="zonaExtrato">
+      <span class="titulo">1 &middot; Extrato do Inter</span>
+      <span class="ajuda">Arraste aqui ou clique para escolher. Aceita .csv e .ofx, baixados direto do Inter.</span>
+      <span class="arquivo" id="nomeExtrato"></span>
+      <span class="pedido">Falta este arquivo para ver as despesas e fechar a conciliação.</span>
+      <input type="file" id="arqExtrato" accept=".csv,.ofx,.txt">
+    </label>
+    <label class="solta" id="zonaPlanilha">
+      <span class="titulo">2 &middot; Status clientes</span>
+      <span class="ajuda">Arraste aqui ou clique para escolher. É o .xlsx com as abas dos meses.</span>
+      <span class="arquivo" id="nomePlanilha"></span>
+      <input type="file" id="arqPlanilha" accept=".xlsx,.xlsm">
+    </label>
+  </div>
+
+  <div class="nuvem escondido" id="nuvem">
+    <p class="nuvem-linha">
+      <span class="nuvem-ponto" aria-hidden="true"></span>
+      <span id="nuvemTexto"></span>
+      <button type="button" class="link" id="btnNuvem">entrar</button>
+    </p>
+    <form class="nuvem-form escondido" id="formNuvem" autocomplete="on">
+      <input type="email" id="nuvemEmail" placeholder="E-mail" autocomplete="username" required aria-label="E-mail">
+      <input type="password" id="nuvemSenha" placeholder="Senha" autocomplete="current-password" required aria-label="Senha">
+      <button type="submit" class="botao" id="nuvemEntrar">Entrar</button>
+      <button type="button" class="link" id="nuvemCancelar">cancelar</button>
+      <span class="nuvem-erro" id="nuvemErro" role="alert"></span>
+    </form>
+  </div>
+
+  <p class="memoria escondido" id="memoria">
+    <span id="memoriaTexto"></span>
+    <button type="button" class="link" id="btnEsquecer">esquecer estes dados</button>
+  </p>
+
+  <div class="aviso escondido" id="aviso" role="status">
+    <span id="avisoTexto"></span>
+    <button type="button" class="fechar" id="avisoFechar" aria-label="Fechar aviso">&times;</button>
+  </div>
+
+  <nav class="abas-meses" id="abasMeses" role="tablist" aria-label="Mês"></nav>
+
+  <div class="barra-abas">
+    <div class="abas" role="tablist">
+      <button type="button" id="abaMes" role="tab" aria-selected="true" disabled>Despesas</button>
+      <button type="button" id="abaVendas" role="tab" aria-selected="false" disabled>Conciliação</button>
+    </div>
+    <div class="acoes-impressao">
+      <label class="caixinha"><input type="checkbox" id="optTabelas"> incluir as tabelas completas</label>
+      <button type="button" class="botao" id="btnImprimir" disabled>Imprimir relatório</button>
+    </div>
+  </div>
+
+  <!-- Só aparece no papel, para o relatório ter capa e data. -->
+  <div class="so-papel" id="capa">
+    <span class="sobrenome">Tradutora Exemplo Ltda &middot; Banco Inter &middot; dados fictícios</span>
+    <h1 id="capaTitulo">Relatório mensal</h1>
+    <p class="periodo" id="capaNota"></p>
+  </div>
+
+  <p class="aviso atencao escondido" id="semExtrato"></p>
+
+  <!-- ================= ABA DESPESAS ================= -->
+  <div id="telaMes" class="escondido">
+    <section class="carimbos" aria-label="Números do mês">
+      <div class="carimbo verde">
+        <span class="rotulo">Dinheiro que entrou</span>
+        <span class="cifra" id="cEnt">&mdash;</span>
+        <span class="nota" id="nEnt"></span>
+      </div>
+      <div class="carimbo azul">
+        <span class="rotulo">Vendido no mês</span>
+        <span class="cifra" id="cVenda">&mdash;</span>
+        <span class="nota" id="nVenda"></span>
+      </div>
+      <div class="carimbo azul">
+        <span class="rotulo">Vendido no mês anterior</span>
+        <span class="cifra" id="cVendaAnt">&mdash;</span>
+        <span class="nota" id="nVendaAnt"></span>
+      </div>
+      <div class="carimbo vermelho">
+        <span class="rotulo">Saiu em despesas</span>
+        <span class="cifra" id="cSai">&mdash;</span>
+        <span class="nota" id="nSai"></span>
+      </div>
+      <div class="carimbo">
+        <span class="rotulo">Pix para a conta pessoal</span>
+        <span class="cifra" id="cPes">&mdash;</span>
+        <span class="nota" id="nPes"></span>
+      </div>
+    </section>
+    <p class="rodape-carimbos" id="rodape"></p>
+    <p class="aviso atencao escondido" id="avisoParcial"></p>
+    <div class="aviso atencao escondido" id="caixaDevolucoes"></div>
+    <div class="conferidas escondido" id="conferidas"></div>
+
+    <section>
+      <h2>Despesas por categoria</h2>
+      <p class="subtitulo" id="subGrafico"></p>
+      <div class="grafico" id="grafico" role="img" aria-label="Despesas do mês por categoria"></div>
+      <div class="dica" id="dica" hidden aria-hidden="true"></div>
+    </section>
+
+    <section id="secSaidas">
+      <h2>Lista de despesas</h2>
+      <p class="subtitulo so-tela">Trocar a categoria de um favorecido muda todos os lançamentos dele de uma vez, em todos os meses, e o gráfico acima se refaz na hora. Na demonstração, nada é guardado.</p>
+      <div class="ferramentas">
+        <input type="search" id="buscaSaida" placeholder="Buscar por favorecido ou categoria" aria-label="Buscar despesa">
+        <button type="button" class="botao" id="btnSalvar">Salvar categorias</button>
+        <button type="button" class="botao" id="btnCarregar">Carregar categorias</button>
+        <input type="file" id="arqCategorias" accept="application/json,.json" hidden>
+        <span class="legenda" id="contaSaida"></span>
+      </div>
+      <div class="tabela-rolagem">
+        <table>
+          <thead><tr><th>Data</th><th>Favorecido</th><th>Categoria</th><th class="num">Valor</th></tr></thead>
+          <tbody id="corpoSaida"></tbody>
+        </table>
+      </div>
+      <p class="vazio escondido" id="vazioSaida">Nenhuma linha corresponde à busca.</p>
+    </section>
+
+    <section id="secPessoal">
+      <h2>Pix entre a conta da empresa e a sua conta pessoal</h2>
+      <p class="subtitulo">Fica fora das despesas da empresa, porque não é custo do negócio. Aparece aqui só para a conta do mês fechar.</p>
+      <div class="tabela-rolagem">
+        <table>
+          <thead><tr><th>Data</th><th>Sentido</th><th class="num">Valor</th></tr></thead>
+          <tbody id="corpoPes"></tbody>
+        </table>
+      </div>
+      <p class="vazio escondido" id="vazioPes">Nenhum pix para a conta pessoal neste mês.</p>
+    </section>
+
+    <p class="nota-fim" id="notaFim"></p>
+  </div>
+
+  <!-- ================= ABA CONCILIAÇÃO ================= -->
+  <div id="telaVendas" class="escondido">
+    <section class="carimbos" aria-label="Conciliação do mês">
+      <div class="carimbo azul">
+        <span class="rotulo">Vendido no mês</span>
+        <span class="cifra" id="kVenda">&mdash;</span>
+        <span class="nota" id="kVendaNota"></span>
+      </div>
+      <div class="carimbo verde">
+        <span class="rotulo">Entrou na conta</span>
+        <span class="cifra" id="kEnt">&mdash;</span>
+        <span class="nota" id="kEntNota"></span>
+      </div>
+      <div class="carimbo">
+        <span class="rotulo">Diferença entre os dois</span>
+        <span class="cifra" id="kDif">&mdash;</span>
+        <span class="nota" id="kDifNota">Explicada passo a passo logo abaixo</span>
+      </div>
+      <div class="carimbo vermelho">
+        <span class="rotulo">A receber de parceiros</span>
+        <span class="cifra" id="kParceiro">&mdash;</span>
+        <span class="nota" id="kParceiroNota"></span>
+      </div>
+    </section>
+    <p class="rodape-carimbos" id="kRodape"></p>
+    <p class="aviso atencao escondido" id="avisoPlanilha"></p>
+
+    <section id="secaoPonte">
+      <h2>Conciliação entre o que foi vendido e o que entrou</h2>
+      <p class="subtitulo">Como o pagamento acontece na aprovação, os dois números só se separam por três motivos: o parceiro acerta no mês seguinte, o cartão pelo link cai 14 dias depois e o Correio entra na conta sem ser venda.</p>
+      <div class="ponte" id="ponte"></div>
+    </section>
+
+    <section id="secEntradas">
+      <h2>Entradas, linha a linha</h2>
+      <p class="subtitulo so-tela">Quase toda entrada é pagamento de cliente. A observação só aparece quando o dinheiro comprovadamente não é receita, como repasse para o Cora ou devolução.</p>
+      <div class="ferramentas">
+        <input type="search" id="buscaEnt" placeholder="Buscar por pagador" aria-label="Buscar entrada">
+        <span class="legenda" id="contaEnt"></span>
+      </div>
+      <div class="tabela-rolagem">
+        <table>
+          <thead><tr><th>Data</th><th>Pagador</th><th>Observação</th><th class="num">Valor</th></tr></thead>
+          <tbody id="corpoEnt"></tbody>
+        </table>
+      </div>
+      <p class="vazio escondido" id="vazioEnt">Nenhuma linha corresponde à busca.</p>
+    </section>
+
+    <section id="secParceiros">
+      <h2>Parceiros a receber</h2>
+      <p class="subtitulo">O que cada parceiro fechou no mês escolhido, que entra no caixa no mês seguinte. A última coluna procura o primeiro nome do parceiro nas entradas do mês seguinte, então serve para orientar a cobrança e não para dar baixa.</p>
+      <p class="legenda" id="contaParceiro"></p>
+      <div class="tabela-rolagem">
+        <table>
+          <thead><tr><th>Parceiro</th><th class="num">Orçamentos</th><th class="num">Fechado</th><th class="num">Envios</th><th class="num" id="thEncontrado">Encontrado no mês seguinte</th></tr></thead>
+          <tbody id="corpoParceiro"></tbody>
+        </table>
+      </div>
+      <p class="vazio escondido" id="vazioParceiro">Nenhum parceiro com trabalho fechado nesse mês.</p>
+    </section>
+
+    <section id="secVendasAno">
+      <h2>Vendas mês a mês</h2>
+      <p class="subtitulo">Tradução mais diligência de cartório e de envio, pela data de aprovação, que é a data em que o cliente paga. A taxa de cartório fica fora, porque é repasse ao notário. O mês escolhido aparece destacado, e clicar em uma barra abre aquele mês.</p>
+      <div class="grafico" id="graficoVendas" role="img" aria-label="Vendas por mês"></div>
+    </section>
+
+    <p class="nota-fim">Vendas contadas pela data de aprovação em todas as abas da planilha, inclusive quando o orçamento foi aprovado em um mês e registrado na aba de outro. Orçamentos cancelados ficam fora, e o mesmo orçamento repetido em duas abas é contado uma vez só.</p>
+  </div>
+
+<script>
+/* ================= DEMONSTRAÇÃO =================
+   Dados fictícios de uma empresa de tradução inventada, a Tradutora Exemplo Ltda.
+   Nada é salvo: o extrato e a planilha são montados aqui, na hora, sempre iguais,
+   e o botão Restaurar exemplo (ou recarregar a página) volta tudo ao começo. */
+
+/* Nuvem desligada na demonstração. */
+const Nuvem = {
+  usuario: null, configurada: () => false, iniciar: () => false,
+  sair: async () => {}, entrar: async () => {}, explicar: () => '', aoMudarUsuario: () => {},
+};
+
+
+/* Núcleo de cálculo do painel. Não toca na tela: recebe texto e devolve números,
+   para poder ser testado sozinho e para a interface ficar só com a apresentação.
+
+   O extrato é lido inteiro, com todos os meses que vierem no arquivo, e o painel
+   de cada mês é montado sob demanda por painelDoMes. Assim um extrato de janeiro
+   a outubro vira dez meses navegáveis, em vez de a página escolher um só. */
+
+const CONTA_PESSOAL = ['marina exemplo dias'];
+const REGRA_EMPRESA = /tradutora exemplo ltda/;
+/* Código do banco de quem está do outro lado do pix, como aparece no extrato
+   ("Cp :31872495-..."). É o que separa as contas da própria empresa. */
+const BANCO_C6 = '31872495';
+const BANCO_CORA = '37880206';
+const CARTAO_C6 = 'Cartão de crédito (link C6)';
+const RETORNO_CORA = 'Retorno do Cora';
+const OUTRA_CONTA = 'Conta da empresa em outro banco';
+const SOBRA_DEVOLUCAO = 'Sobra de centavos de devolução';
+const NAO_RECEITA = ['Repasse para o Cora', 'Transferência para o C6', 'Devolução', 'Pagamento de cartão', RETORNO_CORA, SOBRA_DEVOLUCAO];
+/* Diferença máxima aceita entre o valor original e a devolução, e quantos dias
+   antes da devolução o original pode estar, para os dois formarem par. */
+const TOLERANCIA_DEVOLUCAO = 0.10;
+const DIAS_DEVOLUCAO = 31;
+const VALORES_TRANSPORTE = [5, 6, 1.5];
+
+/* A primeira regra que casa vence, então as específicas vêm antes. */
+const REGRAS = [
+  [/devol/, 'Devolução'],
+  [REGRA_EMPRESA, 'Repasse para o Cora'],
+  [/mercado pago/, 'Pagamento de cartão'],
+  [/camila rocha prado|diego matos freire/, 'Salário'],
+  [/correios e telegrafos/, 'Envios'],
+  [/livia martins costa/, 'Tradução externa'],
+  [/cartorio exemplo/, 'Cartório'],
+  [/silva e ramos advogados/, 'Jurídico'],
+  [/contabil prisma/, 'Contabilidade'],
+  [/telefonica bras/, 'Telefonia e internet'],
+  [/google cloud/, 'Tecnologia e software'],
+  [/ifood pago/, 'Alimentação'],
+  [/99 tecnologia|uber/, 'Transporte'],
+  [/imobiliaria horizonte/, 'Aluguel'],
+  [/receita federal/, 'Impostos e tarifas'],
+];
+
+const CATEGORIAS = [
+  'A confirmar', 'Salário', 'Envios', 'Tradução externa', 'Cartório', 'Jurídico',
+  'Contabilidade', 'Telefonia e internet', 'Tecnologia e software', 'Papelaria e limpeza',
+  'Alimentação', 'Transporte', 'Aluguel', 'Impostos e tarifas', 'Marketing',
+  'Pagamento de cartão', 'Repasse para o Cora', 'Transferência para o C6', 'Devolução',
+  'Antecipação de lucros', 'Outros',
+];
+
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const ABAS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+
+const semAcento = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const arred = n => Math.round(n * 100) / 100;
+const chaveDe = (ano, mes) => ano + '-' + String(mes).padStart(2, '0');
+const nomeDoMes = chave => { const [a, m] = chave.split('-'); return MESES[Number(m) - 1] + ' de ' + a; };
+
+/* ---------- leitura do extrato ---------- */
+
+/* O Inter exporta ora em UTF-8, ora em ANSI (windows-1252). Lido como UTF-8, o
+   arquivo ANSI vira texto com caracteres de substituição e o cabeçalho deixa de
+   ser reconhecido, então testamos a codificação em vez de supor. */
+function decodificar(bytes) {
+  if (typeof bytes === 'string') return bytes;
+  const dados = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(dados);
+  } catch (e) {
+    return new TextDecoder('windows-1252').decode(dados);
+  }
+}
+
+/* O cabeçalho pode vir com ou sem acento, e o acento pode ter chegado corrompido.
+   Por isso procuramos as peças do nome, e não o nome exato. */
+function pareceCabecalho(linha) {
+  const t = semAcento(linha);
+  return /\bdata\b/.test(t) && /lan[a-zÀ-ÿ�]*amento/.test(t);
+}
+
+/* O extrato do Inter sempre sai com ponto e vírgula, porque a vírgula é o
+   separador decimal. Se o arquivo chegou com vírgula separando os campos, ele
+   passou pelo Excel e os valores ficaram ambíguos: R$ 38.899,40 vira três
+   pedaços. Nesse caso é mais honesto recusar do que entregar número errado. */
+function conferirSeparador(linha) {
+  const pontoEVirgula = (linha.match(/;/g) || []).length;
+  if (pontoEVirgula >= 3) return;
+  throw new Error('Este CSV está com vírgula separando as colunas, o que acontece quando o ' +
+    'arquivo é aberto e salvo de novo pelo Excel. Os valores ficam ambíguos e eu prefiro ' +
+    'não adivinhar. Baixe o extrato de novo no Inter e carregue sem abrir no Excel, ou use o OFX.');
+}
+
+/* "Cp :31872495-NOME" traz o código do banco da outra ponta. */
+const bancoDe = texto => ((String(texto).match(/Cp\s*:\s*(\d{6,8})/) || [])[1] || '');
+
+function lerCSV(bytes) {
+  const texto = decodificar(bytes).replace(/^﻿/, '');
+  const linhas = texto.split(/\r?\n/);
+  const inicio = linhas.findIndex(pareceCabecalho);
+  if (inicio < 0) {
+    const amostra = linhas.filter(l => l.trim()).slice(0, 3).join(' / ').slice(0, 120);
+    throw new Error('Não achei a linha de cabeçalho com Data e Lançamento. ' +
+      'Confira se é o extrato da conta corrente, e não a fatura do cartão. ' +
+      'As primeiras linhas do arquivo são: ' + (amostra || '(arquivo vazio)'));
+  }
+
+  conferirSeparador(linhas[inicio]);
+  const saida = [];
+  for (const linha of linhas.slice(inicio + 1)) {
+    if (!linha.trim()) continue;
+    const p = linha.split(';');
+    if (p.length < 4) continue;
+    const bruto = p[3].trim();
+    if (!bruto) continue;
+    const valor = Number(bruto.replace(/\./g, '').replace(',', '.'));
+    if (!Number.isFinite(valor)) continue;
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(p[0].trim())) continue;
+    saida.push({ data: p[0].trim(), hist: p[1].trim(), desc: p[2].trim(), valor,
+      banco: bancoDe(p[1] + ' ' + p[2]) });
+  }
+  if (!saida.length) {
+    throw new Error('Achei o cabeçalho, mas nenhuma linha de lançamento depois dele. ' +
+      'O arquivo pode estar vazio ou ter sido salvo em outro formato pelo Excel.');
+  }
+  return saida;
+}
+
+function lerOFX(bytes) {
+  const texto = decodificar(bytes);
+  const campo = (bloco, tag) => {
+    const achado = bloco.match(new RegExp('<' + tag + '>(.*?)[\\r\\n<]'));
+    return achado ? achado[1].trim() : '';
+  };
+  const saida = [];
+  const blocos = texto.match(/<STMTTRN>[\s\S]*?<\/STMTTRN>/g) || [];
+  for (const bloco of blocos) {
+    const data = campo(bloco, 'DTPOSTED').slice(0, 8);
+    const valor = campo(bloco, 'TRNAMT');
+    if (data.length !== 8 || !valor) continue;
+    const memo = campo(bloco, 'MEMO');
+    // O histórico do CSV corresponde ao que vem antes dos dois pontos no MEMO.
+    const hist = memo.includes(':') ? memo.split(':')[0].trim() : memo.trim();
+    saida.push({
+      data: `${data.slice(6, 8)}/${data.slice(4, 6)}/${data.slice(0, 4)}`,
+      hist, desc: campo(bloco, 'NAME') || memo, valor: Number(valor), banco: bancoDe(memo),
+    });
+  }
+  if (!saida.length) throw new Error('Não achei nenhum lançamento nesse OFX.');
+  return saida;
+}
+
+function lerExtrato(nome, bytes) {
+  if (/\.(xlsx|xls|pdf|docx|zip)$/i.test(nome)) {
+    throw new Error('Este formato não serve para o extrato. Baixe no Inter em CSV ou OFX.');
+  }
+  return /\.ofx$/i.test(nome) ? lerOFX(bytes) : lerCSV(bytes);
+}
+
+/* ---------- regras de tratamento ---------- */
+
+/* Movimentação dentro da própria conta. A verificação é pelo histórico, nunca
+   pelo nome do destinatário: o nome completo da Portoseg contém a palavra
+   investimento e causaria falso positivo. */
+function interno(reg) {
+  const hist = semAcento(reg.hist);
+  const desc = semAcento(reg.desc);
+  if (hist === 'aplicacao' || hist === 'resgate') return true;
+  if (hist === 'estorno' && desc.trim() === 'aplicacao') return true;
+  return desc.includes('cdb') || desc.includes('cofrinho');
+}
+
+/* Remove a reversão junto com o lançamento original. Deixar só um dos lados
+   infla entrada ou saída. O que sobra sem par pode ser devolução parcial.
+   Roda sobre o arquivo inteiro, porque a devolução pode cair no mês seguinte ao
+   do pagamento original, e nesse caso os dois saem, cada um do seu mês.
+
+   O par é procurado em duas passadas. Primeiro o valor exato; depois, se não
+   houver, um valor que difira em até 10 centavos, porque o banco às vezes
+   devolve 1 centavo a menos (entrou R$ 2.384,71 e voltou R$ 2.384,70). Nesse
+   segundo caso a diferença fica como um lançamento próprio de centavos, para o
+   total do mês continuar batendo com o saldo do banco. Em qualquer caso vale o
+   original mais próximo antes da devolução, com no máximo 31 dias. */
+function tirarEstornos(regs) {
+  const fora = new Set();
+  const orfaos = [];
+  const sobras = [];
+  const dias = r => { const [d, m, a] = r.data.split('/').map(Number); return Date.UTC(a, m - 1, d) / 86400000; };
+  const procura = (reg, i, tolerancia) => {
+    let par = -1, melhor = Infinity;
+    for (let j = 0; j < regs.length; j++) {
+      if (j === i || fora.has(j)) continue;
+      const o = regs[j];
+      if (semAcento(o.hist).includes('devolvid')) continue;
+      if (o.desc !== reg.desc || o.valor * reg.valor >= 0) continue;
+      if (Math.abs(Math.abs(o.valor) - Math.abs(reg.valor)) > tolerancia) continue;
+      const distancia = dias(reg) - dias(o);
+      if (distancia >= 0 && distancia <= DIAS_DEVOLUCAO && distancia < melhor) { melhor = distancia; par = j; }
+    }
+    return par;
+  };
+  regs.forEach((reg, i) => {
+    if (!semAcento(reg.hist).includes('devolvid') || fora.has(i)) return;
+    let par = procura(reg, i, 0.005);
+    if (par < 0) par = procura(reg, i, TOLERANCIA_DEVOLUCAO + 0.005);
+    if (par < 0) { orfaos.push(reg); return; }
+    fora.add(i); fora.add(par);
+    const resto = arred(regs[par].valor + reg.valor);
+    if (Math.abs(resto) >= 0.005) {
+      sobras.push({ data: reg.data, hist: 'Sobra de devolução', desc: reg.desc, valor: resto, banco: reg.banco, sobra: true });
+    }
+  });
+  return { limpos: regs.filter((_, i) => !fora.has(i)).concat(sobras), removidos: fora.size, orfaos };
+}
+
+function categorizar(reg) {
+  if (VALORES_TRANSPORTE.includes(Math.abs(reg.valor)) && semAcento(reg.hist).includes('pix')) return 'Transporte';
+  const alvo = semAcento(reg.desc);
+  // A conta da empresa no C6 recebendo é transferência, e não repasse para o Cora.
+  if (REGRA_EMPRESA.test(alvo) && reg.banco === BANCO_C6) return 'Transferência para o C6';
+  for (const [padrao, cat] of REGRAS) if (padrao.test(alvo)) return cat;
+  return 'A confirmar';
+}
+
+const ordena = r => { const [d, m, a] = r.data.split('/'); return a + m + d; };
+const chaveDoRegistro = r => { const [, m, a] = r.data.split('/'); return a + '-' + m; };
+
+/* Lê o arquivo inteiro e deixa pronto para montar qualquer mês. O que sai daqui
+   é o que fica guardado no navegador. */
+function prepararExtrato(nome, bytes) {
+  const todos = lerExtrato(nome, bytes);
+  const operacionais = todos.filter(r => !interno(r));
+  const { limpos, removidos, orfaos } = tirarEstornos(operacionais);
+  limpos.sort((a, b) => ordena(a) < ordena(b) ? -1 : ordena(a) > ordena(b) ? 1 : 0);
+  const meses = [...new Set(todos.map(chaveDoRegistro))].sort();
+  const ultimo = todos.map(ordena).sort().pop();
+  return {
+    formato: 2,
+    registros: limpos,
+    orfaos,
+    meses,
+    ultimoDia: `${ultimo.slice(6, 8)}/${ultimo.slice(4, 6)}/${ultimo.slice(0, 4)}`,
+    diagnostico: { lidos: todos.length, internos: todos.length - operacionais.length, estornos: removidos },
+  };
+}
+
+/* O mês fica parcial quando o extrato termina antes do último dia dele. */
+function parcialAte(base, chave) {
+  const [d, m, a] = base.ultimoDia.split('/');
+  if (a + '-' + m !== chave) return '';
+  const fimDoMes = new Date(Number(a), Number(m), 0).getDate();
+  return Number(d) < fimDoMes ? base.ultimoDia.slice(0, 5) : '';
+}
+
+/* Devolução sem par: a dona da empresa diz o que ela é, e a escolha fica guardada pela
+   chave do lançamento. "empresa" é devolução de um pagamento da empresa, que não
+   é venda nem despesa nova; "pessoal" é dinheiro ligado à conta pessoal, que vai
+   para a tabela dos pix pessoais; "manter" só confirma a classificação de sempre. */
+const DESTINOS_DEVOLUCAO = {
+  empresa: 'Devolução de pagamento da empresa',
+  pessoal: 'Ligada à conta pessoal',
+  manter: 'Deixar como está',
+};
+const chaveDevolucao = r => [r.data, r.desc, arred(r.valor)].join('|');
+
+/* Monta o painel de um mês a partir do extrato preparado. As categorias que a
+   dona da empresa escolheu à mão valem mais do que qualquer regra. */
+function painelDoMes(base, chave, aprendidas = {}, resolucoes = {}) {
+  const doMes = base.registros.filter(r => chaveDoRegistro(r) === chave);
+  const chavesOrfas = new Set(base.orfaos.map(chaveDevolucao));
+  const saidas = [], entradas = [], pessoal = [];
+  for (const reg of doMes) {
+    const item = { data: reg.data, desc: reg.desc, hist: reg.hist, valor: arred(Math.abs(reg.valor)) };
+    const alvo = semAcento(reg.desc);
+    const destino = chavesOrfas.has(chaveDevolucao(reg)) ? resolucoes[chaveDevolucao(reg)] : '';
+    if (destino === 'pessoal') {
+      item.sentido = reg.valor < 0 ? 'saida' : 'entrada';
+      item.nota = 'Devolução ligada à conta pessoal';
+      pessoal.push(item);
+    } else if (destino === 'empresa') {
+      if (reg.valor < 0) { item.cat = 'Devolução'; saidas.push(item); }
+      else { item.via = 'pix'; item.obs = 'Devolução'; entradas.push(item); }
+    } else if (CONTA_PESSOAL.some(n => alvo.includes(n))) {
+      item.sentido = reg.valor < 0 ? 'saida' : 'entrada';
+      pessoal.push(item);
+    } else if (reg.valor < 0) {
+      item.cat = reg.sobra ? 'Devolução' : (aprendidas[item.desc] || categorizar(reg));
+      saidas.push(item);
+    } else {
+      let cat = reg.sobra ? SOBRA_DEVOLUCAO : categorizar(reg);
+      item.via = 'pix';
+      if (REGRA_EMPRESA.test(alvo) && !reg.sobra) {
+        // Entrando com o nome da empresa, o banco diz de onde veio. Do C6 é cliente
+        // pagando no cartão pelo link; do Cora é dinheiro da própria empresa voltando.
+        // Sem o código do banco, como no CSV antigo, vale a regra de sempre: C6.
+        if (reg.banco === BANCO_CORA) cat = RETORNO_CORA;
+        else if (!reg.banco || reg.banco === BANCO_C6) { cat = CARTAO_C6; item.via = 'cartao'; }
+        else { cat = OUTRA_CONTA; item.via = 'outra'; item.banco = reg.banco; }
+      }
+      item.obs = NAO_RECEITA.includes(cat) ? cat : '';
+      entradas.push(item);
+    }
+  }
+
+  const soma = l => arred(l.reduce((a, b) => a + b.valor, 0));
+  const idas = pessoal.filter(i => i.sentido === 'saida');
+  const voltas = pessoal.filter(i => i.sentido === 'entrada');
+  const naoReceita = entradas.filter(i => i.obs);
+  const noCartao = entradas.filter(i => i.via === 'cartao');
+  const [ano, mesNum] = chave.split('-');
+  const doMesOrfaos = base.orfaos.filter(o => chaveDoRegistro(o) === chave)
+    .map(o => ({ ...o, chave: chaveDevolucao(o), destino: resolucoes[chaveDevolucao(o)] || '' }));
+  const orfaos = doMesOrfaos.filter(o => !o.destino);
+  const conferidas = doMesOrfaos.filter(o => o.destino);
+
+  return {
+    chave, mes: nomeDoMes(chave), ano: Number(ano), mesNum: Number(mesNum),
+    parcial: parcialAte(base, chave),
+    cats: CATEGORIAS, saidas, entradas, pessoal, orfaos, conferidas,
+    totais: {
+      entradas: soma(entradas), saidas: soma(saidas),
+      receitaCliente: arred(soma(entradas) - soma(naoReceita)), receitaCartao: soma(noCartao),
+      naoReceita: soma(naoReceita), qtdNaoReceita: naoReceita.length,
+      pessoalIda: soma(idas), pessoalVolta: soma(voltas),
+      qtdEntradas: entradas.length, qtdSaidas: saidas.length, qtdPessoalIda: idas.length,
+    },
+  };
+}
+
+/* Compatibilidade com o uso antigo: devolve o painel do último mês do arquivo. */
+function processarExtrato(nome, bytes, aprendidas = {}) {
+  const base = prepararExtrato(nome, bytes);
+  return painelDoMes(base, base.meses[base.meses.length - 1], aprendidas);
+}
+
+/* ---------- planilha de status de clientes ---------- */
+
+const COL = { apr: 1, cli: 3, orc: 4, status: 6, origem: 10, cart: 13, trad: 14,
+  dilcart: 15, dilenv: 16, correio: 17, total: 18, pgto: 20 };
+
+/* Quando cada venda vira dinheiro na conta. O pagamento acontece na aprovação,
+   com duas exceções: o parceiro acerta no mês seguinte e o cartão pelo link do
+   C6 cai 14 dias depois. */
+function regime(origem, forma) {
+  if (semAcento(origem).startsWith('parceiro')) return 'parceiro';
+  const f = semAcento(forma);
+  if (f.includes('cart') && !f.includes('pix')) return 'cartao';
+  if (f.includes('fatur')) return 'faturado';
+  return 'pix';
+}
+
+/* problemas recebe as linhas com data de aprovação preenchida mas ilegível, para
+   a página avisar em vez de deixar a venda sumir em silêncio. */
+function lerPlanilha(livro, XLSX, problemas = []) {
+  const linhas = [];
+  for (const aba of livro.SheetNames) {
+    const idx = ABAS.indexOf(aba.slice(0, 3).toUpperCase());
+    if (idx < 0 || !/^\w{3}\s*\d{2}$/.test(aba.trim())) continue;
+    const grade = XLSX.utils.sheet_to_json(livro.Sheets[aba], { header: 1, raw: true });
+    grade.slice(1).forEach((linha, i) => {
+      if (!linha) return;
+      const bruto = linha[COL.apr];
+      const data = comoData(bruto);
+      if (!data) {
+        const preenchida = bruto != null && String(bruto).trim() && !/^[-–—\s]*$/.test(String(bruto));
+        if (preenchida) problemas.push({ aba, linha: i + 2, valor: String(bruto), cli: String(linha[COL.cli] || ''), orc: linha[COL.orc] });
+        return;
+      }
+      if (semAcento(linha[COL.status] || '').includes('ancel')) return;
+      const n = c => typeof linha[c] === 'number' ? linha[c] : 0;
+      const venda = arred(n(COL.trad) + n(COL.dilcart) + n(COL.dilenv));
+      linhas.push({
+        aba, cli: String(linha[COL.cli] || ''), orc: linha[COL.orc],
+        ano: data.ano, mes: data.mes, dia: data.dia,
+        origem: String(linha[COL.origem] || ''), pgto: String(linha[COL.pgto] || 'Não informado'),
+        regime: regime(String(linha[COL.origem] || ''), String(linha[COL.pgto] || '')),
+        traducao: n(COL.trad), dilCartorio: n(COL.dilcart), dilEnvio: n(COL.dilenv),
+        correio: n(COL.correio), cartorio: n(COL.cart), venda,
+      });
+    });
+  }
+  // O mesmo orçamento às vezes aparece em duas abas com os mesmos valores.
+  const vistos = new Set(), limpas = [];
+  for (const l of linhas.sort((a, b) => (a.ano * 10000 + a.mes * 100 + a.dia) - (b.ano * 10000 + b.mes * 100 + b.dia))) {
+    const chave = [l.orc, l.venda, l.ano, l.mes, l.dia].join('|');
+    if (vistos.has(chave)) continue;
+    vistos.add(chave); limpas.push(l);
+  }
+  return limpas;
+}
+
+/* O xlsx pode trazer a data como objeto, como texto ou como número de série.
+   Devolve dia, mês e ano já separados. A data em objeto chega da biblioteca com
+   alguns segundos ou minutos de desvio por causa do fuso histórico do Brasil, e
+   perto da meia-noite isso pode jogar o dia 1 para o mês anterior; por isso a
+   data é arredondada para o dia mais próximo antes de ser lida. */
+function comoData(bruto) {
+  if (bruto instanceof Date && !isNaN(bruto)) {
+    const d = new Date(bruto.getTime() + 12 * 3600 * 1000);
+    return { ano: d.getFullYear(), mes: d.getMonth() + 1, dia: d.getDate() };
+  }
+  if (typeof bruto === 'number' && bruto > 20000 && bruto < 80000) {
+    // Número de série do Excel: conta em UTC e lê em UTC, para o fuso não mudar o dia.
+    const d = new Date(Date.UTC(1899, 11, 30 + Math.floor(bruto)));
+    return { ano: d.getUTCFullYear(), mes: d.getUTCMonth() + 1, dia: d.getUTCDate() };
+  }
+  if (typeof bruto === 'string') {
+    const m = bruto.trim().match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+    if (m && Number(m[2]) >= 1 && Number(m[2]) <= 12 && Number(m[1]) >= 1 && Number(m[1]) <= 31) {
+      return { ano: Number(m[3]), mes: Number(m[2]), dia: Number(m[1]) };
+    }
+  }
+  return null;
+}
+
+function vendasDoMes(linhas, ano, mes) {
+  const doMes = linhas.filter(l => l.ano === ano && l.mes === mes);
+  if (!doMes.length) return null;
+  const s = k => arred(doMes.reduce((a, b) => a + b[k], 0));
+  const regimes = {};
+  for (const l of doMes) {
+    regimes[l.regime] = regimes[l.regime] || { qtd: 0, valor: 0 };
+    regimes[l.regime].qtd++;
+    regimes[l.regime].valor = arred(regimes[l.regime].valor + l.venda);
+  }
+  return {
+    venda: s('venda'), traducao: s('traducao'), dilCartorio: s('dilCartorio'),
+    dilEnvio: s('dilEnvio'), correio: s('correio'), cartorio: s('cartorio'),
+    qtd: doMes.length, regimes, linhas: doMes,
+  };
+}
+
+/* O mês anterior ao de referência, para a comparação no card. */
+function mesAnterior(ano, mes) {
+  return mes === 1 ? { ano: ano - 1, mes: 12 } : { ano, mes: mes - 1 };
+}
+
+function resumoAnual(linhas) {
+  const porMes = {};
+  for (const l of linhas) {
+    const k = chaveDe(l.ano, l.mes);
+    porMes[k] = porMes[k] || { venda: 0, qtd: 0, cartorio: 0, correio: 0, parceiro: 0, ano: l.ano, mes: l.mes };
+    porMes[k].venda = arred(porMes[k].venda + l.venda);
+    porMes[k].cartorio = arred(porMes[k].cartorio + l.cartorio);
+    porMes[k].correio = arred(porMes[k].correio + l.correio);
+    if (l.regime === 'parceiro') porMes[k].parceiro = arred(porMes[k].parceiro + l.venda);
+    porMes[k].qtd++;
+  }
+  return Object.keys(porMes).sort().map(k => ({ chave: k, ...porMes[k] }));
+}
+
+/* Quanto cada parceiro fechou em cada mês, para acompanhar o que está a receber. */
+function parceirosPorMes(linhas, ano, mes) {
+  const doMes = linhas.filter(l => l.ano === ano && l.mes === mes && l.regime === 'parceiro');
+  const por = {};
+  for (const l of doMes) {
+    const nome = l.cli || 'Sem nome';
+    por[nome] = por[nome] || { qtd: 0, valor: 0, correio: 0 };
+    por[nome].qtd++;
+    por[nome].valor = arred(por[nome].valor + l.venda);
+    por[nome].correio = arred(por[nome].correio + l.correio);
+  }
+  return Object.keys(por).map(n => ({ nome: n, ...por[n] })).sort((a, b) => b.valor - a.valor);
+}
+
+/* Procura, nas entradas do extrato, lançamentos cujo nome lembre o do parceiro.
+   É uma aproximação por primeiro nome, então serve para orientar a cobrança e
+   não para dar baixa contábil. */
+function recebidoDe(nome, entradas) {
+  const chave = semAcento(nome).split(/\s+/)[0];
+  if (!chave || chave.length < 4) return { valor: 0, qtd: 0 };
+  const achados = entradas.filter(e => semAcento(e.desc).includes(chave));
+  return { valor: arred(achados.reduce((a, b) => a + b.valor, 0)), qtd: achados.length };
+}
+
+
+</script>
+<script>
+/* Interface do Financeiro, versão de demonstração. A conta mora em nucleo.js; aqui só desenhamos.
+
+   O extrato é guardado inteiro e cada mês é montado na hora em que a aba dele é
+   aberta. Por isso tudo na página, das despesas aos parceiros e ao relatório
+   impresso, segue o mês escolhido na fileira de abas do alto. */
+
+const brl = v => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const el = id => document.getElementById(id);
+const plural = (q, um, muitos) => q + (q === 1 ? um : muitos);
+
+const MES_CURTO = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const SIGLA = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+
+const estado = {
+  base: null,          // extrato preparado, com todos os meses
+  planilha: null,      // linhas do Status clientes
+  problemas: [],       // linhas da planilha com data de aprovação ilegível
+  categorias: {},      // escolhas feitas à mão: favorecido -> categoria
+  resolucoes: {},      // devoluções sem par já conferidas: lançamento -> destino
+  revendo: false,      // lista das devoluções conferidas aberta para mudar
+  mesSel: null,        // 'AAAA-MM'
+  painel: null,        // o mês escolhido, montado a partir de base
+  vendas: null, vendasAnteriores: null, mesAnterior: null,
+  aba: 'mes', nomes: {},
+};
+
+/* ---------- avisos ---------- */
+let relogioAviso = null;
+/* Os avisos de confirmação somem sozinhos; os de atenção e de erro ficam até a
+   pessoa fechar no x. */
+function avisar(texto, tipo = 'ok', fixo = false) {
+  const caixa = el('aviso');
+  el('avisoTexto').textContent = texto;
+  caixa.className = 'aviso ' + tipo;
+  clearTimeout(relogioAviso);
+  if (!fixo) relogioAviso = setTimeout(() => caixa.classList.add('escondido'), 7000);
+}
+el('avisoFechar').addEventListener('click', () => {
+  clearTimeout(relogioAviso);
+  el('aviso').classList.add('escondido');
+});
+
+/* ---------- memória do navegador ----------
+   O que você carrega fica guardado nesta máquina, para a página já abrir com os
+   dados do último uso. Nada disso vai para o GitHub nem para servidor nenhum:
+   mora apenas neste navegador, e o botão de esquecer apaga tudo. */
+const BAU = {
+  extrato: 'financeiro-ift-dados-extrato',
+  planilha: 'financeiro-ift-dados-planilha',
+  problemas: 'financeiro-ift-problemas-planilha',
+  nomes: 'financeiro-ift-nomes',
+  categorias: 'financeiro-ift-categorias',
+  devolucoes: 'financeiro-ift-devolucoes',
+  mes: 'financeiro-ift-mes',
+  aba: 'financeiro-ift-aba',
+  carimbos: 'financeiro-ift-carimbos',
+};
+
+function gravar() { return true; } // demonstração: nada é salvo
+function ler() { return null; } // demonstração: nada é lido
+
+function guardarDados() {
+  let ok = true;
+  if (estado.base) ok = gravar(BAU.extrato, estado.base) && ok;
+  if (estado.planilha) {
+    ok = gravar(BAU.planilha, estado.planilha) && ok;
+    gravar(BAU.problemas, estado.problemas);
+  }
+  gravar(BAU.nomes, estado.nomes);
+  gravar(BAU.categorias, estado.categorias);
+  if (!ok) {
+    // Janela anônima ou armazenamento cheio: a página segue funcionando sem memória.
+    avisar('Não consegui guardar os dados neste navegador, então eles valem só enquanto a página estiver aberta. Costuma acontecer em janela anônima.', 'atencao');
+  }
+}
+
+/* Só guarda o que foi escolhido à mão. Uma categoria que a própria regra já dá
+   não é guardada, para que a regra possa melhorar depois sem ficar presa a uma
+   cópia antiga dela. */
+function filtrarEscolhas(mapa) {
+  const limpo = {};
+  for (const [desc, cat] of Object.entries(mapa || {})) {
+    if (!cat || cat === 'A confirmar' || !CATEGORIAS.includes(cat)) continue;
+    if (categorizar({ desc, hist: '', valor: 0, banco: '' }) === cat) continue;
+    limpo[desc] = cat;
+  }
+  return limpo;
+}
+
+/* Versões anteriores guardavam as categorias mês a mês. Elas são reunidas numa
+   memória só, que vale para todos os meses. */
+function migrarCategoriasAntigas() {
+  try {
+    const juntas = {};
+    const apagar = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const chave = localStorage.key(i);
+      if (/^financeiro-ift-[a-zç]+-de-\d{4}$/.test(chave)) {
+        Object.assign(juntas, JSON.parse(localStorage.getItem(chave)) || {});
+        apagar.push(chave);
+      }
+    }
+    if (!apagar.length) return;
+    estado.categorias = Object.assign(filtrarEscolhas(juntas), estado.categorias);
+    apagar.forEach(c => localStorage.removeItem(c));
+    gravar(BAU.categorias, estado.categorias);
+    mudou('escolhas');
+  } catch (e) { /* sem memória disponível */ }
+}
+
+function recuperarDados() {
+  estado.nomes = ler(BAU.nomes) || {};
+  estado.categorias = ler(BAU.categorias) || {};
+  estado.resolucoes = ler(BAU.devolucoes) || {};
+  migrarCategoriasAntigas();
+
+  const base = ler(BAU.extrato);
+  if (base && base.formato === 2) {
+    estado.base = base;
+    marcarZona('zonaExtrato', 'nomeExtrato', estado.nomes.extrato);
+  } else if (base) {
+    // Guardado por uma versão antiga, que só mantinha um mês. Não dá para aproveitar.
+    try { localStorage.removeItem(BAU.extrato); } catch (e) { /* nada a fazer */ }
+    avisar('Esta versão separa o extrato por mês, e o extrato guardado pela versão anterior não serve mais. Carregue o extrato do Inter mais uma vez, de preferência do ano inteiro. As categorias que você corrigiu continuam guardadas.', 'atencao', true);
+  }
+  const planilha = ler(BAU.planilha);
+  if (Array.isArray(planilha) && planilha.length) {
+    estado.planilha = planilha;
+    estado.problemas = ler(BAU.problemas) || [];
+    marcarZona('zonaPlanilha', 'nomePlanilha', estado.nomes.planilha);
+  }
+
+  // Dado guardado antes da nuvem existir ganha o carimbo mais antigo possível:
+  // se a nuvem estiver vazia ele sobe, e se ela já tiver algo, a nuvem vale.
+  const carimbos = ler(BAU.carimbos) || {};
+  for (const item of ITENS_NUVEM) {
+    if (!carimbos[item] && temItem(item)) carimbos[item] = 1;
+  }
+  gravar(BAU.carimbos, carimbos);
+
+  if (!estado.base && !estado.planilha) return;
+  const aba = ler(BAU.aba);
+  if (aba === 'mes' || aba === 'vendas') estado.aba = aba;
+  escolherMes(ler(BAU.mes));
+  mostrarMemoria();
+}
+
+function marcarZona(idZona, idNome, nomeArquivo) {
+  el(idZona).classList.add('pronto');
+  el(idNome).textContent = nomeArquivo || 'arquivo guardado neste navegador';
+}
+
+function mostrarMemoria() {
+  const partes = [];
+  if (estado.base) {
+    const m = estado.base.meses;
+    partes.push('extrato de ' + (m.length > 1
+      ? MES_CURTO[Number(m[0].slice(5)) - 1] + ' a ' + nomeDoMes(m[m.length - 1])
+      : nomeDoMes(m[0])));
+  }
+  if (estado.planilha) partes.push('planilha com ' + estado.planilha.length + ' orçamentos');
+  if (!partes.length) { el('memoria').classList.add('escondido'); return; }
+  el('memoriaTexto').textContent = 'Guardado neste navegador: ' + partes.join(' e ') +
+    '. Carregar um arquivo novo substitui o anterior.';
+  el('memoria').classList.remove('escondido');
+}
+
+el('btnEsquecer').addEventListener('click', async () => {
+  const naNuvem = !!Nuvem.usuario;
+  if (!confirm('Apagar deste navegador o extrato, a planilha e as categorias que você corrigiu?' +
+    (naNuvem ? ' A cópia na nuvem continua guardada, e você sai da conta neste aparelho.' : ''))) return;
+  for (const chave of Object.values(BAU)) {
+    try { localStorage.removeItem(chave); } catch (e) { /* nada a fazer */ }
+  }
+  if (naNuvem) { try { await Nuvem.sair(); } catch (e) { /* segue */ } }
+  location.reload();
+});
+
+/* ---------- nuvem ----------
+   Cada item tem um carimbo com a hora da última mudança, guardado no navegador
+   e na nuvem. Ao entrar, e sempre que a página volta a ficar visível, os dois
+   carimbos são comparados item por item: vale o mais recente. Assim o que você
+   fez no celular aparece no computador, e o contrário também. */
+const ITENS_NUVEM = ['extrato', 'planilha', 'escolhas', 'nomes'];
+let filaNuvem = new Set(), relogioNuvem = null, sincronizando = false, ultimaSinc = 0;
+
+function temItem(item) {
+  if (item === 'extrato') return !!estado.base;
+  if (item === 'planilha') return !!estado.planilha;
+  if (item === 'escolhas') return Object.keys(estado.categorias).length + Object.keys(estado.resolucoes).length > 0;
+  return Object.keys(estado.nomes).length > 0;
+}
+function valorDoItem(item) {
+  if (item === 'extrato') return estado.base;
+  if (item === 'planilha') return { linhas: estado.planilha, problemas: estado.problemas };
+  if (item === 'escolhas') return { categorias: estado.categorias, devolucoes: estado.resolucoes };
+  return estado.nomes;
+}
+function aplicarItem(item, v) {
+  if (!v) return;
+  if (item === 'extrato' && v.formato === 2) { estado.base = v; gravar(BAU.extrato, v); }
+  if (item === 'planilha' && Array.isArray(v.linhas)) {
+    estado.planilha = v.linhas; estado.problemas = v.problemas || [];
+    gravar(BAU.planilha, estado.planilha); gravar(BAU.problemas, estado.problemas);
+  }
+  if (item === 'escolhas') {
+    estado.categorias = v.categorias || {}; estado.resolucoes = v.devolucoes || {};
+    gravar(BAU.categorias, estado.categorias); gravar(BAU.devolucoes, estado.resolucoes);
+  }
+  if (item === 'nomes') { estado.nomes = v || {}; gravar(BAU.nomes, estado.nomes); }
+}
+
+/* Marca que algo mudou neste aparelho e, com a conta aberta, manda para a nuvem
+   alguns segundos depois, juntando mudanças seguidas num envio só. */
+function mudou(...itens) {
+  const carimbos = ler(BAU.carimbos) || {};
+  const agora = Date.now();
+  itens.forEach(i => { carimbos[i] = agora; filaNuvem.add(i); });
+  gravar(BAU.carimbos, carimbos);
+  if (!Nuvem.usuario) return;
+  clearTimeout(relogioNuvem);
+  relogioNuvem = setTimeout(enviarFila, 1500);
+}
+
+async function enviarFila() {
+  if (!Nuvem.usuario || !filaNuvem.size) return;
+  const itens = [...filaNuvem];
+  filaNuvem = new Set();
+  const carimbos = ler(BAU.carimbos) || {};
+  estadoNuvem('salvando');
+  try {
+    await Nuvem.indice();
+    for (const item of itens) if (temItem(item)) await Nuvem.enviar(item, valorDoItem(item), carimbos[item] || Date.now());
+    estadoNuvem('ok');
+  } catch (e) {
+    itens.forEach(i => filaNuvem.add(i));
+    estadoNuvem('erro', Nuvem.explicar(e));
+  }
+}
+
+async function sincronizar() {
+  if (!Nuvem.usuario || sincronizando) return;
+  sincronizando = true;
+  estadoNuvem('salvando');
+  try {
+    const indice = await Nuvem.indice();
+    const carimbos = ler(BAU.carimbos) || {};
+    let baixou = false;
+    for (const item of ITENS_NUVEM) {
+      const naNuvem = (indice[item] && indice[item].carimbo) || 0;
+      const aqui = carimbos[item] || 0;
+      if (naNuvem > aqui) {
+        aplicarItem(item, await Nuvem.baixar(item, indice[item]));
+        carimbos[item] = naNuvem;
+        baixou = true;
+      } else if (aqui > naNuvem && temItem(item)) {
+        await Nuvem.enviar(item, valorDoItem(item), aqui);
+      }
+    }
+    gravar(BAU.carimbos, carimbos);
+    filaNuvem = new Set();
+    ultimaSinc = Date.now();
+    if (baixou) redesenharTudo();
+    estadoNuvem('ok');
+  } catch (e) {
+    estadoNuvem('erro', Nuvem.explicar(e));
+  } finally {
+    sincronizando = false;
+  }
+}
+
+function redesenharTudo() {
+  if (estado.base) marcarZona('zonaExtrato', 'nomeExtrato', estado.nomes.extrato);
+  if (estado.planilha) marcarZona('zonaPlanilha', 'nomePlanilha', estado.nomes.planilha);
+  if (estado.base || estado.planilha) escolherMes(estado.mesSel || ler(BAU.mes));
+  mostrarMemoria();
+}
+
+function estadoNuvem(situacao, detalhe) {
+  const texto = el('nuvemTexto'), botao = el('btnNuvem');
+  el('nuvem').classList.remove('escondido');
+  el('nuvem').dataset.situacao = situacao;
+  if (!Nuvem.configurada()) {
+    texto.textContent = 'A nuvem ainda não foi configurada, então os dados ficam só neste navegador.';
+    botao.hidden = true;
+    return;
+  }
+  botao.hidden = false;
+  const u = Nuvem.usuario;
+  if (!u) {
+    el('nuvem').dataset.situacao = 'fora';
+    texto.textContent = 'Os dados estão só neste navegador. Entre na sua conta para guardar na nuvem e ver em qualquer aparelho.';
+    botao.textContent = 'entrar';
+    return;
+  }
+  botao.textContent = 'sair';
+  const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  if (situacao === 'salvando') texto.textContent = 'Na nuvem como ' + u.email + '. Sincronizando…';
+  else if (situacao === 'erro') texto.textContent = 'Na nuvem como ' + u.email + '. Não consegui sincronizar: ' + detalhe + ' Os dados continuam neste navegador, e tento de novo na próxima mudança.';
+  else texto.textContent = 'Na nuvem como ' + u.email + '. Tudo sincronizado às ' + hora + '.';
+}
+
+el('btnNuvem').addEventListener('click', async () => {
+  if (Nuvem.usuario) {
+    await Nuvem.sair();
+    avisar('Você saiu da conta neste aparelho. Os dados continuam aqui e na nuvem.', 'ok');
+    return;
+  }
+  el('formNuvem').classList.toggle('escondido');
+  if (!el('formNuvem').classList.contains('escondido')) el('nuvemEmail').focus();
+});
+el('nuvemCancelar').addEventListener('click', () => el('formNuvem').classList.add('escondido'));
+el('formNuvem').addEventListener('submit', async e => {
+  e.preventDefault();
+  const botao = el('nuvemEntrar');
+  botao.disabled = true;
+  el('nuvemErro').textContent = '';
+  try {
+    await Nuvem.entrar(el('nuvemEmail').value, el('nuvemSenha').value);
+    el('nuvemSenha').value = '';
+    el('formNuvem').classList.add('escondido');
+  } catch (erro) {
+    el('nuvemErro').textContent = Nuvem.explicar(erro);
+  } finally {
+    botao.disabled = false;
+  }
+});
+
+document.addEventListener('visibilitychange', () => {
+  // Voltando para a página depois de um tempo, busca o que mudou em outro aparelho.
+  if (document.visibilityState === 'visible' && Date.now() - ultimaSinc > 30000) sincronizar();
+});
+
+function ligarNuvem() {
+  if (!Nuvem.iniciar()) { estadoNuvem('desligada'); return; }
+  estadoNuvem('ok');
+  Nuvem.aoMudarUsuario(u => {
+    estadoNuvem('ok');
+    if (u) sincronizar();
+  });
+}
+
+/* ---------- carregar arquivos ---------- */
+function ligarZona(idZona, idInput, aoLer) {
+  const zona = el(idZona), entrada = el(idInput);
+  const processa = arquivo => {
+    if (!arquivo) return;
+    const leitor = new FileReader();
+    leitor.onload = () => {
+      try {
+        aoLer(arquivo.name, leitor.result);
+        zona.classList.add('pronto');
+        zona.querySelector('.arquivo').textContent = arquivo.name;
+        estado.nomes[idZona === 'zonaExtrato' ? 'extrato' : 'planilha'] = arquivo.name;
+        guardarDados();
+        mudou(idZona === 'zonaExtrato' ? 'extrato' : 'planilha', 'nomes');
+        mostrarMemoria();
+      } catch (erro) {
+        avisar('Não consegui ler ' + arquivo.name + '. ' + erro.message, 'erro', true);
+      }
+    };
+    leitor.onerror = () => avisar('O navegador não conseguiu abrir ' + arquivo.name + '.', 'erro', true);
+    leitor.readAsArrayBuffer(arquivo);
+  };
+  entrada.addEventListener('change', e => {
+    processa(e.target.files[0]);
+    // Sem isso, escolher de novo o mesmo arquivo não dispara nada.
+    e.target.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(ev => zona.addEventListener(ev, e => {
+    e.preventDefault(); zona.classList.add('sobre');
+  }));
+  zona.addEventListener('dragleave', e => {
+    if (!zona.contains(e.relatedTarget)) zona.classList.remove('sobre');
+  });
+  zona.addEventListener('drop', e => {
+    e.preventDefault(); zona.classList.remove('sobre');
+    processa(e.dataTransfer.files[0]);
+  });
+}
+
+ligarZona('zonaExtrato', 'arqExtrato', (nome, buffer) => {
+  // Lido como bytes para o núcleo decidir a codificação, já que o Inter exporta
+  // ora em UTF-8, ora em ANSI.
+  const base = prepararExtrato(nome, new Uint8Array(buffer));
+  estado.base = base;
+  // Arquivo novo abre no mês mais recente dele.
+  escolherMes(base.meses[base.meses.length - 1]);
+  const d = base.diagnostico;
+  avisar('Extrato lido: ' + d.lidos + ' lançamentos em ' + plural(base.meses.length, ' mês', ' meses') +
+    ', ' + d.internos + ' de CDB e aplicações fora da conta e ' + d.estornos +
+    ' retirados em pares de estorno. Escolha o mês nas abas do alto.', 'ok');
+});
+
+ligarZona('zonaPlanilha', 'arqPlanilha', (nome, buffer) => {
+  if (typeof XLSX === 'undefined') throw new Error('A biblioteca de planilhas não carregou. Confira a conexão e recarregue a página.');
+  const livro = XLSX.read(new Uint8Array(buffer), { type: 'array', cellDates: true });
+  const problemas = [];
+  const linhas = lerPlanilha(livro, XLSX, problemas);
+  if (!linhas.length) throw new Error('Não achei nenhuma linha com data de aprovação nas abas de meses.');
+  estado.planilha = linhas;
+  estado.problemas = problemas;
+  escolherMes(estado.mesSel);
+  avisar('Planilha lida: ' + linhas.length + ' orçamentos aprovados em ' +
+    plural(resumoAnual(linhas).length, ' mês.', ' meses.'), 'ok');
+});
+
+/* ---------- meses ---------- */
+
+function mesesDisponiveis() {
+  const todos = new Set(estado.base ? estado.base.meses : []);
+  if (estado.planilha) for (const m of resumoAnual(estado.planilha)) todos.add(m.chave);
+  return [...todos].sort();
+}
+
+/* Troca o mês de tudo de uma vez. Sem mês válido, fica o mais recente. */
+function escolherMes(chave) {
+  const meses = mesesDisponiveis();
+  if (!meses.length) return;
+  if (!meses.includes(chave)) {
+    // Preferência pelo último mês que tem extrato, que é o que tem despesas para mostrar.
+    const comExtrato = estado.base ? estado.base.meses : [];
+    chave = comExtrato.length ? comExtrato[comExtrato.length - 1] : meses[meses.length - 1];
+  }
+  estado.mesSel = chave;
+  gravar(BAU.mes, chave);
+  montarMes();
+  desenharAbasMeses();
+  if (estado.painel) desenharMes();
+  desenharVendas();
+  habilitar();
+}
+
+function montarMes() {
+  const k = estado.mesSel;
+  estado.painel = estado.base && estado.base.meses.includes(k)
+    ? painelDoMes(estado.base, k, estado.categorias, estado.resolucoes)
+    : null;
+  const [ano, mes] = k.split('-').map(Number);
+  estado.ref = { ano, mes };
+  if (estado.planilha) {
+    estado.vendas = vendasDoMes(estado.planilha, ano, mes);
+    estado.mesAnterior = mesAnterior(ano, mes);
+    estado.vendasAnteriores = vendasDoMes(estado.planilha, estado.mesAnterior.ano, estado.mesAnterior.mes);
+  } else {
+    estado.vendas = estado.vendasAnteriores = estado.mesAnterior = null;
+  }
+}
+
+function desenharAbasMeses() {
+  const cx = el('abasMeses');
+  cx.innerHTML = '';
+  const meses = mesesDisponiveis();
+  const anos = new Set(meses.map(m => m.slice(0, 4)));
+  for (const k of meses) {
+    const [a, m] = k.split('-');
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', k === estado.mesSel);
+    const temExtrato = estado.base && estado.base.meses.includes(k);
+    const parcial = temExtrato ? parcialDoMes(k) : '';
+    b.textContent = SIGLA[Number(m) - 1] + (anos.size > 1 ? ' ' + a.slice(2) : '');
+    if (parcial) {
+      const s = document.createElement('small');
+      s.textContent = 'até ' + parcial;
+      b.appendChild(s);
+    } else if (!temExtrato && estado.base) {
+      // Só marca o mês sem extrato quando existe extrato; sem nenhum, a caixa do
+      // arquivo já pede o extrato, e a marca em todos os meses seria repetição.
+      const s = document.createElement('small');
+      s.textContent = 'só planilha';
+      b.appendChild(s);
+      b.classList.add('sem-extrato');
+    }
+    b.title = nomeDoMes(k) + (temExtrato ? '' : ', sem extrato carregado para este mês');
+    b.addEventListener('click', () => escolherMes(k));
+    cx.appendChild(b);
+  }
+  // No celular a fileira rola de lado; o mês escolhido fica à vista sem mexer na página.
+  const sel = cx.querySelector('[aria-selected=true]');
+  if (sel) requestAnimationFrame(() => {
+    cx.scrollLeft = Math.max(0, sel.offsetLeft - cx.offsetLeft - (cx.clientWidth - sel.offsetWidth) / 2);
+  });
+}
+
+function parcialDoMes(k) {
+  const [d, m, a] = estado.base.ultimoDia.split('/');
+  if (a + '-' + m !== k) return '';
+  const fim = new Date(Number(a), Number(m), 0).getDate();
+  return Number(d) < fim ? d + '/' + m : '';
+}
+
+function habilitar() {
+  el('abaMes').disabled = !estado.painel;
+  el('abaVendas').disabled = !estado.mesSel;
+  el('btnImprimir').disabled = !estado.mesSel;
+  if (estado.aba === 'mes' && !estado.painel) trocarAba('vendas', false);
+  else trocarAba(estado.aba, false);
+  // Sem extrato nenhum, quem pede o arquivo é a própria caixa de carregar. O aviso
+  // amarelo só aparece quando há extrato, mas ele não cobre o mês escolhido.
+  el('zonaExtrato').classList.toggle('falta', !estado.base && !!estado.planilha);
+  const faltaMes = !!estado.base && !estado.painel && !!estado.mesSel;
+  el('semExtrato').classList.toggle('escondido', !faltaMes);
+  if (faltaMes) {
+    const m = estado.base.meses;
+    el('semExtrato').textContent = 'O extrato carregado vai de ' + nomeDoMes(m[0]) + ' a ' + nomeDoMes(m[m.length - 1]) +
+      ' e não tem ' + nomeDoMes(estado.mesSel) + '. Para ver as despesas deste mês, baixe no Inter um extrato que inclua ' +
+      MES_CURTO[Number(estado.mesSel.slice(5)) - 1] + '.';
+  }
+}
+
+/* ---------- abas Despesas e Conciliação ---------- */
+function trocarAba(qual, lembrar = true) {
+  if (lembrar) { estado.aba = qual; gravar(BAU.aba, qual); }
+  el('abaMes').setAttribute('aria-selected', qual === 'mes');
+  el('abaVendas').setAttribute('aria-selected', qual === 'vendas');
+  el('telaMes').classList.toggle('escondido', qual !== 'mes');
+  el('telaVendas').classList.toggle('escondido', qual !== 'vendas');
+}
+el('abaMes').addEventListener('click', () => trocarAba('mes'));
+el('abaVendas').addEventListener('click', () => trocarAba('vendas'));
+
+/* ================= TELA DO MÊS ================= */
+
+function rotuloMes(P) {
+  return P.mes + (P.parcial ? ', parcial até ' + P.parcial : '');
+}
+
+function desenharMes() {
+  const P = estado.painel, T = P.totais, V = estado.vendas, A = estado.vendasAnteriores;
+  document.title = 'Financeiro · demonstração · ' + P.mes;
+
+  el('cEnt').textContent = brl(T.entradas);
+  el('nEnt').textContent = T.qtdEntradas + ' recebimentos, ' + brl(T.receitaCartao) + ' no cartão pelo link do C6' +
+    (T.naoReceita ? ' e ' + brl(T.naoReceita) + ' que não são venda' : '');
+
+  if (V) {
+    el('cVenda').textContent = brl(V.venda);
+    el('nVenda').textContent = V.qtd + ' orçamentos aprovados';
+  } else {
+    el('cVenda').textContent = estado.planilha ? 'sem vendas' : 'sem planilha';
+    el('nVenda').textContent = estado.planilha ? 'A planilha não tem aprovações neste mês' : 'Carregue o Status clientes para ver as vendas';
+  }
+
+  if (A) {
+    el('cVendaAnt').textContent = brl(A.venda);
+    let nota = A.qtd + ' orçamentos em ' + nomeMes(estado.mesAnterior);
+    if (V && A.venda > 0) {
+      const var_ = ((V.venda - A.venda) / A.venda) * 100;
+      const sinal = var_ >= 0 ? '+' : '−';
+      nota += '. O mês escolhido está ' + sinal + Math.abs(var_).toFixed(1).replace('.', ',') + '%' +
+        (P.parcial ? ', ainda parcial' : '');
+    }
+    el('nVendaAnt').textContent = nota;
+  } else {
+    el('cVendaAnt').textContent = estado.planilha ? 'sem dados' : '—';
+    el('nVendaAnt').textContent = estado.planilha ? 'A planilha não tem o mês anterior' : '';
+  }
+
+  el('cSai').textContent = brl(T.saidas);
+  el('nSai').textContent = T.qtdSaidas + ' pagamentos a terceiros, sem contar a conta pessoal';
+  el('cPes').textContent = brl(T.pessoalIda);
+  el('nPes').textContent = T.qtdPessoalIda + ' transferências enviadas, ' + brl(T.pessoalVolta) + ' devolvidos';
+
+  const saldo = T.entradas + T.pessoalVolta - T.saidas - T.pessoalIda;
+  el('rodape').textContent = 'Movimentação de ' + rotuloMes(P) + '. Entrou ' + brl(T.entradas) +
+    ' e saiu ' + brl(T.saidas + T.pessoalIda) + ' somando despesas e conta pessoal, então o mês fechou em ' +
+    brl(saldo) + '.';
+
+  // Mês incompleto e devolução sem par ficam visíveis dentro do próprio mês.
+  el('avisoParcial').textContent = P.parcial ? 'O extrato termina em ' + P.parcial + ', então ' + P.mes + ' ainda está incompleto.' : '';
+  el('avisoParcial').classList.toggle('escondido', !P.parcial);
+  desenharDevolucoes(P);
+
+  el('notaFim').textContent = 'Foram excluídos cofrinho, CDB, aplicações e resgates, por serem movimentação dentro da própria conta. ' +
+    'Os pares de estorno saíram dos dois lados para não inflar entradas nem saídas, mesmo quando a devolução caiu em outro mês. ' +
+    'Pagamentos ao Mercado Pago e à Portoseg aparecem como pagamento de cartão, e as despesas que os geraram estão nas faturas. ' +
+    'Depósito vindo de Tradutora Exemplo Ltda pelo C6 é cliente pagando no cartão pelo link, e por isso conta como receita; ' +
+    'vindo do Cora, é dinheiro da própria empresa voltando, e não conta como venda.';
+
+  grafico(); tabelaSaidas(el('buscaSaida').value); tabelaPessoal();
+}
+
+/* ---------- devoluções sem par ----------
+   Cada devolução sem par ganha um seletor dentro do aviso amarelo. Escolhido o
+   destino, o aviso daquela devolução some e a conta do mês se refaz. As já
+   conferidas ficam numa linha discreta, com um botão para rever a escolha. */
+function linhaDevolucao(o) {
+  const linha = document.createElement('div');
+  linha.className = 'devolucao';
+  const texto = document.createElement('span');
+  texto.className = 'devolucao-texto';
+  const sentido = o.valor < 0 ? 'saiu da empresa' : 'entrou na empresa';
+  texto.textContent = o.data + ' · ' + o.desc + ' · ' + brl(Math.abs(o.valor)) + ', ' + sentido;
+  const sel = document.createElement('select');
+  sel.setAttribute('aria-label', 'O que é a devolução de ' + o.desc + ' em ' + o.data);
+  const vazio = document.createElement('option');
+  vazio.value = ''; vazio.textContent = 'O que é esta devolução?';
+  sel.appendChild(vazio);
+  for (const [valor, rotulo] of Object.entries(DESTINOS_DEVOLUCAO)) {
+    const op = document.createElement('option');
+    op.value = valor; op.textContent = rotulo;
+    if (o.destino === valor) op.selected = true;
+    sel.appendChild(op);
+  }
+  sel.addEventListener('change', e => {
+    if (e.target.value) estado.resolucoes[o.chave] = e.target.value;
+    else delete estado.resolucoes[o.chave];
+    gravar(BAU.devolucoes, estado.resolucoes);
+    mudou('escolhas');
+    montarMes();
+    desenharMes();
+    desenharVendas();
+    avisar(e.target.value ? 'Devolução marcada como "' + DESTINOS_DEVOLUCAO[e.target.value] + '".' : 'Devolução voltou para a lista de pendentes.', 'ok');
+  });
+  const noPapel = document.createElement('span');
+  noPapel.className = 'cat-papel';
+  noPapel.textContent = o.destino ? DESTINOS_DEVOLUCAO[o.destino] : 'a conferir';
+  linha.append(texto, sel, noPapel);
+  return linha;
+}
+
+function desenharDevolucoes(P) {
+  const caixa = el('caixaDevolucoes');
+  caixa.innerHTML = '';
+  if (P.orfaos.length) {
+    const titulo = document.createElement('p');
+    titulo.className = 'devolucao-titulo';
+    titulo.textContent = plural(P.orfaos.length, ' devolução sem par', ' devoluções sem par') +
+      ' neste mês. Pode ser devolução parcial, de um pagamento fora do extrato ou ligada à sua conta pessoal. ' +
+      'Escolha o que cada uma é para tirar o aviso.';
+    caixa.appendChild(titulo);
+    for (const o of P.orfaos) caixa.appendChild(linhaDevolucao(o));
+  }
+  caixa.classList.toggle('escondido', !P.orfaos.length);
+
+  const conf = el('conferidas');
+  conf.innerHTML = '';
+  conf.classList.toggle('escondido', !P.conferidas.length);
+  if (!P.conferidas.length) return;
+  const resumo = document.createElement('span');
+  resumo.textContent = plural(P.conferidas.length, ' devolução conferida', ' devoluções conferidas') + ' por você neste mês.';
+  const botao = document.createElement('button');
+  botao.type = 'button';
+  botao.className = 'link';
+  botao.textContent = estado.revendo ? 'fechar' : 'rever';
+  botao.addEventListener('click', () => { estado.revendo = !estado.revendo; desenharDevolucoes(estado.painel); });
+  const topo = document.createElement('div');
+  topo.append(resumo, ' ', botao);
+  conf.appendChild(topo);
+  if (estado.revendo) for (const o of P.conferidas) conf.appendChild(linhaDevolucao(o));
+}
+
+function nomeMes(ref) {
+  return ref ? MES_CURTO[ref.mes - 1] + ' de ' + ref.ano : '';
+}
+
+/* ---------- gráfico de barras horizontal ----------
+   Uma série só, então uma cor só e rótulo direto em cada barra: legenda seria
+   ruído. A categoria pendente sai em outro tom para pular aos olhos. */
+function desenhaGrafico(destino, itens, aoPassar, aoClicar) {
+  const cx = el(destino);
+  cx.innerHTML = '';
+  if (!itens.length) return;
+  const maior = Math.max(...itens.map(i => i.valor)) || 1;
+  const total = itens.reduce((a, b) => a + b.valor, 0);
+
+  for (const item of itens) {
+    const linha = document.createElement('div');
+    linha.className = 'linha-barra' + (item.pendente ? ' pendente' : '') + (item.atual ? ' atual' : '');
+
+    const rotulo = document.createElement('span');
+    rotulo.className = 'rotulo-cat';
+    rotulo.textContent = item.nome;
+    if (item.detalhe) {
+      const d = document.createElement('small');
+      d.textContent = item.detalhe;
+      rotulo.appendChild(d);
+    }
+
+    const pista = document.createElement('div');
+    pista.className = 'pista';
+    const marca = document.createElement('div');
+    marca.className = 'marca';
+    marca.style.width = Math.max(0, (item.valor / maior) * 100) + '%';
+    pista.appendChild(marca);
+
+    const cifra = document.createElement('span');
+    cifra.className = 'cifra-cat';
+    cifra.textContent = brl(item.valor);
+
+    linha.append(rotulo, pista, cifra);
+
+    const fatia = total ? (item.valor / total) * 100 : 0;
+    linha.addEventListener('mousemove', e => mostrarDica(e, aoPassar(item, fatia)));
+    linha.addEventListener('mouseleave', esconderDica);
+    if (aoClicar) {
+      linha.classList.add('clicavel');
+      linha.addEventListener('click', () => { esconderDica(); aoClicar(item); });
+    }
+    cx.appendChild(linha);
+  }
+}
+
+function mostrarDica(evento, html) {
+  const d = el('dica');
+  d.innerHTML = html;
+  d.hidden = false;
+  const larg = d.offsetWidth, alt = d.offsetHeight;
+  let x = evento.clientX + 14, y = evento.clientY + 14;
+  if (x + larg > window.innerWidth - 8) x = evento.clientX - larg - 14;
+  if (y + alt > window.innerHeight - 8) y = evento.clientY - alt - 14;
+  d.style.left = x + 'px';
+  d.style.top = y + 'px';
+}
+function esconderDica() { el('dica').hidden = true; }
+
+/* O nome do favorecido vem do extrato e vai para a dica como HTML. */
+const escapar = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function grafico() {
+  const mapa = new Map();
+  for (const l of estado.painel.saidas) {
+    const a = mapa.get(l.cat) || { soma: 0, qtd: 0 };
+    a.soma += l.valor; a.qtd++;
+    mapa.set(l.cat, a);
+  }
+  const itens = [...mapa.entries()].sort((a, b) => b[1].soma - a[1].soma)
+    .map(([nome, a]) => ({ nome, valor: arred(a.soma),
+      detalhe: plural(a.qtd, ' lançamento', ' lançamentos'),
+      pendente: nome === 'A confirmar' }));
+
+  const total = arred(itens.reduce((a, b) => a + b.valor, 0));
+  const pend = itens.find(i => i.pendente);
+  el('subGrafico').textContent = !itens.length ? 'Nenhuma despesa neste mês.' :
+    plural(itens.length, ' categoria', ' categorias') + ' somando ' + brl(total) +
+    (pend ? '. Ainda há ' + brl(pend.valor) + ' sem categoria, que é ' +
+      ((pend.valor / total) * 100).toFixed(0) + '% do total.' : '. Tudo categorizado.');
+
+  desenhaGrafico('grafico', itens, (item, fatia) =>
+    '<b>' + escapar(item.nome) + '</b><br><span class="mono">' + brl(item.valor) + '</span> em ' +
+    item.detalhe.trim() + '<br>' + fatia.toFixed(1).replace('.', ',') + '% das despesas do mês');
+}
+
+function tabelaSaidas(filtro) {
+  const corpo = el('corpoSaida');
+  corpo.innerHTML = '';
+  const termo = (filtro || '').trim().toLowerCase();
+  let vis = 0;
+  for (const l of estado.painel.saidas) {
+    if (termo && !(l.desc + ' ' + l.cat).toLowerCase().includes(termo)) continue;
+    vis++;
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.className = 'data'; td1.textContent = l.data;
+    const td2 = document.createElement('td'); td2.className = 'desc'; td2.textContent = l.desc;
+    const sp = document.createElement('span'); sp.className = 'tipo'; sp.textContent = l.hist;
+    td2.appendChild(sp);
+    const td3 = document.createElement('td');
+    const sel = document.createElement('select');
+    sel.setAttribute('aria-label', 'Categoria de ' + l.desc);
+    for (const c of estado.painel.cats) {
+      const o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      if (c === l.cat) o.selected = true;
+      sel.appendChild(o);
+    }
+    if (l.cat === 'A confirmar') sel.classList.add('pendente');
+    sel.addEventListener('change', e => {
+      const valor = e.target.value;
+      // A escolha vale para o favorecido em todos os meses, não só neste.
+      if (valor === 'A confirmar') delete estado.categorias[l.desc];
+      else estado.categorias[l.desc] = valor;
+      const mudadas = estado.painel.saidas.filter(o => o.desc === l.desc).length;
+      gravar(BAU.categorias, estado.categorias);
+      mudou('escolhas');
+      montarMes();
+      desenharMes();
+      avisar(mudadas > 1
+        ? mudadas + ' lançamentos de ' + l.desc + ' neste mês foram categorizados como ' + valor + '. A escolha vale também para os outros meses.'
+        : 'Categoria salva, e vale também para os outros meses.', 'ok');
+    });
+    td3.appendChild(sel);
+    // O seletor não vai para o papel, então a categoria também existe como texto.
+    const noPapel = document.createElement('span');
+    noPapel.className = 'cat-papel';
+    noPapel.textContent = l.cat;
+    td3.appendChild(noPapel);
+    const td4 = document.createElement('td');
+    td4.className = 'valor menos';
+    td4.textContent = '− ' + brl(l.valor);
+    tr.append(td1, td2, td3, td4);
+    corpo.appendChild(tr);
+  }
+  el('vazioSaida').classList.toggle('escondido', vis > 0);
+  el('vazioSaida').textContent = estado.painel.saidas.length ? 'Nenhuma linha corresponde à busca.' : 'Nenhuma despesa neste mês.';
+  el('contaSaida').textContent = vis + ' de ' + estado.painel.saidas.length + ' linhas';
+}
+
+function obsEntrada(l) {
+  if (l.via === 'cartao') return 'Cartão pelo link do C6';
+  if (l.via === 'outra') return 'Conta da empresa em outro banco (código ' + l.banco + '), a confirmar';
+  return l.obs || '';
+}
+
+function tabelaEntradas(filtro) {
+  const corpo = el('corpoEnt');
+  corpo.innerHTML = '';
+  const termo = (filtro || '').trim().toLowerCase();
+  let vis = 0;
+  for (const l of estado.painel.entradas) {
+    if (termo && !(l.desc + ' ' + obsEntrada(l)).toLowerCase().includes(termo)) continue;
+    vis++;
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.className = 'data'; td1.textContent = l.data;
+    const td2 = document.createElement('td'); td2.className = 'desc'; td2.textContent = l.desc;
+    const sp = document.createElement('span'); sp.className = 'tipo'; sp.textContent = l.hist;
+    td2.appendChild(sp);
+    const td3 = document.createElement('td'); td3.className = 'obs';
+    td3.textContent = obsEntrada(l);
+    const td4 = document.createElement('td');
+    td4.className = 'valor mais';
+    td4.textContent = '+ ' + brl(l.valor);
+    tr.append(td1, td2, td3, td4);
+    corpo.appendChild(tr);
+  }
+  el('vazioEnt').classList.toggle('escondido', vis > 0);
+  el('vazioEnt').textContent = estado.painel.entradas.length ? 'Nenhuma linha corresponde à busca.' : 'Nenhuma entrada neste mês.';
+  el('contaEnt').textContent = vis + ' de ' + estado.painel.entradas.length + ' linhas';
+}
+
+function tabelaPessoal() {
+  const corpo = el('corpoPes');
+  corpo.innerHTML = '';
+  for (const l of estado.painel.pessoal) {
+    const tr = document.createElement('tr');
+    const a = document.createElement('td'); a.className = 'data'; a.textContent = l.data;
+    const b = document.createElement('td');
+    b.textContent = l.nota
+      ? l.nota + ', ' + l.desc + (l.sentido === 'saida' ? ', saiu da empresa' : ', entrou na empresa')
+      : (l.sentido === 'saida' ? 'Enviado para a conta pessoal' : 'Devolvido para a empresa');
+    const c = document.createElement('td');
+    c.className = 'valor ' + (l.sentido === 'saida' ? 'menos' : 'mais');
+    c.textContent = (l.sentido === 'saida' ? '− ' : '+ ') + brl(l.valor);
+    tr.append(a, b, c);
+    corpo.appendChild(tr);
+  }
+  el('vazioPes').classList.toggle('escondido', estado.painel.pessoal.length > 0);
+}
+
+el('buscaSaida').addEventListener('input', e => { if (estado.painel) tabelaSaidas(e.target.value); });
+el('buscaEnt').addEventListener('input', e => { if (estado.painel) tabelaEntradas(e.target.value); });
+
+el('btnSalvar').addEventListener('click', () => {
+  const conteudo = JSON.stringify({ categorias: estado.categorias, devolucoes: estado.resolucoes }, null, 2);
+  const blob = new Blob([conteudo], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Categorias exemplo.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  avisar('Arquivo de categorias baixado, com ' + plural(Object.keys(estado.categorias).length, ' favorecido.', ' favorecidos.'), 'ok');
+});
+
+el('btnCarregar').addEventListener('click', () => el('arqCategorias').click());
+el('arqCategorias').addEventListener('change', evento => {
+  const arquivo = evento.target.files[0];
+  evento.target.value = '';
+  if (!arquivo) return;
+  const leitor = new FileReader();
+  leitor.onload = () => {
+    try {
+      const lido = JSON.parse(leitor.result);
+      const novas = filtrarEscolhas(lido.categorias || lido);
+      Object.assign(estado.categorias, novas);
+      gravar(BAU.categorias, estado.categorias);
+      // As devoluções conferidas viajam no mesmo arquivo.
+      for (const [k, v] of Object.entries(lido.devolucoes || {})) {
+        if (DESTINOS_DEVOLUCAO[v]) estado.resolucoes[k] = v;
+      }
+      gravar(BAU.devolucoes, estado.resolucoes);
+      mudou('escolhas');
+      if (estado.painel) { montarMes(); desenharMes(); }
+      avisar(plural(Object.keys(novas).length, ' favorecido recuperado.', ' favorecidos recuperados.'), 'ok');
+    } catch (e) {
+      avisar('Não consegui ler esse arquivo. Ele precisa ser o JSON que o botão de salvar gera.', 'erro', true);
+    }
+  };
+  leitor.readAsText(arquivo);
+});
+
+/* ================= RELATÓRIO IMPRESSO ================= */
+
+/* A impressão mostra as duas telas de uma vez, então a página precisa sair do
+   modo de abas e voltar ao normal depois. Fazemos isso pelos eventos do próprio
+   navegador, e não só no clique, para funcionar também quando a pessoa usa
+   Ctrl+P ou manda imprimir pelo menu. */
+function prepararPapel() {
+  if (!estado.mesSel) return;
+  document.body.classList.toggle('com-tabelas', el('optTabelas').checked);
+
+  const quando = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  el('capaTitulo').textContent = 'Relatório de ' + nomeDoMes(estado.mesSel);
+  el('capaNota').textContent = 'Emitido em ' + quando +
+    (estado.painel && estado.painel.parcial ? '. Mês parcial, com o extrato até ' + estado.painel.parcial : '') +
+    (estado.planilha ? '. Vendas pela data de aprovação, que é a data do pagamento.' : '.') +
+    (estado.painel && !estado.planilha ? ' Sem a planilha carregada, o relatório sai sem a parte de vendas.' : '') +
+    (!estado.painel ? ' Sem extrato deste mês, o relatório sai só com a parte de vendas.' : '');
+
+  // As duas telas precisam estar montadas, mesmo a que está fechada na tela.
+  el('telaMes').classList.toggle('escondido', !estado.painel);
+  el('telaVendas').classList.toggle('escondido', !estado.planilha && !estado.painel);
+}
+
+function restaurarTela() {
+  document.body.classList.remove('com-tabelas');
+  trocarAba(estado.aba === 'mes' && !estado.painel ? 'vendas' : estado.aba, false);
+}
+
+window.addEventListener('beforeprint', prepararPapel);
+window.addEventListener('afterprint', restaurarTela);
+
+el('btnImprimir').addEventListener('click', () => {
+  prepararPapel();
+  // Um respiro para o navegador refazer o layout antes de abrir a impressão.
+  setTimeout(() => { window.print(); restaurarTela(); }, 60);
+});
+
+/* ================= TELA DE CONCILIAÇÃO ================= */
+
+function desenharVendas() {
+  const P = estado.painel, V = estado.vendas;
+  const linhas = estado.planilha;
+  const anual = linhas ? resumoAnual(linhas) : [];
+  const k = estado.mesSel;
+
+  if (P && V) {
+    const T = P.totais;
+    el('kVenda').textContent = brl(V.venda);
+    el('kVendaNota').textContent = V.qtd + ' orçamentos aprovados em ' + P.mes;
+    el('kEnt').textContent = brl(T.entradas);
+    el('kEntNota').textContent = T.qtdEntradas + ' recebimentos no extrato';
+    const dif = T.entradas - V.venda;
+    const elDif = el('kDif');
+    elDif.textContent = (dif < 0 ? '− ' : '+ ') + brl(Math.abs(dif));
+    elDif.style.color = dif < 0 ? 'var(--saida)' : 'var(--entrada)';
+    const parc = (V.regimes.parceiro || { valor: 0, qtd: 0 });
+    el('kParceiro').textContent = brl(parc.valor);
+    el('kParceiroNota').textContent = plural(parc.qtd, ' orçamento fechado com parceiro', ' orçamentos fechados com parceiros') +
+      ', para entrar no caixa do mês seguinte';
+    el('kRodape').textContent = 'Conciliação de ' + rotuloMes(P) +
+      '. Venda é o que foi fechado com o cliente, entrada é o que o banco recebeu, e a diferença tem explicação, não é erro.';
+    el('kDifNota').textContent = 'Explicada passo a passo logo abaixo';
+    el('secaoPonte').classList.remove('escondido');
+    ponte();
+  } else {
+    el('kDif').style.color = '';
+    for (const id of ['kVenda', 'kEnt', 'kDif', 'kParceiro']) el(id).textContent = '—';
+    if (V) {
+      el('kVenda').textContent = brl(V.venda);
+      const parc = (V.regimes.parceiro || { valor: 0, qtd: 0 });
+      el('kParceiro').textContent = brl(parc.valor);
+      el('kParceiroNota').textContent = plural(parc.qtd, ' orçamento fechado com parceiro', ' orçamentos fechados com parceiros');
+      el('kVendaNota').textContent = V.qtd + ' orçamentos aprovados em ' + nomeDoMes(k);
+    } else {
+      el('kVendaNota').textContent = !linhas ? 'Carregue a planilha para conciliar' : 'A planilha não tem aprovações neste mês';
+      el('kParceiroNota').textContent = '';
+    }
+    if (P) {
+      el('kEnt').textContent = brl(P.totais.entradas);
+      el('kEntNota').textContent = P.totais.qtdEntradas + ' recebimentos no extrato';
+    } else {
+      el('kEntNota').textContent = estado.base ? 'O extrato carregado não tem este mês' : 'Carregue o extrato do Inter';
+    }
+    el('kRodape').textContent = 'A conciliação precisa do extrato e da planilha do mesmo mês. Abaixo, o que dá para ver com o que foi carregado.';
+    el('kDifNota').textContent = 'Aparece quando houver extrato e planilha deste mês';
+    el('secaoPonte').classList.add('escondido');
+  }
+
+  if (P) { tabelaEntradas(el('buscaEnt').value); el('secEntradas').classList.remove('escondido'); }
+  else el('secEntradas').classList.add('escondido');
+
+  // Linhas da planilha com data ilegível: a venda delas não entra em mês nenhum.
+  const prob = estado.problemas || [];
+  el('avisoPlanilha').classList.toggle('escondido', !prob.length);
+  if (prob.length) {
+    el('avisoPlanilha').textContent = 'A planilha tem ' + plural(prob.length, ' linha', ' linhas') +
+      ' com a data de aprovação ilegível, que ficam fora de todos os meses até serem corrigidas: ' +
+      prob.map(p => 'aba ' + p.aba + ', linha ' + p.linha + ' (' + (p.cli || 'sem cliente') +
+        (p.orc ? ', orçamento ' + p.orc : '') + ', escrito "' + p.valor + '")').join('; ') + '.';
+  }
+
+  el('secParceiros').classList.toggle('escondido', !linhas);
+  el('secVendasAno').classList.toggle('escondido', !linhas);
+  if (!linhas) return;
+
+  desenhaGrafico('graficoVendas', anual.map(m => ({
+    nome: MES_CURTO[m.mes - 1] + ' de ' + m.ano,
+    valor: m.venda,
+    detalhe: m.qtd + ' orçamentos',
+    chave: m.chave,
+    atual: m.chave === k,
+  })), (item, fatia) => '<b>' + item.nome + '</b><br><span class="mono">' + brl(item.valor) +
+    '</span> em ' + item.detalhe + '<br>' + fatia.toFixed(1).replace('.', ',') + '% do período<br>Clique para abrir este mês',
+  item => escolherMes(item.chave));
+
+  tabelaParceiros();
+}
+
+/* A ponte desce da venda do mês até o dinheiro que entrou, passo a passo. */
+function ponte() {
+  const P = estado.painel, T = P.totais, V = estado.vendas;
+  if (!V) return;
+  const R = n => V.regimes[n] || { valor: 0, qtd: 0 };
+  const parceiro = R('parceiro'), cartao = R('cartao'), faturado = R('faturado'), pix = R('pix');
+
+  const passos = [
+    { classe: 'base', texto: 'Vendido no mês',
+      nota: V.qtd + ' orçamentos: tradução ' + brl(V.traducao) + ', diligência de cartório ' +
+            brl(V.dilCartorio) + ' e diligência de envio ' + brl(V.dilEnvio),
+      valor: V.venda, sinal: '' },
+    { classe: 'menos', texto: 'Parceiro, acerta no mês seguinte',
+      nota: plural(parceiro.qtd, ' orçamento de parceiro', ' orçamentos de parceiros') + ', que entram no caixa do mês que vem',
+      valor: -parceiro.valor, sinal: '− ' },
+    { classe: 'menos', texto: 'Cartão pelo link, cai 14 dias depois',
+      nota: plural(cartao.qtd, ' orçamento no cartão', ' orçamentos no cartão') + ', que chegam pelo C6 duas semanas após a aprovação',
+      valor: -cartao.valor, sinal: '− ' },
+  ];
+  if (faturado.valor > 0) {
+    passos.push({ classe: 'menos', texto: 'Faturado, sem data de recebimento',
+      nota: plural(faturado.qtd, ' orçamento faturado', ' orçamentos faturados'),
+      valor: -faturado.valor, sinal: '− ' });
+  }
+  const proprioMes = arred(V.venda - parceiro.valor - cartao.valor - faturado.valor);
+  passos.push({ classe: '', texto: 'Venda paga no próprio mês',
+    nota: plural(pix.qtd, ' orçamento no pix, pago na aprovação', ' orçamentos no pix, pagos na aprovação'),
+    valor: proprioMes, sinal: '' });
+  passos.push({ classe: 'mais', texto: 'Correio e DHL cobrados do cliente',
+    nota: 'Reembolso do envio, que entra na conta mas não é venda', valor: V.correio, sinal: '+ ' });
+  if (T.naoReceita > 0) {
+    passos.push({ classe: 'mais', texto: 'Entradas que não são venda',
+      nota: plural(T.qtdNaoReceita, ' lançamento', ' lançamentos') + ', como retorno do Cora, devolução ou estorno de cartão. Estão marcados na lista de entradas',
+      valor: T.naoReceita, sinal: '+ ' });
+  }
+
+  const anterior = arred(T.entradas - proprioMes - V.correio - T.naoReceita);
+  passos.push({ classe: anterior < 0 ? 'menos' : 'mais', texto: 'Recebido de meses anteriores',
+    nota: 'Parceiros acertando o mês passado e cartão aprovado antes. Do C6 chegaram ' + brl(T.receitaCartao) + ' neste mês',
+    valor: anterior, sinal: anterior < 0 ? '− ' : '+ ' });
+  passos.push({ classe: 'fecho', texto: 'Dinheiro que entrou na conta',
+    nota: T.qtdEntradas + ' recebimentos no extrato do Inter', valor: T.entradas, sinal: '' });
+
+  const cx = el('ponte');
+  cx.innerHTML = '';
+  for (const p of passos) {
+    const linha = document.createElement('div');
+    linha.className = 'passo ' + p.classe;
+    const texto = document.createElement('span');
+    texto.className = 'texto';
+    texto.textContent = p.texto;
+    const nota = document.createElement('small');
+    nota.textContent = p.nota;
+    texto.appendChild(nota);
+    const cifra = document.createElement('span');
+    cifra.className = 'cifra';
+    cifra.textContent = p.sinal + brl(Math.abs(p.valor));
+    linha.append(texto, cifra);
+    cx.appendChild(linha);
+  }
+}
+
+/* Parceiros que fecharam no mês escolhido. O acerto deles cai no mês seguinte,
+   então é nas entradas do mês seguinte que a página procura o pagamento. */
+function tabelaParceiros() {
+  const { ano, mes } = estado.ref;
+  const lista = parceirosPorMes(estado.planilha, ano, mes);
+  const corpo = el('corpoParceiro');
+  corpo.innerHTML = '';
+  const seguinte = mes === 12 ? chaveDe(ano + 1, 1) : chaveDe(ano, mes + 1);
+  const temSeguinte = estado.base && estado.base.meses.includes(seguinte);
+  const entradas = temSeguinte ? painelDoMes(estado.base, seguinte, estado.categorias, estado.resolucoes).entradas : null;
+  el('thEncontrado').textContent = 'Encontrado em ' + MES_CURTO[Number(seguinte.slice(5)) - 1];
+
+  for (const p of lista) {
+    const tr = document.createElement('tr');
+    const nome = document.createElement('td'); nome.className = 'desc'; nome.textContent = p.nome;
+    const q = document.createElement('td'); q.className = 'valor'; q.textContent = p.qtd;
+    const v = document.createElement('td'); v.className = 'valor'; v.textContent = brl(p.valor);
+    const c = document.createElement('td'); c.className = 'valor'; c.textContent = p.correio ? brl(p.correio) : '—';
+    const r = document.createElement('td'); r.className = 'valor';
+    if (!entradas) {
+      r.textContent = '—';
+      r.title = 'O extrato carregado não tem ' + nomeDoMes(seguinte) + ', que é quando o parceiro acerta.';
+    } else {
+      const achado = recebidoDe(p.nome, entradas);
+      r.textContent = achado.qtd ? brl(achado.valor) : 'nada encontrado';
+      r.classList.add(achado.valor >= p.valor ? 'mais' : 'menos');
+      r.title = achado.qtd ? achado.qtd + ' lançamentos com esse nome em ' + nomeDoMes(seguinte) : '';
+    }
+    tr.append(nome, q, v, c, r);
+    corpo.appendChild(tr);
+  }
+  el('vazioParceiro').classList.toggle('escondido', lista.length > 0);
+  const soma = arred(lista.reduce((a, b) => a + b.valor, 0));
+  el('contaParceiro').textContent = lista.length
+    ? plural(lista.length, ' parceiro, ', ' parceiros, ') + brl(soma) + ' fechados em ' + nomeDoMes(estado.mesSel)
+    : '';
+}
+
+
+</script>
+<script>
+/* Sorteio com semente fixa: o exemplo sai igual em toda abertura. */
+function sorteador(semente) {
+  let s = semente >>> 0;
+  return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+}
+
+const EX = {
+  ano: 2026,
+  ultimoMes: 10,
+  ultimoDia: 15,
+  clientes: ['Mariana Duarte Alves', 'Rafael Nogueira Lima', 'Beatriz Campos Rocha', 'Thiago Moreira Santos',
+    'Lúcia Ferreira Gomes', 'Paulo Henrique Viana', 'Renata Souza Pires', 'André Luiz Barros',
+    'Carolina Mendes Pinto', 'Fábio Antunes Reis', 'Helena Cardoso Melo', 'Gustavo Tavares Lopes',
+    'Patrícia Azevedo Cruz', 'Rodrigo Prates Fonseca', 'Vanessa Lacerda Moura', 'Eduardo Brandão Sá',
+    'Atlas Consultoria Ltda', 'Rota Norte Viagens Ltda', 'Clínica Bem Estar Ltda', 'Construtora Alvorada Ltda'],
+  parceiros: ['Vértice Assessoria', 'Lumen Traduções', 'Ponte Documentos'],
+  origens: ['Instagram', 'Indicação', 'Google', 'Site'],
+};
+
+const semAcentoEx = t => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '');
+const doisDig = n => String(n).padStart(2, '0');
+
+function montarPlanilhaExemplo(r) {
+  const linhas = [];
+  for (let m = 1; m <= EX.ultimoMes; m++) {
+    const maxDia = m === EX.ultimoMes ? EX.ultimoDia : 28;
+    const n = (m === EX.ultimoMes ? 16 : 30) + Math.floor(r() * 10);
+    for (let i = 0; i < n; i++) {
+      const parceiro = r() < 0.28;
+      const cli = parceiro ? EX.parceiros[Math.floor(r() * EX.parceiros.length)] : EX.clientes[Math.floor(r() * EX.clientes.length)];
+      const pgto = parceiro ? 'Faturado ao parceiro' : (r() < 0.16 ? 'Cartão de crédito' : 'PIX');
+      const origem = parceiro ? 'Parceiro' : EX.origens[Math.floor(r() * EX.origens.length)];
+      const traducao = (18 + Math.floor(r() * 75)) * 10;
+      const dilCartorio = r() < 0.3 ? 60 : 0;
+      const dilEnvio = r() < 0.2 ? 40 : 0;
+      const correio = r() < 0.15 ? 55 : 0;
+      linhas.push({
+        aba: SIGLA[m - 1] + ' 26', cli, orc: Number('26' + doisDig(m) + String(i + 1).padStart(3, '0')),
+        ano: EX.ano, mes: m, dia: 1 + Math.floor(r() * maxDia), origem, pgto,
+        regime: regime(origem, pgto), traducao, dilCartorio, dilEnvio, correio, cartorio: 0,
+        venda: traducao + dilCartorio + dilEnvio,
+      });
+    }
+  }
+  return linhas.sort((a, b) => (a.mes * 100 + a.dia) - (b.mes * 100 + b.dia));
+}
+
+/* O extrato é escrito como um OFX de verdade e passa pela mesma leitura do
+   aplicativo, com exclusão de CDB, pares de estorno e tudo o mais. */
+function montarExtratoExemplo(r, planilha) {
+  const regs = [];
+  const add = (m, d, valor, hist, nome, banco = '00416968') => {
+    if (m > EX.ultimoMes || (m === EX.ultimoMes && d > EX.ultimoDia) || m < 1) return;
+    regs.push({ data: EX.ano + doisDig(m) + doisDig(d), valor: Math.round(valor * 100) / 100, hist, nome, banco });
+  };
+  const sorteia = (min, max) => min + r() * (max - min);
+  const redondo = v => Math.round(v);
+
+  // Recebimentos que nascem da planilha.
+  const parceirosDoMes = {};
+  for (const l of planilha) {
+    const total = l.venda + l.correio;
+    if (l.regime === 'pix') add(l.mes, l.dia, total, 'Pix recebido', semAcentoEx(l.cli), '0' + (1000000 + Math.floor(r() * 8999999)));
+    else if (l.regime === 'cartao') {
+      const d = new Date(EX.ano, l.mes - 1, l.dia + 14);
+      add(d.getMonth() + 1, d.getDate(), total, 'Pix recebido', 'Tradutora Exemplo Ltda', BANCO_C6);
+    } else if (l.regime === 'parceiro') {
+      const k = l.mes + '|' + l.cli;
+      parceirosDoMes[k] = (parceirosDoMes[k] || 0) + total;
+    }
+  }
+  // Parceiro acerta no mês seguinte, entre os dias 8 e 12.
+  for (const [k, v] of Object.entries(parceirosDoMes)) {
+    const [m, cli] = k.split('|');
+    add(Number(m) + 1, 8 + Math.floor(r() * 5), v, 'Pix recebido', semAcentoEx(cli) + ' Ltda', '0' + (2000000 + Math.floor(r() * 7999999)));
+  }
+
+  for (let m = 1; m <= EX.ultimoMes; m++) {
+    add(m, 5, -2150, 'Pix enviado', 'Camila Rocha Prado');
+    add(m, 5, -1980, 'Pix enviado', 'Diego Matos Freire');
+    add(m, 10, -1800, 'Pagamento efetuado', 'Imobiliaria Horizonte Ltda');
+    add(m, 15, -690, 'Pagamento de Titulo', 'Contabil Prisma Ltda');
+    add(m, 12, -189.9, 'Pagamento de Convenio', 'Telefonica Brasil S A');
+    add(m, 7, -58.4, 'Pagamento efetuado', 'Google Cloud Brasil');
+    add(m, 20, -redondo(sorteia(900, 1700)), 'DARF NUMERADO', 'Receita Federal');
+    add(m, 18, -redondo(sorteia(380, 920)), 'Pagamento efetuado', 'Mercado Pago');
+    for (let i = 0, q = 3 + Math.floor(r() * 4); i < q; i++) add(m, 1 + Math.floor(r() * 27), -redondo(sorteia(22, 95)), 'Pix enviado', 'Correios E Telegrafos');
+    for (let i = 0, q = 1 + Math.floor(r() * 2); i < q; i++) add(m, 3 + Math.floor(r() * 24), -redondo(sorteia(180, 620)), 'Pix enviado', 'Livia Martins Costa');
+    for (let i = 0, q = 2 + Math.floor(r() * 3); i < q; i++) add(m, 2 + Math.floor(r() * 25), -redondo(sorteia(60, 240)), 'Pix enviado', 'Cartorio Exemplo 5 Oficio');
+    if (m % 3 === 0) add(m, 22, -1200, 'Pix enviado', 'Silva E Ramos Advogados');
+    for (let i = 0, q = 1 + Math.floor(r() * 3); i < q; i++) add(m, 1 + Math.floor(r() * 27), -redondo(sorteia(35, 80)), 'Pix enviado', 'Ifood Pago');
+    for (let i = 0, q = 2 + Math.floor(r() * 3); i < q; i++) add(m, 1 + Math.floor(r() * 27), -redondo(sorteia(14, 38)), 'Pix enviado', '99 Tecnologia Ltda');
+    for (let i = 0; i < 3; i++) add(m, 2 + i * 8, -6, 'Pix enviado', 'Marcos Vinicius Teles');
+    add(m, 14, -300, 'Pix enviado', 'Tradutora Exemplo Ltda', BANCO_CORA);
+    add(m, 27, -250, 'Pix enviado', 'Tradutora Exemplo Ltda', BANCO_CORA);
+    // Favorecidos sem regra, que aparecem como "A confirmar".
+    for (let i = 0, q = 1 + Math.floor(r() * 2); i < q; i++) add(m, 4 + Math.floor(r() * 22), -redondo(sorteia(45, 120)), 'Pix enviado', 'Papelaria Estrela Ltda');
+    if (m % 2 === 0) add(m, 16, -450, 'Pix enviado', 'Studio Nuvem Design');
+    // Conta pessoal da dona da empresa.
+    for (let i = 0, q = 3 + Math.floor(r() * 3); i < q; i++) add(m, 3 + Math.floor(r() * 25), -redondo(sorteia(400, 1500)), 'Pix enviado', 'Marina Exemplo Dias');
+    if (m % 4 === 1) add(m, 26, 300, 'Pix recebido', 'Marina Exemplo Dias');
+    // Aplicações e resgates, que ficam fora de todos os totais.
+    add(m, 25, -2000, 'Aplicacao', 'Aplicação');
+    if (m % 2 === 1) add(m, 2, 1500, 'Resgate', 'Cdb Di Liq Banco Inter S A');
+  }
+
+  // Casos especiais, para mostrar as regras do aplicativo.
+  add(3, 12, -89.9, 'Pix enviado', 'Loja Virtual Alfa');
+  add(3, 13, 89.9, 'Pix enviado devolvido', 'Loja Virtual Alfa');          // par de estorno
+  add(9, 9, 1200.01, 'Pix recebido', 'Cambio Global Corretora');
+  add(9, 10, -1200, 'Pix recebido devolvido', 'Cambio Global Corretora');  // devolução com 1 centavo a menos
+  add(5, 19, 150, 'Pix recebido', 'Tradutora Exemplo Ltda', BANCO_CORA);  // retorno do Cora
+  add(6, 3, 59.9, 'Pix enviado devolvido', 'Hospedagem Web Exemplo');      // devolução sem par
+  add(8, 21, 32.5, 'Pix enviado devolvido', 'Uber Do Brasil Tecnologia Ltda'); // devolução sem par
+
+  const corpo = regs.map((g, i) => [
+    '<STMTTRN>', '<TRNTYPE>' + (g.valor < 0 ? 'PAYMENT' : 'CREDIT'), '<DTPOSTED>' + g.data,
+    '<TRNAMT>' + g.valor.toFixed(2), '<FITID>' + g.data + i,
+    '<MEMO>' + g.hist + ': "Cp :' + g.banco + '-' + g.nome.toUpperCase() + '"',
+    '<NAME>' + g.nome, '</STMTTRN>'].join('\n')).join('\n');
+  return prepararExtrato('extrato-exemplo.ofx', 'OFXHEADER:100\n<OFX>\n<BANKTRANLIST>\n' + corpo + '\n</BANKTRANLIST>\n</OFX>\n');
+}
+
+function carregarExemplo() {
+  const r = sorteador(20261018);
+  const planilha = montarPlanilhaExemplo(r);
+  estado.base = montarExtratoExemplo(r, planilha);
+  estado.planilha = planilha;
+  estado.problemas = [{ aba: 'JUL 26', linha: 37, valor: '31/06', cli: 'Rafael Nogueira Lima', orc: 2607037 }];
+  estado.categorias = {};
+  estado.resolucoes = {};
+  estado.revendo = false;
+  estado.nomes = { extrato: 'extrato-exemplo-2026.ofx', planilha: 'status-clientes-exemplo.xlsx' };
+  marcarZona('zonaExtrato', 'nomeExtrato', estado.nomes.extrato);
+  marcarZona('zonaPlanilha', 'nomePlanilha', estado.nomes.planilha);
+  el('buscaSaida').value = '';
+  el('buscaEnt').value = '';
+  estado.aba = 'mes';
+  escolherMes(estado.base.meses[estado.base.meses.length - 1]);
+  trocarAba('mes', false);
+}
+
+/* As caixas de arquivo não abrem nada na demonstração. */
+for (const id of ['zonaExtrato', 'zonaPlanilha']) {
+  const zona = el(id);
+  const bloqueia = e => {
+    e.preventDefault(); e.stopImmediatePropagation();
+    zona.classList.remove('sobre');
+    if (e.type === 'click' || e.type === 'drop') {
+      avisar('Na demonstração, o extrato e a planilha já vêm carregados com dados fictícios. No aplicativo verdadeiro, é aqui que você solta os arquivos baixados do Inter e da planilha.', 'ok');
+    }
+  };
+  ['click', 'drop', 'dragenter', 'dragover'].forEach(ev => zona.addEventListener(ev, bloqueia, true));
+}
+
+/* Restaurar exemplo: pede confirmação com um segundo clique. */
+(() => {
+  const b = el('btnRestaurar');
+  let relogio = null;
+  b.addEventListener('click', () => {
+    if (b.dataset.ok !== '1') {
+      b.dataset.ok = '1';
+      b.textContent = 'Confirmar: apagar alterações';
+      relogio = setTimeout(() => { b.dataset.ok = ''; b.textContent = 'Restaurar exemplo'; }, 4000);
+      return;
+    }
+    clearTimeout(relogio);
+    b.dataset.ok = '';
+    b.textContent = 'Restaurar exemplo';
+    carregarExemplo();
+    avisar('Exemplo restaurado. Tudo voltou ao começo.', 'ok');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+carregarExemplo();
+
+</script>
+</body>
+</html>
