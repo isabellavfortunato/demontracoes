@@ -5,75 +5,68 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Demonstrações</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,600..800&family=Source+Sans+3:wght@400;600&display=swap">
 <style>
-/* Layout: cabeçalho com o nome em manuscrita e uma grade de cartões, um por demonstração */
-@font-face{font-family:"Quentin";src:url(fonts/quentin.ttf) format("truetype");font-display:swap}
-:root{--bg:#f6f0f3;--surface:#fffcfd;--fg:#2b1a22;--muted:#7c6671;--line:#e7d7de;--accent:#8a4a64;--accent-ink:#fff;--soft:#f1e3e9;
-  --display:"Barlow Condensed","Arial Narrow",sans-serif;--body:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
-  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme: dark){:root{--bg:#181115;--surface:#221920;--fg:#f3e8ed;--muted:#b39ca8;--line:#3a2b33;--accent:#cf94ad;--accent-ink:#1e1318;--soft:#35242d;color-scheme:dark}}
+/* Layout: cabeçalho azul com faixa mostarda, título com traço mostarda e grade de cartões brancos, rodapé com as assinaturas da marca */
+:root{
+  --azul:#3f5b7a;--azul-escuro:#2f4760;--mostarda:#d4a21a;--mostarda-clara:#f2c44e;--mostarda-escura:#b8890f;
+  --navy:#14213d;--cinza:#4d5a70;--fundo:#eceef1;--borda:#c8ced8;--claro:#e6edf6;--claro-suave:#bfcde2;--branco:#ffffff;
+  --titulo:"Archivo","Arial Narrow",Arial,sans-serif;--texto:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55}
-.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px;display:flex;flex-direction:column;gap:28px}
-h1{font-family:"Quentin","Brush Script MT",cursive;font-weight:400;color:var(--accent);font-size:clamp(52px,9vw,84px);line-height:1.1;margin:0}
-.intro{margin:0;color:var(--muted);max-width:60ch}
+body{margin:0;background:var(--fundo);color:var(--navy);font-family:var(--texto);font-size:17px;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
+.lado{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.miolo{max-width:1040px;margin:0 auto;width:100%}
+header{background:var(--azul);border-bottom:4px solid var(--mostarda);padding-top:env(safe-area-inset-top,0px)}
+header .miolo{padding-block:18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.marca{font-family:var(--titulo);font-weight:600;font-stretch:90%;font-size:20px;color:var(--mostarda-clara);letter-spacing:.01em}
+.assinatura{font-family:var(--titulo);font-weight:600;font-stretch:90%;font-size:15px;color:var(--claro-suave)}
+main{flex:1}
+main .miolo{padding-block:44px 64px;display:flex;flex-direction:column;gap:30px}
+.traco{display:block;width:48px;height:4px;border-radius:4px;background:var(--mostarda);margin-bottom:14px}
+h1{font-family:var(--titulo);font-weight:800;font-stretch:72%;font-size:clamp(44px,8vw,68px);line-height:1;margin:0;color:var(--navy);letter-spacing:-.005em}
+.intro{margin:12px 0 0;color:var(--cinza);max-width:62ch}
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-.demo{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:10px;color:inherit;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease}
-.demo:hover{transform:translateY(-3px);box-shadow:0 16px 34px -22px var(--accent)}
-.demo:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.rotulo{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.demo h2{font-family:var(--display);font-weight:600;font-size:30px;line-height:1.1;margin:0}
-.demo p{margin:0;color:var(--muted);font-size:16px}
-.abrir{margin-top:auto;padding-top:6px;color:var(--accent);font-weight:600;font-size:15px}
-.breve{border-style:dashed;border-top-style:solid;border-top-color:var(--line);opacity:.75}
-@media (prefers-reduced-motion:reduce){.demo{transition:none}}
+.demo{background:var(--branco);border:1px solid var(--borda);border-radius:12px;padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.etiqueta{font-family:var(--titulo);font-weight:600;font-stretch:90%;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mostarda-escura)}
+.demo h2{font-family:var(--titulo);font-weight:800;font-stretch:72%;font-size:34px;line-height:1.05;margin:0;color:var(--navy)}
+.demo p{margin:0;color:var(--cinza);font-size:16px}
+.botao{align-self:flex-start;margin-top:auto;display:inline-block;background:var(--azul);color:var(--branco);font-family:var(--titulo);font-weight:700;font-size:15px;text-decoration:none;border-radius:10px;padding:10px 18px;transition:background .15s}
+.botao:hover{background:var(--azul-escuro)}
+.botao:focus-visible{outline:3px solid var(--mostarda-clara);outline-offset:2px}
+.demo .espaco{height:4px}
+footer{border-top:1px solid var(--borda)}
+footer .miolo{padding-block:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:15px}
+footer .usuario{color:var(--cinza)}
+footer .site{color:var(--azul);font-weight:600}
+@media (prefers-reduced-motion:reduce){.botao{transition:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Demonstrações</h1>
-    <p class="intro">Versões de demonstração dos aplicativos que eu criei com o Claude, com dados fictícios. Tudo o que você mexer aqui fica só na sua tela e volta ao exemplo quando a página é recarregada.</p>
-  </header>
-  <main class="grade">
-    <a class="demo" href="painel-da-vida/">
-      <span class="rotulo">Vida pessoal</span>
-      <h2>Painel da vida</h2>
-      <p>Visão da vida que você quer ter, 101 coisas para fazer em 101 dias, roda das áreas da vida, moodboard, diário de gratidão e desafios.</p>
-      <span class="abrir">Abrir demonstração ›</span>
-    </a>
-    <a class="demo" href="controle-de-ponto/">
-      <span class="rotulo">Gestão de equipe</span>
-      <h2>Controle de ponto</h2>
-      <p>Registro das 4 marcações do dia, equipe ao vivo, ajustes e atestados para aprovar, folgas e feriados por cidade e fechamento do espelho de ponto.</p>
-      <span class="abrir">Abrir demonstração ›</span>
-    </a>
-    <a class="demo" href="despesas-da-semana/">
-      <span class="rotulo">Finanças</span>
-      <h2>Despesas da semana</h2>
-      <p>Calendário semanal das contas da empresa e pessoais, com valor por dia, marcar como pago, parcelas, calculadora de pagamento e relatório do mês.</p>
-      <span class="abrir">Abrir demonstração ›</span>
-    </a>
-    <a class="demo" href="tempo-dos-projetos/">
-      <span class="rotulo">Produtividade</span>
-      <h2>Tempo dos projetos</h2>
-      <p>Cronômetro ou timer para cada projeto, com o tempo somado ao longo dos dias e o percurso de todas as paradas.</p>
-      <span class="abrir">Abrir demonstração ›</span>
-    </a>
-    <a class="demo" href="crm-da-tradutora/">
-      <span class="rotulo">Empresa</span>
-      <h2>CRM da tradutora</h2>
-      <p>Quadro de orçamentos em seis etapas, ficha de clientes, tabela de serviços, conferência do que vai para a planilha e faturamento de parceiros.</p>
-      <span class="abrir">Abrir demonstração ›</span>
-    </a>
-    <a class="demo" href="despesas/">
-      <span class="rotulo">Finanças pessoais</span>
-      <h2>Minhas despesas</h2>
-      <p>Despesas do mês organizadas por categoria, com Pix e cartão separados, gráfico de pizza e totais por categoria.</p>
-      <span class="abrir">Abrir demonstração ›</span>
-    </a>
-  </main>
-</div>
+<header class="lado">
+  <div class="miolo"><span class="marca">Ferramenta Sob Medida</span><span class="assinatura">Isabella Fortunato</span></div>
+</header>
+<main class="lado">
+  <div class="miolo">
+    <div>
+      <span class="traco" aria-hidden="true"></span>
+      <h1>Demonstrações</h1>
+      <p class="intro">Versões de demonstração dos aplicativos que eu criei com o Claude, com dados fictícios. Tudo o que você mexer fica só na sua tela e volta ao exemplo quando a página é recarregada.</p>
+    </div>
+    <div class="grade">
+      <article class="demo">
+        <span class="etiqueta">Vida pessoal</span>
+        <h2>Painel da vida</h2>
+        <p>Visão da vida que você quer ter, 101 coisas para fazer em 101 dias, roda das áreas da vida, moodboard, diário de gratidão e desafios.</p>
+        <span class="espaco"></span>
+        <a class="botao" href="painel-da-vida/">Abrir demonstração</a>
+      </article>
+    </div>
+  </div>
+</main>
+<footer class="lado">
+  <div class="miolo"><span class="usuario">@isabellafortunato</span><span class="site">ferramentasobmedida.com.br</span></div>
+</footer>
 </body>
 </html>
