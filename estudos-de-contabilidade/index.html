@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estudos de contabilidade · Demonstração</title>
+<meta name="theme-color" content="#1F5490">
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --papel: #F3F8FD;
+    --papel2: #E3EEF9;
+    --razao: #D5E7F7;
+    --pauta: #A9C9E7;
+    --tinta: #16293D;
+    --tinta2: #3F5A76;
+    --tinta3: #7B95AF;
+    --carimbo: #1F5490;
+    --lancamento: #1F5490;
+    --borda: #C4DAEE;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--carimbo); outline-offset: 2px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .09em;
+    color: var(--tinta3);
+  }
+
+  /* cabeçalho */
+  header {
+    padding: 26px 22px 18px;
+    border-bottom: 1px solid var(--borda);
+    background:
+      linear-gradient(var(--papel), var(--papel));
+  }
+  .titulo {
+    font-family: var(--serif);
+    font-size: 34px;
+    line-height: 1.1;
+    font-weight: 600;
+    margin: 6px 0 4px;
+    letter-spacing: -.01em;
+  }
+  .subtitulo { color: var(--tinta2); max-width: 62ch; margin: 0; }
+  .barra-topo { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .acoes { display: flex; gap: 8px; align-items: center; }
+  .btn {
+    background: transparent;
+    border: 1px solid var(--borda);
+    color: var(--tinta2);
+    padding: 7px 12px;
+    border-radius: 2px;
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1.4;
+  }
+  .btn:hover { border-color: var(--tinta3); color: var(--tinta); }
+  .estado { font-family: var(--mono); font-size: 11px; color: var(--tinta3); min-height: 14px; }
+
+  /* balancete de métricas */
+  .balancete {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--borda);
+    border-top: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+  }
+  .metrica { background: var(--papel2); padding: 14px 18px; }
+  .metrica .valor {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 26px;
+    line-height: 1.1;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .metrica .rotulo { font-size: 12px; color: var(--tinta2); }
+  .metrica .de { color: var(--tinta3); font-size: 15px; }
+
+  /* quadro */
+  .quadro {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+    gap: 1px;
+    background: var(--borda);
+    min-height: 60vh;
+  }
+  .coluna { background: var(--papel); padding: 0 0 40px; }
+  .coluna.alvo { background: var(--razao); }
+  .cabeca {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--papel2);
+    border-bottom: 1px solid var(--borda);
+    padding: 11px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .cabeca .nome { font-family: var(--serif); font-size: 17px; }
+  .cabeca .conta { font-family: var(--mono); font-size: 12px; color: var(--tinta3); font-variant-numeric: tabular-nums; }
+  .lista { padding: 12px 12px 0; display: flex; flex-direction: column; gap: 10px; }
+
+  /* ficha */
+  .ficha {
+    position: relative;
+    text-align: left;
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--pauta);
+    border-left: 3px solid var(--carimbo);
+    border-radius: 2px;
+    padding: 12px 14px 10px;
+    display: block;
+    transition: border-color .12s ease, transform .12s ease;
+  }
+  .ficha:hover { border-color: var(--carimbo); }
+  .ficha.arrastando { opacity: .45; }
+  .ficha .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--carimbo);
+    letter-spacing: .06em;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .ficha .nome-ficha { font-family: var(--serif); font-size: 17px; line-height: 1.25; display: block; }
+  .ficha .fonte { font-size: 12.5px; color: var(--tinta2); margin-top: 5px; display: block; }
+  .ficha .rodape {
+    margin-top: 11px;
+    padding-top: 8px;
+    border-top: 1px solid var(--papel2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .ficha .parcial { font-family: var(--mono); font-size: 11px; color: var(--tinta3); font-variant-numeric: tabular-nums; }
+  .medidor { flex: 1; height: 3px; background: var(--razao); }
+  .medidor span { display: block; height: 100%; background: var(--carimbo); }
+  .ficha.completa { border-left-color: var(--carimbo); }
+  .ficha .anotado {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--lancamento);
+  }
+  .vazio { padding: 16px; color: var(--tinta3); font-size: 13px; }
+
+  /* gaveta */
+  .fundo {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 41, 61, .3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease;
+    z-index: 8;
+  }
+  .fundo.aberto { opacity: 1; pointer-events: auto; }
+  .gaveta {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: min(500px, 100%);
+    background: var(--papel);
+    border-left: 1px solid var(--borda);
+    transform: translateX(102%);
+    transition: transform .22s ease;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+  }
+  .gaveta.aberta { transform: none; }
+  .gaveta header { border-bottom: 1px solid var(--borda); padding: 20px 22px 16px; }
+  .gaveta .corpo { overflow-y: auto; padding: 4px 22px 90px; flex: 1; }
+  .gaveta .titulo-ficha { font-family: var(--serif); font-size: 25px; margin: 5px 0 0; font-weight: 600; }
+  .fechar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    border: 1px solid var(--borda);
+    background: var(--papel);
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
+    color: var(--tinta2);
+    font-size: 15px;
+    line-height: 1;
+  }
+  .mover { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .mover button {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    padding: 6px 10px;
+    border: 1px solid var(--borda);
+    background: var(--papel);
+    color: var(--tinta2);
+    border-radius: 2px;
+  }
+  .mover button[aria-pressed="true"] { background: var(--tinta); border-color: var(--tinta); color: var(--papel); }
+
+  .secao { margin-top: 26px; }
+  .secao > .eyebrow { display: block; margin-bottom: 9px; padding-bottom: 6px; border-bottom: 1px solid var(--borda); }
+  .item { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+  .item input { margin: 3px 0 0; width: 15px; height: 15px; accent-color: var(--carimbo); flex: none; }
+  .item label { flex: 1; cursor: pointer; }
+  .item input:checked + label { color: var(--tinta3); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .nota-fixa {
+    background: var(--razao);
+    border-left: 3px solid var(--pauta);
+    padding: 11px 13px;
+    font-size: 14px;
+    color: var(--tinta2);
+  }
+  .secao > .eyebrow.linha { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .mini-link {
+    color: var(--carimbo);
+    text-decoration: none;
+    border-bottom: 1px solid var(--pauta);
+    white-space: nowrap;
+  }
+  .mini-link:hover { border-bottom-color: var(--carimbo); }
+  .curso {
+    background: var(--razao);
+    border-left: 3px solid var(--carimbo);
+    padding: 12px 14px 8px;
+  }
+  .link-curso {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--carimbo);
+    text-decoration: none;
+    border-bottom: 1px solid var(--pauta);
+    display: inline-block;
+  }
+  .link-curso:hover { border-bottom-color: var(--carimbo); }
+  .objetivo { margin: 6px 0 0; font-size: 13.5px; color: var(--tinta2); }
+  .curso .item { padding-top: 10px; }
+  .caderno {
+    width: 100%;
+    min-height: 230px;
+    border: 1px solid var(--borda);
+    background-color: #fff;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--pauta) 27px,
+      var(--pauta) 28px
+    );
+    background-position: 0 6px;
+    line-height: 28px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--tinta);
+    padding: 6px 12px 12px;
+    resize: vertical;
+  }
+  .caderno:focus { border-color: var(--carimbo); }
+
+  .rodape-ref { border-top: 1px solid var(--borda); background: var(--papel2); padding: 22px; }
+  .grade-ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 26px; max-width: 1100px; }
+  .grade-ref h3 { font-family: var(--serif); font-size: 17px; margin: 8px 0 8px; font-weight: 600; }
+  .grade-ref ul { margin: 0; padding-left: 17px; color: var(--tinta2); font-size: 14px; }
+  .grade-ref li { margin-bottom: 4px; }
+
+  .carregando { padding: 60px 22px; color: var(--tinta3); font-family: var(--mono); font-size: 13px; }
+
+  @media (max-width: 860px) {
+    .balancete { grid-template-columns: repeat(2, 1fr); }
+    .quadro { display: block; }
+    .coluna { border-bottom: 1px solid var(--borda); }
+    .titulo { font-size: 27px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  /* barra da demonstração */
+  .demo-topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 22px;
+    background: var(--papel2);
+    border-bottom: 1px solid var(--borda);
+  }
+  .demo-selo {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    font-weight: 600;
+    color: var(--carimbo);
+    background: var(--razao);
+    border-radius: 999px;
+    padding: 6px 14px;
+  }
+  .demo-volta { color: var(--tinta2); font-size: 13px; text-decoration: none; }
+  .demo-volta:hover { color: var(--carimbo); }
+  .demo-topo .btn { background: #fff; }
+  .demo-topo .btn.confirmar { border-color: var(--carimbo); color: var(--carimbo); }
+</style>
+</head>
+<body>
+
+<div class="demo-topo">
+  <a class="demo-volta" href="../">&larr; Demonstrações</a>
+  <span class="demo-selo">Demonstração com dados fictícios</span>
+  <button class="btn" id="restaurar" type="button">Restaurar exemplo</button>
+</div>
+
+<header>
+  <div class="barra-topo">
+    <div>
+      <span class="eyebrow">12 semanas de estudo, mais 3 meses de aprofundamento</span>
+      <h1 class="titulo">Estudos de contabilidade</h1>
+      <p class="subtitulo">Marion, cursos do Sebrae e prática aplicada na Aurora Consultoria. Abra uma etapa para marcar o que já estudou e escrever os exercícios.</p>
+    </div>
+    <div class="acoes">
+      <span class="estado" id="estado"></span>
+      <button class="btn" id="btn-limpar">Limpar progresso</button>
+    </div>
+  </div>
+</header>
+
+<section class="balancete" id="balancete" aria-label="Resumo do progresso"></section>
+
+<main id="quadro" class="quadro" aria-label="Quadro de estudos">
+  <p class="carregando">Carregando seu progresso...</p>
+</main>
+
+<section class="rodape-ref">
+  <span class="eyebrow">Referência rápida</span>
+  <div class="grade-ref">
+    <div>
+      <h3>Rotina de segunda a sexta</h3>
+      <ul>
+        <li>Segunda: aula ou módulo do Sebrae.</li>
+        <li>Terça: leitura do livro.</li>
+        <li>Quarta: continuação da leitura e anotações.</li>
+        <li>Quinta: exercícios do livro.</li>
+        <li>Sexta: aplicação prática na empresa fictícia.</li>
+        <li>Sábado: revisão ou reposição. Domingo livre.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Carga semanal</h3>
+      <ul>
+        <li>Conteúdo: 2 horas.</li>
+        <li>Leitura: 1 hora e 30 minutos.</li>
+        <li>Exercícios: 1 hora.</li>
+        <li>Aplicação prática: 30 minutos.</li>
+        <li>Total aproximado: 5 horas por semana.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Aurora Consultoria</h3>
+      <ul>
+        <li>Atividade: consultoria empresarial para pequenas empresas.</li>
+        <li>Sócia: você.</li>
+        <li>Serviços: consultoria individual, cursos online e produtos digitais.</li>
+        <li>Use a mesma empresa nas 12 semanas.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Arquivos ou abas do projeto</h3>
+      <ul>
+        <li>Plano de contas.</li>
+        <li>Contas a pagar e receber.</li>
+        <li>Fluxo de caixa.</li>
+        <li>Lançamentos e demonstrações contábeis.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="fundo" id="fundo"></div>
+<aside class="gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="titulo-gaveta" hidden>
+  <header>
+    <button class="fechar" id="btn-fechar" aria-label="Fechar">&times;</button>
+    <span class="eyebrow" id="num-gaveta"></span>
+    <h2 class="titulo-ficha" id="titulo-gaveta"></h2>
+    <div class="mover" id="mover"></div>
+  </header>
+  <div class="corpo" id="corpo-gaveta"></div>
+</aside>
+
+<script>
+const COLUNAS = [
+  { id: 'fazer', nome: 'A fazer' },
+  { id: 'estudando', nome: 'Estudando' },
+  { id: 'praticando', nome: 'Praticando' },
+  { id: 'concluido', nome: 'Concluído' }
+];
+
+const ETAPAS = [
+  {
+    id: 's1', num: 'Semana 01', nome: 'Visão geral e patrimônio',
+    fonte: 'Capítulos 1 e 2, curso de gestão financeira',
+    curso: {
+      nome: 'Gestão financeira',
+      url: 'https://loja.sebrae.com.br/gest-o-financeira-1-372000026927',
+      objetivo: 'Construir a base de organização financeira.'
+    },
+    sebrae: [
+      'Fazer a inscrição no curso de gestão financeira.',
+      'Estudar a importância da organização financeira.',
+      'Identificar a diferença entre finanças pessoais e empresariais.'
+    ],
+    livro: ['Capítulo 1: Contabilidade.', 'Capítulo 2: Patrimônio.'],
+    estudar: [
+      'O que é contabilidade.',
+      'Usuários das informações contábeis.',
+      'Patrimônio.',
+      'Bens, direitos e obrigações.',
+      'Ativo, passivo e patrimônio líquido.',
+      'Equação patrimonial.'
+    ],
+    pratica: [
+      'Listar os bens, direitos e obrigações da Aurora Consultoria.',
+      'Incluir computador, saldo bancário, contas a receber, fornecedores e empréstimos.'
+    ],
+    resultado: 'Você deve conseguir explicar o que a empresa possui, o que tem a receber e o que deve.'
+  },
+  {
+    id: 's2', num: 'Semana 02', nome: 'Demonstrações e balanço',
+    fonte: 'Capítulos 3 e 4, curso de gestão financeira',
+    curso: {
+      nome: 'Gestão financeira',
+      url: 'https://loja.sebrae.com.br/gest-o-financeira-1-372000026927',
+      objetivo: 'Construir a base de organização financeira.'
+    },
+    sebrae: [
+      'Continuar o curso de gestão financeira.',
+      'Fazer as atividades sobre organização e análise financeira.'
+    ],
+    livro: ['Capítulo 3: Demonstrações Financeiras.', 'Capítulo 4: Balanço Patrimonial, uma introdução.'],
+    estudar: [
+      'Para que serve o balanço patrimonial.',
+      'Para que serve a DRE.',
+      'Para que serve o fluxo de caixa.',
+      'Diferença entre situação patrimonial, resultado e caixa.',
+      'Ativo, passivo e patrimônio líquido no balanço.'
+    ],
+    pratica: [
+      'Montar o balanço inicial da Aurora com banco de R$ 10.000.',
+      'Incluir computador de R$ 4.000.',
+      'Incluir capital social de R$ 14.000.'
+    ]
+  },
+  {
+    id: 's3', num: 'Semana 03', nome: 'Grupos de contas',
+    fonte: 'Capítulo 5, conclusão do curso',
+    curso: {
+      nome: 'Gestão financeira',
+      url: 'https://loja.sebrae.com.br/gest-o-financeira-1-372000026927',
+      objetivo: 'Construir a base de organização financeira.'
+    },
+    sebrae: ['Concluir o curso de gestão financeira.', 'Baixar ou salvar o certificado.'],
+    livro: ['Capítulo 5: Balanço Patrimonial, grupo de contas.'],
+    estudar: [
+      'Ativo circulante.',
+      'Ativo não circulante.',
+      'Passivo circulante.',
+      'Passivo não circulante.',
+      'Patrimônio líquido.',
+      'Capital social.',
+      'Lucros e prejuízos acumulados.'
+    ],
+    pratica: [
+      'Organizar o plano de contas em ativo.',
+      'Organizar o plano de contas em passivo.',
+      'Organizar o plano de contas em patrimônio líquido.',
+      'Organizar o plano de contas em receitas.',
+      'Organizar o plano de contas em despesas.'
+    ],
+    resultado: 'Você deve conseguir classificar uma conta sem depender de decorar exemplos.'
+  },
+  {
+    id: 's4', num: 'Semana 04', nome: 'Caixa e competência',
+    fonte: 'Capítulos 6 e 7, curso de controle da movimentação financeira',
+    curso: {
+      nome: 'Controle da movimentação financeira',
+      url: 'https://loja.sebrae.com.br/controle-da-movimentac-o-financeira-372000005120',
+      objetivo: 'Aprender a registrar entradas e saídas.'
+    },
+    livro: [
+      'Capítulo 6: Apuração do resultado e regimes de contabilidade.',
+      'Capítulo 7: Demonstração do Resultado do Exercício.'
+    ],
+    estudar: [
+      'Regime de caixa.',
+      'Regime de competência.',
+      'Receita.',
+      'Despesa.',
+      'Custo.',
+      'Lucro.',
+      'Prejuízo.',
+      'Faturamento.',
+      'Recebimento.'
+    ],
+    pratica: [
+      'Registrar uma consultoria vendida por R$ 2.000 com R$ 1.000 pagos à vista e o restante no mês seguinte.',
+      'Responder qual é a receita.',
+      'Responder quanto entrou no caixa.',
+      'Responder quanto ainda está a receber.',
+      'Responder em que momento o resultado é reconhecido.'
+    ]
+  },
+  {
+    id: 's5', num: 'Semana 05', nome: 'Fluxo de caixa',
+    fonte: 'Capítulo 8, curso de fluxo de caixa',
+    curso: {
+      nome: 'Fluxo de caixa como ferramenta de gestão financeira para sua empresa',
+      url: 'https://loja.sebrae.com.br/fluxo-de-caixa-como-ferramenta-de-gest-o-financeira-para-sua-empresa-372000005124',
+      objetivo: 'Entender caixa realizado e projetado.'
+    },
+    sebrae: [
+      'Fazer o curso de fluxo de caixa como ferramenta de gestão financeira para sua empresa.',
+      'Revisar regime de caixa, regime de competência e plano de contas no curso.',
+      'Estudar a projeção de fluxo de caixa apresentada no curso.'
+    ],
+    livro: ['Capítulo 8: Demonstração dos Fluxos de Caixa e plano de contas.'],
+    estudar: [
+      'Entradas e saídas.',
+      'Saldo inicial e saldo final.',
+      'Fluxo de caixa realizado.',
+      'Fluxo de caixa projetado.',
+      'Plano de contas financeiro.',
+      'Diferença entre fluxo de caixa e DFC contábil.'
+    ],
+    pratica: [
+      'Montar um fluxo de caixa de 30 dias com recebimentos de clientes.',
+      'Incluir assinaturas de softwares.',
+      'Incluir pró-labore e prestadores.',
+      'Incluir impostos e tarifas bancárias.',
+      'Incluir marketing.'
+    ]
+  },
+  {
+    id: 's6', num: 'Semana 06', nome: 'Balanços sucessivos',
+    fonte: 'Capítulo 9, curso de controle do fluxo de caixa',
+    curso: {
+      nome: 'Como controlar o fluxo de caixa',
+      url: 'https://es.loja.sebrae.com.br/como-controlar-o-fluxo-de-caixa-736',
+      objetivo: 'Praticar planilha e capital de giro.'
+    },
+    livro: ['Capítulo 9: Contabilidade por Balanços Sucessivos.'],
+    estudar: [
+      'Como cada operação altera a equação patrimonial.',
+      'Compra à vista e compra a prazo.',
+      'Venda à vista e venda a prazo.',
+      'Pagamento de fornecedores.',
+      'Recebimento de clientes.',
+      'Empréstimo.',
+      'Retirada dos sócios.'
+    ],
+    pratica: [
+      'Registrar 10 operações da Aurora.',
+      'Atualizar a equação depois de cada operação.'
+    ],
+    resultado: 'Ativo é igual a passivo mais patrimônio líquido. Não avance enquanto a equação deixar de fechar.'
+  },
+  {
+    id: 's7', num: 'Semana 07', nome: 'Débito e crédito',
+    fonte: 'Capítulo 10, curso de finanças para o MEI',
+    curso: {
+      nome: 'Finanças para o MEI',
+      url: 'https://rs.loja.sebrae.com.br/curso-online-financas-para-o-mei-como-controlar-e-planejar-as-financas-do-seu-negocio',
+      objetivo: 'Revisar planejamento financeiro.'
+    },
+    livro: ['Capítulo 10: Contabilização das contas de balanço, débito e crédito.'],
+    estudar: [
+      'Débito e crédito.',
+      'Natureza devedora.',
+      'Natureza credora.',
+      'Aumento e redução de contas.',
+      'Razonete.',
+      'Lançamento simples.'
+    ],
+    pratica: [
+      'Lançar o aporte dos sócios: débito em banco e crédito em capital social.',
+      'Lançar a compra de equipamento: débito em equipamentos e crédito em banco.',
+      'Lançar o pagamento de fornecedor.',
+      'Lançar o recebimento de cliente: débito em banco e crédito em clientes.',
+      'Lançar a contratação de empréstimo.',
+      'Lançar o pagamento de tarifa bancária.'
+    ]
+  },
+  {
+    id: 's8', num: 'Semana 08', nome: 'Partidas dobradas e balancete',
+    fonte: 'Capítulo 11, curso de preço de venda',
+    curso: {
+      nome: 'Como definir preço de venda',
+      url: 'https://loja.sebrae.com.br/como-definir-preco-de-venda-1-371440103446',
+      objetivo: 'Estudar custos, margem e ponto de equilíbrio.'
+    },
+    livro: ['Capítulo 11: Balancete de verificação e método das partidas dobradas.'],
+    estudar: [
+      'Partidas dobradas.',
+      'Balancete.',
+      'Total de débitos e total de créditos.',
+      'Saldo de cada conta.',
+      'Erros de lançamento.',
+      'Conferência contábil.'
+    ],
+    pratica: [
+      'Fazer pelo menos 20 lançamentos da empresa fictícia.',
+      'Montar o balancete.',
+      'Conferir se o total de débitos é igual ao total de créditos.'
+    ],
+    resultado: 'Se os totais não baterem, procure o erro antes de continuar.'
+  },
+  {
+    id: 's9', num: 'Semana 09', nome: 'Resultado e lucro',
+    fonte: 'Capítulo 12, curso de viabilidade de negócios',
+    curso: {
+      nome: 'Viabilidade de negócios',
+      url: 'https://loja.sebrae.com.br/viabilidade-de-negocios-1-372000028389',
+      objetivo: 'Analisar preço, custos e lucro.'
+    },
+    livro: ['Capítulo 12: Contabilização de contas de resultado e apuração contábil do lucro.'],
+    estudar: [
+      'Contas de receitas.',
+      'Contas de despesas.',
+      'Apuração do resultado.',
+      'Encerramento das contas de resultado.',
+      'Lucro bruto.',
+      'Lucro operacional.',
+      'Lucro líquido.'
+    ],
+    pratica: [
+      'Registrar a receita de consultoria e a receita de curso do mês.',
+      'Registrar software e publicidade.',
+      'Registrar prestadores e pró-labore.',
+      'Registrar tarifas bancárias e impostos.',
+      'Calcular o lucro ou o prejuízo do mês.'
+    ]
+  },
+  {
+    id: 's10', num: 'Semana 10', nome: 'Livros e escrituração',
+    fonte: 'Capítulos 13 e 14',
+    livro: [
+      'Capítulo 13: Livros contábeis.',
+      'Capítulo 14: Sistemas contábeis e disposições sobre escrituração mercantil.'
+    ],
+    estudar: [
+      'Livro Diário.',
+      'Livro Razão.',
+      'Escrituração e documentos comprobatórios.',
+      'Histórico dos lançamentos.',
+      'Plano de contas.',
+      'Sistemas contábeis.',
+      'Conciliação bancária.',
+      'Fechamento mensal.'
+    ],
+    pratica: [
+      'Comparar o fluxo de caixa com um extrato bancário fictício.',
+      'Encontrar uma tarifa não registrada.',
+      'Encontrar um recebimento duplicado.',
+      'Encontrar uma despesa lançada na data errada.',
+      'Encontrar um pagamento que ainda não apareceu no banco.'
+    ]
+  },
+  {
+    id: 's11', num: 'Semana 11', nome: 'Ativo não circulante e depreciação',
+    fonte: 'Capítulo 15',
+    livro: ['Capítulo 15: Ativo não circulante, leasing e depreciação.'],
+    estudar: [
+      'Imobilizado.',
+      'Intangível.',
+      'Depreciação.',
+      'Vida útil e valor residual.',
+      'Depreciação acumulada.',
+      'Leasing.',
+      'Diferença entre despesa e investimento.'
+    ],
+    pratica: [
+      'Calcular a depreciação linear mensal de um computador de R$ 4.000 com vida útil de 4 anos e valor residual zero.',
+      'Registrar a despesa de depreciação.',
+      'Registrar a depreciação acumulada.'
+    ],
+    resultado: 'R$ 4.000 divididos por 48 meses dão R$ 83,33 por mês.'
+  },
+  {
+    id: 's12', num: 'Semana 12', nome: 'Fechamento completo',
+    fonte: 'Capítulo 16 e projeto final',
+    livro: [
+      'Capítulo 16: Ciclo contábil e levantamento das demonstrações financeiras.',
+      'Fazer os exercícios de revisão e consultar o gabarito somente depois de tentar resolver.'
+    ],
+    estudar: [
+      'Fechamento mensal.',
+      'Balancete final.',
+      'DRE.',
+      'Balanço patrimonial.',
+      'Fluxo de caixa.',
+      'Integração entre os relatórios.',
+      'Conferência da equação patrimonial.',
+      'Interpretação dos resultados.'
+    ],
+    pratica: [
+      'Montar o plano de contas do fechamento de 3 meses.',
+      'Fazer os lançamentos.',
+      'Montar os razonetes.',
+      'Montar o balancete.',
+      'Montar a DRE.',
+      'Montar o balanço patrimonial.',
+      'Montar o fluxo de caixa.',
+      'Escrever um relatório com 5 indicadores.',
+      'Comentar a saúde financeira da empresa.'
+    ]
+  },
+  {
+    id: 'm4', num: 'Mês 04', nome: 'Pequenos negócios',
+    fonte: 'Depois das 12 semanas',
+    sebrae: ['Percorrer a trilha do Sebrae de gestão financeira para pequenos negócios.'],
+    estudar: [
+      'Custos fixos e variáveis.',
+      'Margem de contribuição.',
+      'Ponto de equilíbrio.',
+      'Formação de preço.',
+      'Capital de giro.',
+      'Prazo médio de recebimento.',
+      'Inadimplência.',
+      'Rentabilidade por cliente.',
+      'Orçamento empresarial.'
+    ]
+  },
+  {
+    id: 'm5', num: 'Mês 05', nome: 'Tributos',
+    fonte: 'Depois das 12 semanas',
+    estudar: [
+      'Simples Nacional.',
+      'MEI.',
+      'Anexos do Simples.',
+      'Fator R.',
+      'ISS.',
+      'Retenções.',
+      'DAS.',
+      'PGDAS-D.',
+      'Obrigações acessórias.'
+    ],
+    resultado: 'Use sempre fontes oficiais e confirme a legislação atual antes de orientar uma cliente.'
+  },
+  {
+    id: 'm6', num: 'Mês 06', nome: 'Contabilidade gerencial',
+    fonte: 'Depois das 12 semanas',
+    estudar: [
+      'Análise de DRE.',
+      'Análise de balanço.',
+      'Indicadores.',
+      'Orçamento.',
+      'Cenários.',
+      'Projeções.',
+      'Dashboard financeiro.',
+      'Relatórios para tomada de decisão.'
+    ]
+  }
+];
+
+const GRUPOS = [
+  { chave: 'sebrae', rotulo: 'Sebrae' },
+  { chave: 'livro', rotulo: 'Livro' },
+  { chave: 'estudar', rotulo: 'Estudar' },
+  { chave: 'pratica', rotulo: 'Prática' }
+];
+
+let estado = { cartoes: {} };
+let abertaId = null;
+let salvando = null;
+
+function doCartao(id) {
+  if (!estado.cartoes[id]) estado.cartoes[id] = { col: 'fazer', marcados: {}, notas: '' };
+  return estado.cartoes[id];
+}
+
+function totalItens(etapa) {
+  const base = etapa.curso ? 1 : 0;
+  return GRUPOS.reduce(function (soma, g) { return soma + (etapa[g.chave] ? etapa[g.chave].length : 0); }, base);
+}
+
+function feitosItens(etapa) {
+  const c = doCartao(etapa.id);
+  let n = etapa.curso && c.marcados['curso:0'] ? 1 : 0;
+  GRUPOS.forEach(function (g) {
+    (etapa[g.chave] || []).forEach(function (_, i) {
+      if (c.marcados[g.chave + ':' + i]) n++;
+    });
+  });
+  return n;
+}
+
+function aviso(texto) {
+  const el = document.getElementById('estado');
+  el.textContent = texto;
+  if (texto) setTimeout(function () { if (el.textContent === texto) el.textContent = ''; }, 2600);
+}
+
+// demonstração: nada é salvo, os dados ficam só na tela
+function carregar() {
+  estado = exemplo();
+  if (!estado.cartoes) estado.cartoes = {};
+}
+
+function salvar() {
+  clearTimeout(salvando);
+  salvando = setTimeout(function () {
+    aviso('Demonstração: nada é salvo');
+  }, 350);
+}
+
+function desenharBalancete() {
+  let totalT = 0, feitosT = 0, concluidas = 0, andamento = 0;
+  ETAPAS.forEach(function (e) {
+    totalT += totalItens(e);
+    feitosT += feitosItens(e);
+    const col = doCartao(e.id).col;
+    if (col === 'concluido') concluidas++;
+    if (col === 'estudando' || col === 'praticando') andamento++;
+  });
+  const perc = totalT ? Math.round((feitosT / totalT) * 100) : 0;
+  const dados = [
+    { valor: concluidas + '<span class="de"> de ' + ETAPAS.length + '</span>', rotulo: 'Etapas concluídas' },
+    { valor: String(andamento), rotulo: 'Em estudo agora' },
+    { valor: feitosT + '<span class="de"> de ' + totalT + '</span>', rotulo: 'Tarefas marcadas' },
+    { valor: perc + '<span class="de">%</span>', rotulo: 'Progresso geral' }
+  ];
+  document.getElementById('balancete').innerHTML = dados.map(function (d) {
+    return '<div class="metrica"><span class="valor">' + d.valor + '</span><span class="rotulo">' + d.rotulo + '</span></div>';
+  }).join('');
+}
+
+function desenharQuadro() {
+  const quadro = document.getElementById('quadro');
+  quadro.innerHTML = '';
+  COLUNAS.forEach(function (col) {
+    const etapas = ETAPAS.filter(function (e) { return doCartao(e.id).col === col.id; });
+    const div = document.createElement('div');
+    div.className = 'coluna';
+    div.dataset.col = col.id;
+    div.innerHTML =
+      '<div class="cabeca"><span class="nome">' + col.nome + '</span><span class="conta">' + etapas.length + '</span></div>' +
+      '<div class="lista"></div>';
+    const lista = div.querySelector('.lista');
+    if (!etapas.length) {
+      const p = document.createElement('p');
+      p.className = 'vazio';
+      p.textContent = col.id === 'fazer' ? 'Nada esperando aqui.' : 'Arraste uma etapa para cá ou use os botões dentro da ficha.';
+      lista.appendChild(p);
+    }
+    etapas.forEach(function (e) { lista.appendChild(criarFicha(e)); });
+
+    div.addEventListener('dragover', function (ev) { ev.preventDefault(); div.classList.add('alvo'); });
+    div.addEventListener('dragleave', function () { div.classList.remove('alvo'); });
+    div.addEventListener('drop', function (ev) {
+      ev.preventDefault();
+      div.classList.remove('alvo');
+      const id = ev.dataTransfer.getData('text/plain');
+      if (!id) return;
+      doCartao(id).col = col.id;
+      salvar();
+      redesenhar();
+    });
+    quadro.appendChild(div);
+  });
+}
+
+function criarFicha(etapa) {
+  const c = doCartao(etapa.id);
+  const total = totalItens(etapa);
+  const feitos = feitosItens(etapa);
+  const b = document.createElement('button');
+  b.className = 'ficha' + (feitos === total && total ? ' completa' : '');
+  b.type = 'button';
+  b.draggable = true;
+  b.dataset.id = etapa.id;
+  b.innerHTML =
+    (c.notas ? '<span class="anotado" title="Tem anotações"></span>' : '') +
+    '<span class="num">' + etapa.num + '</span>' +
+    '<span class="nome-ficha">' + etapa.nome + '</span>' +
+    '<span class="fonte">' + etapa.fonte + '</span>' +
+    '<span class="rodape"><span class="medidor"><span style="width:' + (total ? (feitos / total) * 100 : 0) + '%"></span></span>' +
+    '<span class="parcial">' + feitos + '/' + total + '</span></span>';
+  b.addEventListener('click', function () { abrir(etapa.id); });
+  b.addEventListener('dragstart', function (ev) {
+    ev.dataTransfer.setData('text/plain', etapa.id);
+    b.classList.add('arrastando');
+  });
+  b.addEventListener('dragend', function () { b.classList.remove('arrastando'); });
+  return b;
+}
+
+function abrir(id) {
+  abertaId = id;
+  const etapa = ETAPAS.find(function (e) { return e.id === id; });
+  const c = doCartao(id);
+  const gaveta = document.getElementById('gaveta');
+  gaveta.hidden = false;
+  document.getElementById('num-gaveta').textContent = etapa.num + ' · ' + etapa.fonte;
+  document.getElementById('titulo-gaveta').textContent = etapa.nome;
+
+  document.getElementById('mover').innerHTML = COLUNAS.map(function (col) {
+    return '<button type="button" data-col="' + col.id + '" aria-pressed="' + (c.col === col.id) + '">' + col.nome + '</button>';
+  }).join('');
+  document.getElementById('mover').querySelectorAll('button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      c.col = btn.dataset.col;
+      salvar();
+      redesenhar();
+      abrir(id);
+    });
+  });
+
+  let html = '';
+  if (etapa.curso) {
+    html += '<div class="secao"><span class="eyebrow linha">Curso do Sebrae</span><div class="curso">' +
+      '<a class="link-curso" href="' + etapa.curso.url + '" target="_blank" rel="noopener">' + etapa.curso.nome + '</a>' +
+      (etapa.curso.objetivo ? '<p class="objetivo">' + etapa.curso.objetivo + '</p>' : '') +
+      '<div class="item"><input type="checkbox" id="' + id + '-curso:0" data-chave="curso:0"' +
+      (c.marcados['curso:0'] ? ' checked' : '') + '>' +
+      '<label for="' + id + '-curso:0">Curso concluído</label></div>' +
+      '</div></div>';
+  }
+  GRUPOS.forEach(function (g) {
+    const itens = etapa[g.chave];
+    if (!itens || !itens.length) return;
+    html += '<div class="secao"><span class="eyebrow">' + g.rotulo + '</span>';
+    itens.forEach(function (texto, i) {
+      const chave = g.chave + ':' + i;
+      const marcado = c.marcados[chave] ? ' checked' : '';
+      html += '<div class="item"><input type="checkbox" id="' + id + '-' + chave + '" data-chave="' + chave + '"' + marcado + '>' +
+        '<label for="' + id + '-' + chave + '">' + texto + '</label></div>';
+    });
+    html += '</div>';
+  });
+  if (etapa.resultado) {
+    html += '<div class="secao"><span class="eyebrow">Resultado esperado</span><p class="nota-fixa">' + etapa.resultado + '</p></div>';
+  }
+  html += '<div class="secao"><span class="eyebrow">Caderno de prática</span>' +
+    '<textarea class="caderno" id="caderno" placeholder="Escreva aqui os lançamentos, os números e as dúvidas desta etapa."></textarea></div>';
+
+  const corpo = document.getElementById('corpo-gaveta');
+  corpo.innerHTML = html;
+  corpo.scrollTop = 0;
+  corpo.querySelectorAll('input[type="checkbox"]').forEach(function (cx) {
+    cx.addEventListener('change', function () {
+      if (cx.checked) c.marcados[cx.dataset.chave] = true;
+      else delete c.marcados[cx.dataset.chave];
+      salvar();
+      redesenhar();
+    });
+  });
+  const caderno = document.getElementById('caderno');
+  caderno.value = c.notas || '';
+  caderno.addEventListener('input', function () {
+    c.notas = caderno.value;
+    salvar();
+    desenharQuadro();
+  });
+
+  document.getElementById('fundo').classList.add('aberto');
+  requestAnimationFrame(function () { gaveta.classList.add('aberta'); });
+}
+
+function fechar() {
+  const gaveta = document.getElementById('gaveta');
+  gaveta.classList.remove('aberta');
+  document.getElementById('fundo').classList.remove('aberto');
+  abertaId = null;
+  setTimeout(function () { if (!abertaId) gaveta.hidden = true; }, 220);
+}
+
+function redesenhar() {
+  desenharBalancete();
+  desenharQuadro();
+}
+
+document.getElementById('btn-fechar').addEventListener('click', fechar);
+document.getElementById('fundo').addEventListener('click', fechar);
+document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && abertaId) fechar(); });
+document.getElementById('btn-limpar').addEventListener('click', function () {
+  if (!confirm('Isso apaga as marcações e as anotações de todas as etapas. Quer continuar?')) return;
+  estado = { cartoes: {} };
+  fechar();
+  redesenhar();
+  aviso('Quadro em branco. Nada é salvo nesta demonstração.');
+});
+
+// ---------- dados fictícios da demonstração ----------
+function marcados(etapa, grupos) {
+  const m = {};
+  grupos.forEach(function (g) {
+    if (g === 'curso') { if (etapa.curso) m['curso:0'] = true; return; }
+    (etapa[g] || []).forEach(function (_, i) { m[g + ':' + i] = true; });
+  });
+  return m;
+}
+
+function exemplo() {
+  const tudo = ['curso', 'sebrae', 'livro', 'estudar', 'pratica'];
+  const cartoes = {};
+  ETAPAS.forEach(function (e) { cartoes[e.id] = { col: 'fazer', marcados: {}, notas: '' }; });
+
+  ['s1', 's2', 's3', 's4'].forEach(function (id) {
+    const etapa = ETAPAS.find(function (e) { return e.id === id; });
+    cartoes[id] = { col: 'concluido', marcados: marcados(etapa, tudo), notas: '' };
+  });
+
+  cartoes.s1.notas = 'Bens: computador 4.000, mesa e cadeira 900.\n' +
+    'Direitos: 2.400 a receber de 2 consultorias entregues.\n' +
+    'Obrigações: 1.200 de fornecedor de design e 600 de softwares.\n' +
+    'Patrimônio líquido = 14.000 - 1.800 = 12.200.';
+  cartoes.s2.notas = 'Balanço inicial da Aurora.\n' +
+    'Ativo: banco 10.000 + computador 4.000 = 14.000.\n' +
+    'Passivo: zero. Patrimônio líquido: capital social 14.000.\n' +
+    'A equação fechou na primeira tentativa.';
+  cartoes.s3.notas = 'Plano de contas em 5 grupos, com 34 contas no total.\n' +
+    'Dúvida resolvida: adiantamento a fornecedor é ativo circulante, não despesa.';
+  cartoes.s4.notas = 'Consultoria de 2.000 vendida no dia 8.\n' +
+    'Receita reconhecida: 2.000 na competência de março.\n' +
+    'Caixa no mês: 1.000. A receber: 1.000 para abril.\n' +
+    'Pelo regime de caixa eu veria só metade do resultado.';
+
+  const s5 = ETAPAS.find(function (e) { return e.id === 's5'; });
+  cartoes.s5 = {
+    col: 'praticando',
+    marcados: marcados(s5, ['curso', 'sebrae', 'livro', 'estudar']),
+    notas: 'Fluxo de 30 dias montado na planilha.\n' +
+      'Entradas previstas: 6.800 de consultorias e 1.450 de cursos.\n' +
+      'Saídas fixas: softwares 380, pró-labore 3.000, prestadores 1.200, impostos 640, tarifas 59.\n' +
+      'Saldo projetado para o fim do mês: 2.971. Falta lançar o marketing.'
+  };
+
+  const s6 = ETAPAS.find(function (e) { return e.id === 's6'; });
+  const m6 = marcados(s6, ['livro']);
+  (s6.estudar || []).forEach(function (_, i) { if (i < 4) m6['estudar:' + i] = true; });
+  cartoes.s6 = {
+    col: 'estudando',
+    marcados: m6,
+    notas: 'Operações 1 a 6 registradas. Na compra a prazo do notebook a equação não fechou,\n' +
+      'porque lancei o valor só no ativo. Faltava o fornecedor no passivo. Corrigido.'
+  };
+
+  cartoes.s7 = { col: 'estudando', marcados: {}, notas: 'Começar pelos razonetes antes de tentar o balancete.' };
+
+  return { cartoes: cartoes };
+}
+
+// Restaurar exemplo pede confirmação com um segundo toque
+const restaurar = document.getElementById('restaurar');
+let esperaConfirmar = null;
+restaurar.addEventListener('click', function () {
+  if (!restaurar.classList.contains('confirmar')) {
+    restaurar.classList.add('confirmar');
+    restaurar.textContent = 'Confirmar: apagar alterações';
+    esperaConfirmar = setTimeout(function () {
+      restaurar.classList.remove('confirmar');
+      restaurar.textContent = 'Restaurar exemplo';
+    }, 4000);
+    return;
+  }
+  clearTimeout(esperaConfirmar);
+  restaurar.classList.remove('confirmar');
+  restaurar.textContent = 'Restaurar exemplo';
+  carregar();
+  fechar();
+  redesenhar();
+  window.scrollTo(0, 0);
+});
+
+(function iniciar() {
+  carregar();
+  redesenhar();
+})();
+</script>
+</body>
+</html>
