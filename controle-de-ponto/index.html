@@ -1,0 +1,1693 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2F3FB0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%232F3FB0%22/%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2219%22 fill=%22none%22 stroke=%22white%22 stroke-width=%225.5%22/%3E%3Cpath d=%22M32 32V19M32 32l-9 5%22 stroke=%22white%22 stroke-width=%225%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+<title>Controle de ponto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F3F5F7; --superficie:#FFFFFF; --tinta:#1C2733; --tinta-suave:#5B6773;
+  --linha:#D9DEE3; --carimbo:#2F3FB0; --carimbo-claro:#E8EAF8;
+  --ok:#2B7A4B; --ok-claro:#E3F2E9; --atencao:#9A6210; --atencao-claro:#FBF0DC;
+  --erro:#B42318; --erro-claro:#FCE8E6;
+  --raio:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--papel);color:var(--tinta);
+  font-size:16px;line-height:1.5;font-variant-numeric:tabular-nums;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select,textarea{font:inherit;color:inherit}
+.oculto{display:none!important}
+
+/* topo */
+.topo{background:var(--superficie);border-bottom:1px solid var(--linha);padding:calc(env(safe-area-inset-top,0px) + 12px) 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:5}
+.marca{display:flex;flex-direction:column;line-height:1.2}
+.marca strong{font-size:18px;font-weight:800;color:var(--carimbo)}
+.marca span{font-size:13px;color:var(--tinta-suave)}
+.quem{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--tinta-suave)}
+
+.pagina{max-width:1040px;margin:0 auto;padding:24px 20px 48px}
+.pagina.estreita{max-width:560px}
+
+/* botões e campos */
+.botao{border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;background:var(--carimbo);color:#fff}
+.botao:hover{filter:brightness(1.08)}
+.botao:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.botao.secundario{background:var(--superficie);color:var(--tinta);border:1px solid var(--linha)}
+.botao.perigo{background:var(--erro)}
+.botao.ok{background:var(--ok)}
+.botao.pequeno{padding:6px 12px;font-size:14px}
+.link{background:none;border:0;padding:0;color:var(--carimbo);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--carimbo);outline-offset:2px}
+label.campo{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin-bottom:14px}
+.campo input,.campo select,.campo textarea{font-weight:400;border:1px solid var(--linha);border-radius:8px;padding:10px 12px;background:#fff;font-size:16px}
+.campo textarea{min-height:80px;resize:vertical}
+.linha-campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.ajuda{font-size:13px;color:var(--tinta-suave);font-weight:400}
+
+.bloco{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:20px;margin-bottom:20px}
+.bloco h2{font-size:18px;margin:0 0 4px}
+.bloco > p.ajuda{margin:0 0 16px}
+h1.titulo{font-size:26px;margin:0 0 4px;font-weight:800}
+
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login .bloco{width:100%;max-width:400px;padding:32px}
+.login h1{font-size:28px;font-weight:800;margin:0;color:var(--carimbo)}
+.login .subtitulo{margin:0 0 24px;color:var(--tinta-suave)}
+.mensagem-erro{color:var(--erro);font-size:14px;min-height:20px;margin:0 0 12px}
+
+/* cartão de ponto */
+.cartao{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:24px 20px;margin-bottom:20px}
+.cartao .dia{font-size:20px;font-weight:700;margin:0}
+.cartao .relogio{font-size:44px;font-weight:800;letter-spacing:-1px;margin:4px 0 20px}
+.slots{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:22px}
+.slot{border:1.5px dashed var(--linha);border-radius:8px;padding:12px;min-height:92px;display:flex;flex-direction:column;justify-content:space-between}
+.slot .rotulo{font-size:13px;color:var(--tinta-suave);font-weight:600}
+.slot .hora{font-size:clamp(20px,2.4vw,28px);font-weight:800;color:#B8C0C8;white-space:nowrap}
+.slot.batido{border-style:solid;border-color:var(--carimbo-claro);background:#FAFBFF}
+.slot.batido .hora{color:var(--carimbo);display:inline-block;align-self:flex-start;border:2px solid var(--carimbo);border-radius:6px;padding:0 8px;transform:rotate(-2deg)}
+.slot.novo .hora{animation:carimbar .45s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes carimbar{0%{transform:rotate(-8deg) scale(1.6);opacity:0}100%{transform:rotate(-2deg) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.slot.novo .hora{animation:none}}
+@media (min-width:640px){.slots{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.botao-bater{width:100%;min-height:64px;font-size:20px;border-radius:12px}
+.acoes-cartao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:14px}
+.concluido{background:var(--ok-claro);color:var(--ok);border-radius:10px;padding:16px;font-weight:600;text-align:center}
+
+/* abas */
+.abas{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--linha);margin-bottom:24px}
+.aba{background:none;border:0;padding:10px 14px;font-weight:600;color:var(--tinta-suave);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.aba.ativa{color:var(--carimbo);border-bottom-color:var(--carimbo)}
+.contador{display:inline-block;min-width:20px;padding:0 6px;border-radius:10px;background:var(--erro);color:#fff;font-size:12px;margin-left:6px;text-align:center}
+
+/* tabelas */
+.rolagem{overflow-x:auto}
+table.tabela{width:100%;border-collapse:collapse;font-size:14px}
+.tabela th{text-align:left;font-size:13px;color:var(--tinta-suave);font-weight:600;padding:8px;border-bottom:2px solid var(--linha);white-space:nowrap}
+.tabela td{padding:8px;border-bottom:1px solid var(--linha);vertical-align:top}
+.tabela tr.fim-de-semana td{background:#F7F8FA;color:var(--tinta-suave)}
+.tabela tr.clicavel{cursor:pointer}
+.tabela tr.clicavel:hover td{background:var(--carimbo-claro)}
+.positivo{color:var(--ok);font-weight:600}
+.negativo{color:var(--erro);font-weight:600}
+
+/* selos */
+.selo{display:inline-block;border-radius:6px;padding:2px 10px;font-size:13px;font-weight:600;white-space:nowrap}
+.selo.pendente{background:var(--atencao-claro);color:var(--atencao)}
+.selo.aprovada,.selo.concluido{background:var(--ok-claro);color:var(--ok)}
+.selo.reprovada,.selo.reaberto{background:var(--erro-claro);color:var(--erro)}
+.selo.neutro{background:var(--papel);color:var(--tinta-suave)}
+
+/* cards de números */
+.numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.numero{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:14px 16px}
+.numero .valor{font-size:28px;font-weight:800;line-height:1.1}
+.numero .legenda{font-size:13px;color:var(--tinta-suave);margin-top:4px}
+.numero.extra .valor{color:var(--ok)}
+.numero.falta .valor{color:var(--erro)}
+
+/* listas de solicitações e pendências */
+.item{border:1px solid var(--linha);border-radius:var(--raio);padding:14px 16px;margin-bottom:12px;background:var(--superficie)}
+.item .cabeca{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.item .cabeca strong{font-size:16px}
+.item p{margin:6px 0;font-size:15px}
+.item .botoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pendencia{border-left:4px solid var(--erro)}
+.pendencia.alerta{border-left-color:var(--atencao)}
+.pendencia.resolvida{border-left-color:var(--ok);opacity:.75}
+.aviso{border-radius:var(--raio);padding:14px 16px;margin-bottom:20px;font-weight:500}
+.aviso.ok{background:var(--ok-claro);color:var(--ok)}
+.aviso.erro{background:var(--erro-claro);color:var(--erro)}
+.aviso.atencao{background:var(--atencao-claro);color:var(--atencao)}
+.barra-filtros{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
+.barra-filtros .campo{margin-bottom:0}
+
+/* equipe ao vivo */
+.ao-vivo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pessoa{background:var(--superficie);border:1px solid var(--linha);border-left:6px solid var(--linha);border-radius:var(--raio);padding:18px 20px}
+.pessoa.concluido{background:var(--superficie);color:inherit;text-align:left;font-weight:400;padding:18px 20px;border-radius:var(--raio)}
+.pessoa.ok{border-left-color:var(--ok)}
+.pessoa.atencao{border-left-color:var(--atencao)}
+.pessoa.erro{border-left-color:var(--erro)}
+.pessoa.concluido{border-left-color:var(--carimbo)}
+.pessoa .cabeca{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pessoa .cabeca strong{font-size:18px}
+.pessoa .destaque{font-size:30px;font-weight:800;line-height:1.15;margin:12px 0 4px}
+.pessoa.ok .destaque{color:var(--ok)} .pessoa.atencao .destaque{color:var(--atencao)}
+.pessoa.erro .destaque{color:var(--erro)} .pessoa.concluido .destaque{color:var(--carimbo)}
+.pessoa .linha{margin:0 0 4px;font-size:15px}
+.pessoa .marcas{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--linha)}
+.pessoa .marcas span{display:block;font-size:12px;color:var(--tinta-suave)}
+.pessoa .marcas b{font-size:16px}
+.selo.ok{background:var(--ok-claro);color:var(--ok)}
+.selo.atencao{background:var(--atencao-claro);color:var(--atencao)}
+.selo.erro{background:var(--erro-claro);color:var(--erro)}
+
+/* calendário de folgas e feriados */
+.cal-topo{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}
+.cal-topo h2{margin:0;font-size:20px}
+.cal-grade{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-cab{font-size:12px;color:var(--tinta-suave);font-weight:600;text-align:center;padding:4px 0}
+.cal-dia{min-height:96px;border:1px solid var(--linha);border-radius:8px;padding:6px;background:#fff;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-width:0}
+.cal-dia:hover{border-color:var(--carimbo)}
+.cal-dia.fds{background:#F7F8FA}
+.cal-dia.hoje{border:2px solid var(--carimbo)}
+.cal-dia .num{font-size:13px;font-weight:700}
+.cal-tag{font:inherit;font-size:11.5px;line-height:1.25;border:0;border-radius:5px;padding:3px 5px;text-align:left;overflow:hidden;overflow-wrap:anywhere}
+.cal-tag small{display:block;opacity:.8;font-size:10.5px}
+.cal-tag.feriado{background:var(--carimbo-claro);color:var(--carimbo)}
+.cal-tag.folga{background:var(--ok-claro);color:var(--ok);cursor:pointer}
+.cal-legenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--tinta-suave)}
+.cal-legenda i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+@media (max-width:600px){.cal-dia{min-height:64px;padding:3px}.cal-tag{font-size:10px;padding:2px 3px}.cal-tag small{display:none}}
+
+/* faixa da demonstração */
+#faixa-demo{background:#1C2733;color:#fff;font-size:14px;padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:center}
+#faixa-demo .demo-selo{background:#FFD27A;color:#1C2733;font-weight:700;border-radius:999px;padding:3px 12px}
+[data-sair],[data-trocar-senha]{display:none!important}
+#faixa-demo .relogio-demo{font-weight:700;font-variant-numeric:tabular-nums}
+#faixa-demo button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:6px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+#faixa-demo button.ativo{background:#fff;color:#1C2733;border-color:#fff;font-weight:700}
+.acessos-demo{margin-top:20px;padding-top:16px;border-top:1px solid var(--linha)}
+.acessos-demo p{margin:0 0 10px;font-size:13px;color:var(--tinta-suave)}
+.acessos-demo .grade{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* diálogo */
+dialog{border:0;border-radius:14px;padding:0;max-width:520px;width:calc(100% - 32px);box-shadow:0 20px 60px rgba(28,39,51,.25)}
+dialog::backdrop{background:rgba(28,39,51,.45)}
+.dialogo{padding:24px}
+.dialogo h3{margin:0 0 12px;font-size:20px}
+.dialogo .rodape{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.opcoes-tipo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.opcoes-tipo label{border:1.5px solid var(--linha);border-radius:8px;padding:10px;cursor:pointer;font-weight:600;font-size:15px;display:flex;gap:8px;align-items:center}
+.opcoes-tipo label:has(input:checked){border-color:var(--carimbo);background:var(--carimbo-claro)}
+.dias-semana{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.dias-semana label{border:1px solid var(--linha);border-radius:6px;padding:6px 10px;font-size:14px;cursor:pointer}
+.dias-semana label:has(input:checked){border-color:var(--carimbo);background:var(--carimbo-claro)}
+
+.aviso-flutuante{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  background:var(--tinta);color:#fff;padding:12px 18px;border-radius:10px;font-size:15px;z-index:50;max-width:calc(100% - 32px)}
+
+/* impressão do espelho */
+#impressao{display:none}
+@media print{
+  @page{size:A4 portrait;margin:10mm 10mm}
+  body{background:#fff;font-size:8.5pt}
+  body > *:not(#impressao){display:none!important}
+  #impressao{display:block}
+}
+.espelho{font-family:"Figtree",Arial,sans-serif;color:#000;font-size:8.5pt;line-height:1.3}
+.espelho h1{font-size:14pt;text-align:center;margin:0 0 2pt}
+.espelho .empresa{text-align:center;margin:0 0 8pt;font-size:8.5pt}
+.espelho .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:4pt;margin-bottom:8pt}
+.espelho .card{border:0.8pt solid #999;border-radius:4pt;padding:4pt 6pt}
+.espelho .card b{display:block;font-size:12pt}
+.espelho .card span{font-size:7pt}
+.espelho .cabecalho{border:0.8pt solid #999;border-radius:4pt;padding:5pt 7pt;margin-bottom:6pt;display:grid;grid-template-columns:1.4fr 1fr 1.6fr;gap:6pt}
+.espelho .cabecalho span{display:block;font-size:7pt;color:#444}
+.espelho table{width:100%;border-collapse:collapse}
+.espelho th,.espelho td{border:0.5pt solid #aaa;padding:1.6pt 3pt;text-align:center}
+.espelho th{background:#eee;font-size:7.5pt}
+.espelho td.obs{text-align:left;font-size:7.5pt}
+.espelho tr.fds td{background:#f3f3f3}
+.espelho .legenda{font-size:7pt;margin:4pt 0 0}
+.espelho .assinaturas{display:grid;grid-template-columns:1fr 1fr;gap:30pt;margin-top:26pt}
+.espelho .assinaturas div{border-top:0.8pt solid #000;text-align:center;padding-top:3pt}
+.espelho .rodape-esp{font-size:7pt;color:#444;margin-top:8pt;text-align:right}
+</style>
+</head>
+<body>
+<div id="faixa-demo">
+  <span class="demo-selo">Demonstração com dados fictícios</span>
+  <span>Ver como:
+    <button data-visao="gestora@demo.com" class="ativo">Gestora</button>
+    <button data-visao="mariana@demo.com">Mariana</button>
+    <button data-visao="camila@demo.com">Camila</button>
+    <button data-visao="beatriz@demo.com">Beatriz</button></span>
+  <span>Quinta-feira, 15/10/2026, <span class="relogio-demo" id="relogio-demo">--:--</span></span>
+  <span>Simular horário:
+    <button data-hora="08:42">08:42</button>
+    <button data-hora="13:15" class="ativo">13:15</button>
+    <button data-hora="17:47">17:47</button></span>
+  <button id="reiniciar-demo">Restaurar exemplo</button>
+</div>
+
+<!-- carregando -->
+<div id="tela-carregando" class="login"><p class="ajuda">Carregando...</p></div>
+
+<!-- login -->
+<div id="tela-login" class="login oculto">
+  <form class="bloco" id="form-login" autocomplete="on">
+    <h1>Ponto</h1>
+    <p class="subtitulo">Empresa Exemplo Ltda</p>
+    <label class="campo">E-mail corporativo
+      <input type="email" id="login-email" autocomplete="username" required>
+    </label>
+    <label class="campo">Senha
+      <input type="password" id="login-senha" autocomplete="current-password" required>
+    </label>
+    <p class="mensagem-erro" id="login-erro"></p>
+    <button class="botao" style="width:100%;padding:14px" type="submit" id="botao-entrar">Entrar</button>
+    <p style="text-align:center;margin:16px 0 0"><button type="button" class="link" id="esqueci">Esqueci minha senha</button></p>
+    <div class="acessos-demo">
+      <p>Acessos de demonstração (senha demo1234 para todos):</p>
+      <div class="grade">
+        <button type="button" class="botao" data-entrar="gestora@demo.com">Gestora</button>
+        <button type="button" class="botao secundario" data-entrar="mariana@demo.com">Mariana</button>
+        <button type="button" class="botao secundario" data-entrar="camila@demo.com">Camila</button>
+        <button type="button" class="botao secundario" data-entrar="beatriz@demo.com">Beatriz</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- primeiro acesso -->
+<div id="tela-senha" class="login oculto">
+  <form class="bloco" id="form-senha">
+    <h1>Crie a sua senha</h1>
+    <p class="subtitulo">Este é o seu primeiro acesso. Troque a senha provisória por uma senha só sua antes de começar.</p>
+    <label class="campo">Senha atual<input type="password" id="ps-atual" autocomplete="current-password" required>
+      <span class="ajuda">A senha provisória que você recebeu, ou a última senha que você criou.</span></label>
+    <label class="campo">Nova senha<input type="password" id="ps-nova" autocomplete="new-password" required>
+      <span class="ajuda">Pelo menos 8 caracteres.</span></label>
+    <label class="campo">Repita a nova senha<input type="password" id="ps-repetida" autocomplete="new-password" required></label>
+    <p class="mensagem-erro" id="ps-erro"></p>
+    <button class="botao" style="width:100%;padding:14px" type="submit" id="ps-salvar">Salvar nova senha</button>
+    <p style="text-align:center;margin:16px 0 0"><button type="button" class="link" data-sair>Sair</button></p>
+  </form>
+</div>
+
+<!-- funcionária -->
+<div id="tela-func" class="oculto">
+  <header class="topo">
+    <div class="marca"><strong>Ponto</strong><span>Empresa Exemplo Ltda</span></div>
+    <div class="quem"><span id="func-nome"></span><button class="botao secundario pequeno" data-trocar-senha>Trocar senha</button><button class="botao secundario pequeno" data-sair>Sair</button></div>
+  </header>
+  <main class="pagina estreita">
+    <div id="func-aguardando" class="aviso atencao oculto">Seu acesso foi criado, mas a sua jornada ainda não foi configurada. Assim que a gestora concluir a configuração, o botão de ponto aparece aqui.</div>
+    <div id="func-conteudo" class="oculto">
+      <section class="cartao">
+        <p class="dia" id="func-dia"></p>
+        <p class="relogio" id="func-relogio">--:--:--</p>
+        <div class="slots" id="func-slots"></div>
+        <div id="func-acao"></div>
+        <div class="acoes-cartao">
+          <button class="link" id="func-outra">Registrar outra marcação</button>
+          <span class="ajuda">O horário gravado é o do servidor, não o do aparelho.</span>
+        </div>
+      </section>
+
+      <section class="bloco">
+        <h2>Ajustes e atestados</h2>
+        <p class="ajuda">Esqueceu de bater, bateu errado ou foi ao médico? Envie para aprovação.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="botao" id="func-pedir-ajuste">Solicitar ajuste de horário</button>
+          <button class="botao secundario" id="func-pedir-atestado">Enviar atestado</button>
+        </div>
+        <div id="func-solicitacoes"></div>
+      </section>
+
+      <section class="bloco">
+        <h2>Meu mês</h2>
+        <p class="ajuda">Marcações registradas neste mês. O asterisco indica horário ajustado.</p>
+        <div class="rolagem"><table class="tabela" id="func-mes"></table></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- gestora -->
+<div id="tela-admin" class="oculto">
+  <header class="topo">
+    <div class="marca"><strong>Ponto</strong><span>Gestão da equipe</span></div>
+    <div class="quem"><span id="admin-nome"></span><button class="botao secundario pequeno" data-trocar-senha>Trocar senha</button><button class="botao secundario pequeno" data-sair>Sair</button></div>
+  </header>
+  <main class="pagina">
+    <nav class="abas" id="abas">
+      <button class="aba ativa" data-aba="hoje">Equipe hoje<span class="contador oculto" id="contador-avisos"></span></button>
+      <button class="aba" data-aba="solicitacoes">Solicitações<span class="contador oculto" id="contador-solic"></span></button>
+      <button class="aba" data-aba="fechamento">Fechamento</button>
+      <button class="aba" data-aba="funcionarias">Funcionárias</button>
+      <button class="aba" data-aba="feriados">Folgas e feriados</button>
+    </nav>
+
+    <section data-painel="solicitacoes" class="oculto">
+      <h1 class="titulo">Solicitações</h1>
+      <p class="ajuda" style="margin:0 0 20px">Ajustes de horário e atestados enviados pela equipe. Ao aprovar, o horário ou o abono entra direto no ponto do dia.</p>
+      <div id="admin-pendentes"></div>
+      <h2 style="font-size:18px;margin:28px 0 12px">Decididas recentemente</h2>
+      <div id="admin-decididas"></div>
+    </section>
+
+    <section data-painel="hoje">
+      <h1 class="titulo">Equipe hoje</h1>
+      <p class="ajuda" style="margin:0 0 20px"><span id="hoje-data"></span>. A tela se atualiza sozinha; última atualização às <span id="hoje-hora"></span>.</p>
+      <div class="bloco" id="bloco-avisos">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2>Avisos de hoje</h2>
+          <button class="botao secundario pequeno oculto" id="ativar-notificacoes">Receber avisos no computador</button>
+        </div>
+        <p class="ajuda" id="notificacoes-estado"></p>
+        <div id="lista-avisos"></div>
+      </div>
+      <div class="ao-vivo" id="admin-hoje"></div>
+    </section>
+
+    <section data-painel="fechamento" class="oculto">
+      <h1 class="titulo">Fechamento do ponto</h1>
+      <p class="ajuda" style="margin:0 0 20px">Escolha o mês e a funcionária. O ponto só pode ser fechado quando todas as pendências estiverem resolvidas e todas as diferenças estiverem justificadas.</p>
+      <div class="barra-filtros">
+        <label class="campo">Mês<input type="month" id="fech-mes"></label>
+        <label class="campo">Funcionária<select id="fech-func"></select></label>
+        <button class="botao" id="fech-verificar">Verificar o mês</button>
+      </div>
+      <div id="fech-resultado"></div>
+      <h2 style="font-size:18px;margin:32px 0 12px">Fechamentos realizados</h2>
+      <div class="rolagem"><table class="tabela" id="fech-historico"></table></div>
+    </section>
+
+    <section data-painel="funcionarias" class="oculto">
+      <h1 class="titulo">Funcionárias</h1>
+      <p class="ajuda" style="margin:0 0 20px">Cada funcionária aparece aqui depois do primeiro acesso. Configure a jornada para liberar o ponto dela.</p>
+      <div id="admin-funcionarias"></div>
+    </section>
+
+    <section data-painel="feriados" class="oculto">
+      <h1 class="titulo">Folgas e feriados</h1>
+      <p class="ajuda" style="margin:0 0 20px">Os feriados nacionais, estaduais e municipais já estão no sistema, conforme a cidade de cada funcionária. Aqui você só lança as folgas.</p>
+      <div class="bloco">
+        <div class="cal-topo">
+          <button class="botao secundario pequeno" id="cal-anterior">Mês anterior</button>
+          <h2 id="cal-titulo"></h2>
+          <button class="botao secundario pequeno" id="cal-proximo">Próximo mês</button>
+        </div>
+        <div class="cal-grade" id="cal-grade"></div>
+        <div class="cal-legenda">
+          <span><i style="background:var(--carimbo-claro)"></i>Feriado</span>
+          <span><i style="background:var(--ok-claro)"></i>Folga (clique na folga para removê-la)</span>
+          <span>Clique num dia para lançar uma folga nele.</span>
+        </div>
+      </div>
+      <div class="bloco">
+        <h2>Lançar folga</h2>
+        <p class="ajuda">No dia da folga, a jornada prevista fica zerada e não conta como falta.</p>
+        <div class="linha-campos">
+          <label class="campo">Data<input type="date" id="fol-data"></label>
+          <label class="campo">Motivo<input type="text" id="fol-motivo" placeholder="Ex.: ponte do feriado"></label>
+          <label class="campo">Vale para<select id="fol-para"></select></label>
+        </div>
+        <button class="botao" id="fol-adicionar">Lançar folga</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="dialogo"><div class="dialogo" id="dialogo-conteudo"></div></dialog>
+<div id="impressao"></div>
+
+<script type="module">
+/* ===================== Modo de demonstração =====================
+   Esta página não se conecta a nenhum servidor. Os dados abaixo são fictícios,
+   ficam só na memória do navegador e voltam ao início quando a página é recarregada. */
+
+/* ---------- relógio simulado: quinta-feira, 15/10/2026 ---------- */
+const DataReal = Date;
+let deslocamentoRelogio = 0;
+class DataDemo extends DataReal {
+  constructor(...a) { if (a.length === 0) super(DataReal.now() + deslocamentoRelogio); else super(...a); }
+  static now() { return DataReal.now() + deslocamentoRelogio; }
+}
+globalThis.Date = DataDemo;
+const DIA_DEMO = "2026-10-15";
+function ajustarRelogio(hhmm) { deslocamentoRelogio = new DataReal(`${DIA_DEMO}T${hhmm}:00-03:00`).getTime() - DataReal.now(); }
+ajustarRelogio("13:15");
+try { Object.keys(localStorage).filter(k => k.startsWith("ponto-avisos-")).forEach(k => localStorage.removeItem(k)); } catch {}
+
+/* ---------- Timestamp e sentinelas ---------- */
+class Timestamp {
+  constructor(ms) { this.ms = ms; }
+  toDate() { return new DataReal(this.ms); }
+  static fromDate(d) { return new Timestamp(d.getTime()); }
+  static now() { return new Timestamp(Date.now()); }
+}
+const serverTimestamp = () => ({ __s: "ts" });
+const increment = (n) => ({ __s: "inc", n });
+const arrayUnion = (...v) => ({ __s: "union", v });
+const deleteField = () => ({ __s: "del" });
+const ehObjeto = (v) => v && typeof v === "object" && !Array.isArray(v) && !(v instanceof Timestamp) && !v.__s;
+
+function resolver(antigo, novo) {
+  if (novo && novo.__s === "ts") return Timestamp.now();
+  if (novo && novo.__s === "inc") return (Number(antigo) || 0) + novo.n;
+  if (novo && novo.__s === "union") { const base = Array.isArray(antigo) ? [...antigo] : []; novo.v.forEach(x => base.push(x)); return base; }
+  return novo;
+}
+function mesclar(destino, origem, profundo) {
+  const r = { ...(destino || {}) };
+  for (const [k, v] of Object.entries(origem)) {
+    if (v && v.__s === "del") { delete r[k]; continue; }
+    if (profundo && ehObjeto(v)) r[k] = mesclar(ehObjeto(r[k]) ? r[k] : {}, v, true);
+    else if (ehObjeto(v)) r[k] = mesclar({}, v, false);
+    else r[k] = resolver(r[k], v);
+  }
+  return r;
+}
+
+/* ---------- banco em memória ---------- */
+const banco = { usuarios: new Map(), batidas: new Map(), solicitacoes: new Map(), fechamentos: new Map(), config: new Map() };
+const escutas = new Set();
+let proximoId = 1;
+const CAMPOS_PONTO = ["entrada", "saidaAlmoco", "voltaAlmoco", "saida"];
+
+function visivel(colecao, dados) {
+  if (colecao !== "batidas") return dados;
+  const d = { ...dados };
+  CAMPOS_PONTO.forEach(c => { if (d[c] instanceof Timestamp && d[c].ms > Date.now()) delete d[c]; });
+  return d;
+}
+function instantaneoDoc(colecao, id) {
+  const bruto = banco[colecao].get(id);
+  return { id, exists: () => !!bruto, data: () => bruto ? visivel(colecao, bruto) : undefined };
+}
+function executarConsulta(q) {
+  const docs = [];
+  for (const [id, bruto] of banco[q.nome]) {
+    if (q.filtros.every(f => bruto[f.campo] === f.valor)) docs.push(instantaneoDoc(q.nome, id));
+  }
+  return { empty: docs.length === 0, docs, size: docs.length };
+}
+function avisarEscutas() {
+  const ordem = [...escutas].sort((a, b) => (b.alvo.nome === "batidas") - (a.alvo.nome === "batidas"));
+  queueMicrotask(() => ordem.forEach(e => {
+    try { e.cb(e.alvo.tipo === "doc" ? instantaneoDoc(e.alvo.col, e.alvo.id) : executarConsulta(e.alvo)); } catch (err) { console.error(err); }
+  }));
+}
+
+function initializeApp() { return {}; }
+function getFirestore() { return {}; }
+function getStorage() { return {}; }
+function collection(_db, nome) { return { tipo: "consulta", nome, filtros: [] }; }
+function where(campo, _op, valor) { return { campo, valor }; }
+function query(c, ...f) { return { ...c, filtros: [...c.filtros, ...f] }; }
+function doc(_db, col, id) { return { tipo: "doc", col, id }; }
+async function getDoc(r) { return instantaneoDoc(r.col, r.id); }
+async function getDocs(q) { return executarConsulta(q); }
+async function setDoc(r, dados, opcoes) {
+  const atual = banco[r.col].get(r.id);
+  banco[r.col].set(r.id, opcoes?.merge ? mesclar(atual, dados, true) : mesclar({}, dados, false));
+  avisarEscutas();
+}
+async function updateDoc(r, dados) {
+  const atual = banco[r.col].get(r.id);
+  if (!atual) { const e = new Error("Documento não encontrado"); e.code = "not-found"; throw e; }
+  banco[r.col].set(r.id, mesclar(atual, dados, false));
+  avisarEscutas();
+}
+async function deleteDoc(r) { banco[r.col].delete(r.id); avisarEscutas(); }
+async function addDoc(c, dados) { const id = `demo${proximoId++}`; banco[c.nome].set(id, mesclar({}, dados, false)); avisarEscutas(); return { id }; }
+function onSnapshot(alvo, cb) {
+  const e = { alvo, cb }; escutas.add(e);
+  queueMicrotask(() => cb(alvo.tipo === "doc" ? instantaneoDoc(alvo.col, alvo.id) : executarConsulta(alvo)));
+  return () => escutas.delete(e);
+}
+
+/* ---------- arquivos de atestado ---------- */
+const arquivos = new Map();
+function ref(_s, caminho) { return { caminho }; }
+async function uploadBytes(r, arquivo) { arquivos.set(r.caminho, URL.createObjectURL(arquivo)); }
+async function getDownloadURL(r) { if (!arquivos.has(r.caminho)) throw new Error("Arquivo não encontrado"); return arquivos.get(r.caminho); }
+function atestadoFicticio(nome, texto) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420"><rect width="600" height="420" fill="#fff"/>
+  <rect x="20" y="20" width="560" height="380" fill="none" stroke="#2F3FB0" stroke-width="3"/>
+  <text x="300" y="80" font-family="Arial" font-size="26" font-weight="bold" text-anchor="middle" fill="#2F3FB0">ATESTADO MÉDICO (FICTÍCIO)</text>
+  <text x="60" y="150" font-family="Arial" font-size="18">Paciente: ${nome}</text>
+  <text x="60" y="190" font-family="Arial" font-size="18">${texto}</text>
+  <text x="60" y="230" font-family="Arial" font-size="18">Clínica Exemplo, consulta de rotina.</text>
+  <text x="300" y="350" font-family="Arial" font-size="14" text-anchor="middle" fill="#888">Documento criado apenas para demonstração.</text></svg>`;
+  return URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+}
+
+/* ---------- autenticação ---------- */
+const contas = new Map();
+let usuarioAtual = { uid: "gestora", email: "gestora@demo.com" };
+const escutasAuth = new Set();
+function getAuth() { return {}; }
+function onAuthStateChanged(_a, cb) { escutasAuth.add(cb); queueMicrotask(() => cb(usuarioAtual)); return () => escutasAuth.delete(cb); }
+function mudarUsuario(u) { usuarioAtual = u; escutasAuth.forEach(cb => queueMicrotask(() => cb(u))); }
+async function signInWithEmailAndPassword(_a, email, senha) {
+  const c = contas.get(String(email).trim().toLowerCase());
+  if (!c || c.senha !== senha) { const e = new Error("credencial"); e.code = "auth/invalid-credential"; throw e; }
+  mudarUsuario({ uid: c.uid, email: c.email });
+}
+async function signOut() { mudarUsuario(null); }
+async function sendPasswordResetEmail() { }
+const EmailAuthProvider = { credential: (email, senha) => ({ email, senha }) };
+async function reauthenticateWithCredential(u, cred) {
+  const c = contas.get(u.email);
+  if (!c || c.senha !== cred.senha) { const e = new Error("senha"); e.code = "auth/invalid-credential"; throw e; }
+}
+async function updatePassword(u, nova) { contas.get(u.email).senha = nova; mudarUsuario({ ...u }); }
+
+/* ---------- dados fictícios ---------- */
+const PESSOAS = [
+  { uid: "mariana", nome: "Mariana Alves", email: "mariana@demo.com", cidade: "rio", jornada: { entrada: "08:30", saida: "17:30", almocoMin: 60, dias: [1, 2, 3, 4, 5] } },
+  { uid: "camila", nome: "Camila Rocha", email: "camila@demo.com", cidade: "rio", jornada: { entrada: "08:00", saida: "17:00", almocoMin: 60, dias: [1, 2, 3, 4, 5] } },
+  { uid: "beatriz", nome: "Beatriz Lima", email: "beatriz@demo.com", cidade: "conquista", jornada: { entrada: "09:00", saida: "18:00", almocoMin: 60, dias: [1, 2, 3, 4, 5] } }
+];
+contas.set("gestora@demo.com", { uid: "gestora", email: "gestora@demo.com", senha: "demo1234" });
+PESSOAS.forEach(p => {
+  contas.set(p.email, { uid: p.uid, email: p.email, senha: "demo1234" });
+  banco.usuarios.set(p.uid, { nome: p.nome, email: p.email, ativa: true, senhaDefinida: true, cidade: p.cidade, jornada: p.jornada });
+});
+
+const ts = (data, hhmm) => new Timestamp(new DataReal(`${data}T${hhmm}:00-03:00`).getTime());
+const somar = (hhmm, min) => { const t = Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3)) + min; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
+function lancar(uid, data, h, extra = {}) {
+  const d = { uid, data, mes: data.slice(0, 7), ...extra };
+  CAMPOS_PONTO.forEach((c, i) => { if (h[i]) d[c] = ts(data, h[i]); });
+  banco.batidas.set(`${uid}_${data}`, d);
+}
+const FERIADOS_DEMO = new Set(["2026-09-07", "2026-10-12"]);
+const VARIACOES = [[2, 1, 3], [-1, 0, 2], [3, 2, -1], [0, -2, 4], [-3, 1, 1], [1, 0, 0], [4, -1, 2]];
+function diasUteis(ini, fim) {
+  const out = []; let d = new DataReal(`${ini}T12:00:00Z`); const f = new DataReal(`${fim}T12:00:00Z`);
+  while (d <= f) { const iso = d.toISOString().slice(0, 10), w = d.getUTCDay(); if (w > 0 && w < 6 && !FERIADOS_DEMO.has(iso)) out.push(iso); d.setUTCDate(d.getUTCDate() + 1); }
+  return out;
+}
+PESSOAS.forEach((p, ip) => diasUteis("2026-09-01", "2026-10-14").forEach((data, i) => {
+  const [vE, vA, vS] = VARIACOES[(i + ip * 2) % VARIACOES.length];
+  const saidaAlmoco = somar(p.jornada.entrada, 210 + ((i * 7 + ip * 11) % 50));
+  lancar(p.uid, data, [somar(p.jornada.entrada, vE), saidaAlmoco, somar(saidaAlmoco, 60 + vA), somar(p.jornada.saida, vS)]);
+}));
+
+// Mariana: setembro com pendências e diferenças para mostrar o fechamento
+lancar("mariana", "2026-09-09", ["08:31", "12:40", "13:41"]);
+lancar("mariana", "2026-09-16", ["08:29", "12:30", "13:30", "19:10"]);
+lancar("mariana", "2026-09-22", ["08:30", "12:30", "13:10", "17:31"]);
+banco.batidas.delete("mariana_2026-09-25");
+lancar("mariana", "2026-10-07", ["08:28", "12:45", "13:45", "18:40"]);
+lancar("mariana", "2026-10-14", ["08:32", "12:50", null, "17:33"]);
+// Beatriz: atestado parcial aprovado e uma hora extra já justificada
+lancar("beatriz", "2026-09-18", ["11:30", "13:30", "14:30", "18:02"], { abonoMin: 150, abonos: [{ solicitacao: "demo-at1", inicio: "09:00", fim: "11:30", min: 150 }] });
+lancar("beatriz", "2026-09-23", ["09:00", "13:00", "14:00", "19:15"], { justificativa: "Ficou até mais tarde para entregar um projeto urgente." });
+// Camila: setembro sem nenhuma pendência, pronto para fechar
+// Hoje, 15/10 (as marcações aparecem conforme o horário simulado)
+lancar("mariana", DIA_DEMO, ["08:28", "13:20", "14:20"]);
+lancar("camila", DIA_DEMO, ["07:41", "12:00", "13:00", "17:02"]);
+lancar("beatriz", DIA_DEMO, ["09:05", "13:00", "14:00", "18:05"]);
+
+banco.config.set("folgas", { lista: [{ data: "2026-10-30", nome: "Folga de aniversário da empresa", para: "todas" }] });
+
+const solicitacao = (id, s) => banco.solicitacoes.set(id, { criadaEm: ts(s.data, "18:00"), mes: s.data.slice(0, 7), ...s });
+solicitacao("demo-aj1", { uid: "mariana", nome: "Mariana Alves", tipo: "ajuste", data: "2026-10-14", campo: "voltaAlmoco", horario: "13:50", motivo: "Esqueci de registrar a volta do almoço.", status: "pendente" });
+arquivos.set("atestados/beatriz/atestado-13-10.svg", atestadoFicticio("Beatriz Lima", "Compareceu à consulta em 13/10/2026, das 09:00 às 11:30."));
+solicitacao("demo-at2", { uid: "beatriz", nome: "Beatriz Lima", tipo: "atestado", data: "2026-10-13", diaInteiro: false, dataFim: null, inicio: "09:00", fim: "11:30",
+  arquivo: "atestados/beatriz/atestado-13-10.svg", arquivoNome: "atestado-13-10.svg", motivo: "Consulta médica de rotina.", status: "pendente" });
+solicitacao("demo-aj0", { uid: "camila", nome: "Camila Rocha", tipo: "ajuste", data: "2026-10-05", campo: "saida", horario: "17:02", motivo: "O celular descarregou na hora de sair.",
+  status: "aprovada", decididaEm: ts("2026-10-06", "09:10"), decididaPor: "gestora@demo.com" });
+lancar("beatriz", "2026-10-13", ["11:30", "13:00", "14:00", "18:01"]);
+
+/* ===================== Configurações ===================== */
+const EMAILS_ADMIN = ["gestora@demo.com"].map(e => e.toLowerCase());
+const EMPRESA = { nome: "Empresa Exemplo Ltda", cnpj: "00.000.000/0001-00" };
+const FUSO = "America/Sao_Paulo";
+const TOLERANCIA_MARCACAO = 5;   // CLT, art. 58, § 1º
+const TOLERANCIA_DIA = 10;
+const LIMITE_ALERTA_MIN = 30;
+const INTERVALO_MINIMO_MIN = 60;  // CLT, art. 71: almoço de pelo menos 1 hora    // diferença diária que exige justificativa
+const CAMPOS = ["entrada", "saidaAlmoco", "voltaAlmoco", "saida"];
+const ROTULOS = { entrada: "Entrada", saidaAlmoco: "Saída para o almoço", voltaAlmoco: "Volta do almoço", saida: "Saída" };
+const ROTULOS_CURTOS = { entrada: "Entrada", saidaAlmoco: "Saída almoço", voltaAlmoco: "Volta almoço", saida: "Saída" };
+const SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+const SEMANA_LONGA = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+const MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const CLASSIFICACOES = { falta: "Falta", feriado: "Feriado", folga: "Folga", ferias: "Férias" };
+const CIDADES = { rio: "Rio de Janeiro (RJ)", conquista: "Vitória da Conquista (BA)" };
+// Feriados de 2026 e 2027. "todas" vale para qualquer cidade.
+const FERIADOS = {
+  todas: [
+    ["2026-01-01","Confraternização Universal"], ["2026-02-16","Segunda-feira de Carnaval (folga da empresa)"],
+    ["2026-04-03","Sexta-feira Santa"], ["2026-04-21","Tiradentes"], ["2026-05-01","Dia do Trabalho"],
+    ["2026-09-07","Independência do Brasil"], ["2026-10-12","Nossa Senhora Aparecida"], ["2026-11-02","Finados"],
+    ["2026-11-15","Proclamação da República"], ["2026-11-20","Dia da Consciência Negra"], ["2026-12-25","Natal"],
+    ["2027-01-01","Confraternização Universal"], ["2027-02-08","Segunda-feira de Carnaval (folga da empresa)"],
+    ["2027-03-26","Sexta-feira Santa"], ["2027-04-21","Tiradentes"], ["2027-05-01","Dia do Trabalho"],
+    ["2027-09-07","Independência do Brasil"], ["2027-10-12","Nossa Senhora Aparecida"], ["2027-11-02","Finados"],
+    ["2027-11-15","Proclamação da República"], ["2027-11-20","Dia da Consciência Negra"], ["2027-12-25","Natal"]
+  ],
+  rio: [
+    ["2026-01-20","São Sebastião (municipal)"], ["2026-02-17","Terça-feira de Carnaval (estadual)"],
+    ["2026-04-23","São Jorge (estadual)"], ["2026-06-04","Corpus Christi (estadual)"],
+    ["2027-01-20","São Sebastião (municipal)"], ["2027-02-09","Terça-feira de Carnaval (estadual)"],
+    ["2027-04-23","São Jorge (estadual)"], ["2027-05-27","Corpus Christi (estadual)"]
+  ],
+  conquista: [
+    ["2026-06-04","Corpus Christi (municipal)"], ["2026-06-24","São João (municipal)"],
+    ["2026-07-02","Independência da Bahia (estadual)"], ["2026-08-15","Nossa Senhora das Vitórias (municipal)"],
+    ["2026-11-09","Aniversário de Vitória da Conquista (municipal)"],
+    ["2027-05-27","Corpus Christi (municipal)"], ["2027-06-24","São João (municipal)"],
+    ["2027-07-02","Independência da Bahia (estadual)"], ["2027-08-15","Nossa Senhora das Vitórias (municipal)"],
+    ["2027-11-09","Aniversário de Vitória da Conquista (municipal)"]
+  ]
+};
+const feriadosDa = (cidade) => [...FERIADOS.todas, ...(FERIADOS[cidade] || [])];
+
+/* ===================== Firebase ===================== */
+const app = initializeApp();
+const auth = getAuth(app);
+auth.languageCode = "pt-BR";
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+/* ===================== Utilidades ===================== */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const hm = (s) => { const [h, m] = String(s).split(":").map(Number); return h * 60 + m; };
+const fmtHM = (min) => { const a = Math.abs(Math.round(min)); return `${String(Math.floor(a / 60)).padStart(2, "0")}:${String(a % 60).padStart(2, "0")}`; };
+const fmtSaldo = (min) => min === 0 ? "00:00" : `${min > 0 ? "+" : "-"}${fmtHM(min)}`;
+const hojeISO = () => new Intl.DateTimeFormat("en-CA", { timeZone: FUSO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const paraData = (ts) => ts?.toDate ? ts.toDate() : ts;
+const horaDe = (ts) => ts ? new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(paraData(ts)) : "";
+const minutosDe = (ts) => hm(horaDe(ts));
+const paraTimestamp = (dataISO, hhmm) => Timestamp.fromDate(new Date(`${dataISO}T${hhmm}:00-03:00`));
+const fmtData = (iso) => { const [y, m, d] = iso.split("-"); return `${d}/${m}/${y}`; };
+const diaDaSemana = (iso) => new Date(`${iso}T12:00:00Z`).getUTCDay();
+const nomeMes = (mes) => { const [y, m] = mes.split("-").map(Number); return `${MESES[m - 1]} de ${y}`; };
+const mesAnterior = () => { const [y, m] = hojeISO().split("-").map(Number); return m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, "0")}`; };
+const listaPt = (arr) => arr.length <= 1 ? arr.join("") : `${arr.slice(0, -1).join(", ")} e ${arr[arr.length - 1]}`;
+const datasEntre = (ini, fim) => { const out = []; let d = new Date(`${ini}T12:00:00Z`); const f = new Date(`${(fim || ini)}T12:00:00Z`); while (d <= f) { out.push(d.toISOString().slice(0, 10)); d.setUTCDate(d.getUTCDate() + 1); } return out; };
+const descreverJornada = (j) => {
+  const dias = j.dias.length === 5 && [1,2,3,4,5].every(d => j.dias.includes(d)) ? "segunda a sexta" : listaPt(j.dias.map(d => SEMANA[d]));
+  return `${j.entrada} às ${j.saida}, ${j.almocoMin} minutos de almoço, ${dias}`;
+};
+
+function avisar(texto) {
+  const el = document.createElement("div");
+  el.className = "aviso-flutuante"; el.textContent = texto;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+function abrirDialogo(html) { $("dialogo-conteudo").innerHTML = html; $("dialogo").showModal(); }
+function fecharDialogo() { $("dialogo").close(); }
+function confirmar(titulo, texto, rotuloOk = "Confirmar", classe = "") {
+  return new Promise(resolve => {
+    abrirDialogo(`<h3>${esc(titulo)}</h3><p>${esc(texto)}</p>
+      <div class="rodape"><button class="botao secundario" id="c-nao">Cancelar</button><button class="botao ${classe}" id="c-sim">${esc(rotuloOk)}</button></div>`);
+    $("c-nao").onclick = () => { fecharDialogo(); resolve(false); };
+    $("c-sim").onclick = () => { fecharDialogo(); resolve(true); };
+  });
+}
+function mostrar(tela) {
+  ["tela-carregando", "tela-login", "tela-senha", "tela-func", "tela-admin"].forEach(id => $(id).classList.toggle("oculto", id !== tela));
+}
+
+/* ===================== Estado ===================== */
+let usuario = null, perfil = null;
+let cancelamentos = [];
+let batidaHoje = null, ultimaQtd = -1;
+let usuarios = new Map();
+let folgas = [];
+let batidasDeHoje = [];
+let relogioTimer = null;
+
+function limparEscutas() { cancelamentos.forEach(f => f()); cancelamentos = []; clearInterval(relogioTimer); }
+
+document.querySelectorAll("[data-sair]").forEach(b => b.onclick = () => signOut(auth));
+
+/* ===================== Login ===================== */
+$("form-login").onsubmit = async (e) => {
+  e.preventDefault();
+  $("login-erro").textContent = "";
+  $("botao-entrar").disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, $("login-email").value.trim(), $("login-senha").value);
+  } catch (err) {
+    const msg = {
+      "auth/invalid-credential": "E-mail ou senha incorretos.",
+      "auth/invalid-email": "O e-mail digitado não é válido.",
+      "auth/too-many-requests": "Muitas tentativas seguidas. Aguarde alguns minutos e tente de novo.",
+      "auth/network-request-failed": "Sem conexão com a internet."
+    }[err.code] || "Não foi possível entrar. Confira os dados e tente de novo.";
+    $("login-erro").textContent = msg;
+  } finally { $("botao-entrar").disabled = false; }
+};
+$("esqueci").onclick = async () => {
+  const email = $("login-email").value.trim();
+  if (!email) { $("login-erro").textContent = "Digite o seu e-mail no campo acima e clique de novo em Esqueci minha senha."; return; }
+  try { await sendPasswordResetEmail(auth, email); avisar("Enviamos um link para criar uma nova senha no seu e-mail."); }
+  catch { $("login-erro").textContent = "Não foi possível enviar o e-mail de redefinição."; }
+};
+
+let uidIniciado = null;
+onAuthStateChanged(auth, async (u) => {
+  usuario = u;
+  if (u && u.uid === uidIniciado) return;   // mesma pessoa: só a sessão foi renovada
+  uidIniciado = u ? u.uid : null;
+  limparEscutas();
+  if (!u) { mostrar("tela-login"); return; }
+  mostrar("tela-carregando");
+  try {
+    if (EMAILS_ADMIN.includes((u.email || "").toLowerCase())) await iniciarAdmin();
+    else await iniciarFuncionaria();
+  } catch (err) {
+    $("tela-carregando").innerHTML = `<div class="bloco" style="max-width:420px"><p class="aviso erro">Não foi possível abrir a plataforma (${esc(err.code || err.message)}). Envie esta mensagem para a gestora.</p>
+      <button class="botao secundario" onclick="location.reload()">Tentar de novo</button></div>`;
+    mostrar("tela-carregando");
+  }
+});
+
+/* ===================== Senha ===================== */
+function validarNovaSenha(atual, nova, repetida) {
+  if (!atual || !nova || !repetida) return "Preencha os 3 campos.";
+  if (nova.length < 8) return "A nova senha precisa ter pelo menos 8 caracteres.";
+  if (nova !== repetida) return "A nova senha e a repetição estão diferentes.";
+  if (nova === atual) return "A nova senha precisa ser diferente da atual.";
+  return "";
+}
+async function trocarSenha(atual, nova) {
+  try {
+    await reauthenticateWithCredential(usuario, EmailAuthProvider.credential(usuario.email, atual));
+    await updatePassword(usuario, nova);
+    return "";
+  } catch (err) {
+    return {
+      "auth/invalid-credential": "A senha atual está incorreta.",
+      "auth/wrong-password": "A senha atual está incorreta.",
+      "auth/weak-password": "Essa senha é fraca demais. Use uma senha mais longa.",
+      "auth/too-many-requests": "Muitas tentativas seguidas. Aguarde alguns minutos e tente de novo.",
+      "auth/network-request-failed": "Sem conexão com a internet."
+    }[err.code] || "Não foi possível trocar a senha. Tente de novo.";
+  }
+}
+document.querySelectorAll("[data-trocar-senha]").forEach(b => b.onclick = () => {
+  abrirDialogo(`<h3>Trocar senha</h3>
+    <label class="campo">Senha atual<input type="password" id="ts-atual" autocomplete="current-password"></label>
+    <label class="campo">Nova senha<input type="password" id="ts-nova" autocomplete="new-password"><span class="ajuda">Pelo menos 8 caracteres.</span></label>
+    <label class="campo">Repita a nova senha<input type="password" id="ts-repetida" autocomplete="new-password"></label>
+    <p class="mensagem-erro" id="ts-erro"></p>
+    <div class="rodape"><button class="botao secundario" id="ts-cancelar">Cancelar</button><button class="botao" id="ts-salvar">Salvar nova senha</button></div>`);
+  $("ts-cancelar").onclick = fecharDialogo;
+  $("ts-salvar").onclick = async () => {
+    const atual = $("ts-atual").value, nova = $("ts-nova").value;
+    const erro = validarNovaSenha(atual, nova, $("ts-repetida").value);
+    if (erro) { $("ts-erro").textContent = erro; return; }
+    $("ts-salvar").disabled = true;
+    const falha = await trocarSenha(atual, nova);
+    if (falha) { $("ts-erro").textContent = falha; $("ts-salvar").disabled = false; return; }
+    fecharDialogo(); avisar("Senha trocada.");
+  };
+});
+$("form-senha").onsubmit = async (e) => {
+  e.preventDefault();
+  const atual = $("ps-atual").value, nova = $("ps-nova").value;
+  const erro = validarNovaSenha(atual, nova, $("ps-repetida").value);
+  if (erro) { $("ps-erro").textContent = erro; return; }
+  $("ps-salvar").disabled = true;
+  const falha = await trocarSenha(atual, nova);
+  if (falha) { $("ps-erro").textContent = falha; $("ps-salvar").disabled = false; return; }
+  try {
+    await updateDoc(doc(db, "usuarios", usuario.uid), { senhaDefinida: true });
+  } catch (err) {
+    $("ps-erro").textContent = `A senha foi trocada, mas o primeiro acesso não foi concluído (${err.code || err.message}). Envie esta mensagem para a gestora.`;
+    $("ps-salvar").disabled = false; return;
+  }
+  $("form-senha").reset(); $("ps-salvar").disabled = false; $("ps-erro").textContent = "";
+  avisar("Senha criada.");
+  iniciarFuncionaria();
+};
+
+/* ===================== Funcionária ===================== */
+async function iniciarFuncionaria() {
+  const refPerfil = doc(db, "usuarios", usuario.uid);
+  let snap = await getDoc(refPerfil);
+  if (!snap.exists()) {
+    await setDoc(refPerfil, { nome: usuario.email.split("@")[0], email: usuario.email, ativa: false });
+    snap = await getDoc(refPerfil);
+  }
+  perfil = snap.data();
+  if (!perfil.senhaDefinida) { mostrar("tela-senha"); return; }
+  $("func-nome").textContent = perfil.nome;
+  mostrar("tela-func");
+  const liberada = perfil.ativa && perfil.jornada && !perfil.desligadaEm;
+  if (perfil.desligadaEm) $("func-aguardando").textContent = "Seu acesso ao ponto foi encerrado.";
+  $("func-aguardando").classList.toggle("oculto", !!liberada);
+  $("func-conteudo").classList.toggle("oculto", !liberada);
+  if (!liberada) return;
+
+  const tick = () => {
+    const agora = new Date();
+    $("func-relogio").textContent = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }).format(agora);
+    const dia = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, weekday: "long", day: "numeric", month: "long" }).format(agora);
+    $("func-dia").textContent = dia.charAt(0).toUpperCase() + dia.slice(1);
+    atualizarBotaoVolta();
+  };
+  tick(); relogioTimer = setInterval(tick, 1000);
+
+  const hoje = hojeISO();
+  cancelamentos.push(onSnapshot(
+    query(collection(db, "batidas"), where("uid", "==", usuario.uid), where("data", "==", hoje)),
+    (qs) => { batidaHoje = qs.empty ? null : qs.docs[0].data({ serverTimestamps: "estimate" }); desenharCartao(); },
+    (err) => avisar("Erro ao carregar o ponto de hoje: " + err.message)
+  ));
+  cancelamentos.push(onSnapshot(
+    query(collection(db, "solicitacoes"), where("uid", "==", usuario.uid)),
+    (qs) => desenharMinhasSolicitacoes(qs.docs.map(d => ({ id: d.id, ...d.data() })))
+  ));
+  cancelamentos.push(onSnapshot(
+    query(collection(db, "batidas"), where("uid", "==", usuario.uid), where("mes", "==", hoje.slice(0, 7))),
+    (qs) => desenharMeuMes(qs.docs.map(d => d.data()))
+  ));
+}
+
+function desenharCartao() {
+  const qtd = CAMPOS.filter(c => batidaHoje?.[c]).length;
+  const novo = ultimaQtd >= 0 && qtd > ultimaQtd;
+  $("func-slots").innerHTML = CAMPOS.map((c, i) => {
+    const v = batidaHoje?.[c];
+    const eNovo = novo && v && CAMPOS.filter(x => batidaHoje?.[x]).length === qtd && i === CAMPOS.map(x => !!batidaHoje?.[x]).lastIndexOf(true);
+    return `<div class="slot ${v ? "batido" : ""} ${eNovo ? "novo" : ""}"><span class="rotulo">${ROTULOS[c]}</span><span class="hora">${v ? horaDe(v) : "--:--"}</span></div>`;
+  }).join("");
+  ultimaQtd = qtd;
+  const proximo = CAMPOS.find(c => !batidaHoje?.[c]);
+  if (!proximo) {
+    $("func-acao").innerHTML = `<div class="concluido">As 4 marcações de hoje estão registradas.</div>`;
+  } else {
+    $("func-acao").innerHTML = `<button class="botao botao-bater" id="bater">Registrar ${ROTULOS[proximo].toLowerCase()}</button><p class="ajuda oculto" id="aviso-volta" style="text-align:center;margin:8px 0 0"></p>`;
+    $("bater").onclick = () => pedirBatida(proximo);
+    atualizarBotaoVolta();
+  }
+  $("func-outra").classList.toggle("oculto", CAMPOS.filter(c => !batidaHoje?.[c]).length < 2);
+}
+
+function voltaLiberadaEm() {
+  if (!batidaHoje?.saidaAlmoco || batidaHoje?.voltaAlmoco) return null;
+  return new Date(paraData(batidaHoje.saidaAlmoco).getTime() + INTERVALO_MINIMO_MIN * 60000);
+}
+function atualizarBotaoVolta() {
+  const botao = $("bater"), aviso = $("aviso-volta");
+  if (!botao || !aviso) return;
+  const proximo = CAMPOS.find(c => !batidaHoje?.[c]);
+  const libera = proximo === "voltaAlmoco" ? voltaLiberadaEm() : null;
+  const bloqueado = libera && Date.now() < libera.getTime();
+  botao.disabled = !!bloqueado;
+  aviso.classList.toggle("oculto", !bloqueado);
+  if (bloqueado) aviso.textContent = `O intervalo mínimo de almoço é de 1 hora. A volta fica liberada às ${horaDe(libera)}.`;
+}
+
+$("func-outra").onclick = () => {
+  const restantes = CAMPOS.filter(c => !batidaHoje?.[c]);
+  abrirDialogo(`<h3>Registrar outra marcação</h3>
+    <p class="ajuda">Use esta opção só se você pulou uma marcação e está registrando a seguinte. A marcação esquecida deve ser pedida em Solicitar ajuste de horário.</p>
+    <label class="campo">Marcação<select id="outra-campo">${restantes.map(c => `<option value="${c}">${ROTULOS[c]}</option>`).join("")}</select></label>
+    <div class="rodape"><button class="botao secundario" id="o-cancelar">Cancelar</button><button class="botao" id="o-ok">Registrar agora</button></div>`);
+  $("o-cancelar").onclick = fecharDialogo;
+  $("o-ok").onclick = () => { const c = $("outra-campo").value; fecharDialogo(); pedirBatida(c, true); };
+};
+
+async function pedirBatida(campo, jaConfirmado = false) {
+  if (!jaConfirmado) {
+    const ok = await confirmar(`Registrar ${ROTULOS[campo].toLowerCase()}?`, "O horário será gravado agora e só poderá ser alterado por solicitação de ajuste.", "Registrar");
+    if (!ok) return;
+  }
+  const libera = campo === "voltaAlmoco" ? voltaLiberadaEm() : null;
+  if (libera && Date.now() < libera.getTime()) { avisar(`O intervalo mínimo de almoço é de 1 hora. A volta fica liberada às ${horaDe(libera)}.`); return; }
+  const data = hojeISO();
+  const refB = doc(db, "batidas", `${usuario.uid}_${data}`);
+  try {
+    if (!batidaHoje) await setDoc(refB, { uid: usuario.uid, data, mes: data.slice(0, 7), [campo]: serverTimestamp() });
+    else await updateDoc(refB, { [campo]: serverTimestamp() });
+    avisar(`${ROTULOS[campo]} registrada.`);
+  } catch (err) {
+    avisar(err.code === "permission-denied"
+      ? "Não foi possível registrar. Se o mês já foi fechado ou esta marcação já existe, peça um ajuste."
+      : "Não foi possível registrar. Confira a sua conexão e tente de novo.");
+  }
+}
+
+function descreverSolicitacao(s) {
+  if (s.tipo === "ajuste") return `${ROTULOS[s.campo]} às ${s.horario} em ${fmtData(s.data)}`;
+  if (s.diaInteiro) return s.dataFim && s.dataFim !== s.data ? `Atestado de ${fmtData(s.data)} a ${fmtData(s.dataFim)} (dias inteiros)` : `Atestado em ${fmtData(s.data)} (dia inteiro)`;
+  return `Atestado em ${fmtData(s.data)}, das ${s.inicio} às ${s.fim}`;
+}
+const STATUS = { pendente: "Pendente", aprovada: "Aprovada", reprovada: "Reprovada" };
+
+function desenharMinhasSolicitacoes(lista) {
+  lista.sort((a, b) => (paraData(b.criadaEm)?.getTime?.() || 0) - (paraData(a.criadaEm)?.getTime?.() || 0));
+  $("func-solicitacoes").innerHTML = lista.length === 0 ? `<p class="ajuda">Você ainda não enviou nenhuma solicitação.</p>` :
+    lista.slice(0, 15).map(s => `<div class="item"><div class="cabeca"><strong>${esc(descreverSolicitacao(s))}</strong><span class="selo ${s.status}">${STATUS[s.status]}</span></div>
+      <p class="ajuda">${esc(s.motivo || "")}${s.comentario ? `<br>Resposta: ${esc(s.comentario)}` : ""}</p>
+      ${s.status === "pendente" ? `<div class="botoes"><button class="botao secundario pequeno" data-cancelar="${s.id}">Cancelar solicitação</button></div>` : ""}</div>`).join("");
+  document.querySelectorAll("[data-cancelar]").forEach(b => b.onclick = async () => {
+    if (await confirmar("Cancelar esta solicitação?", "Ela será apagada e não chegará para aprovação.", "Cancelar solicitação", "perigo")) {
+      await deleteDoc(doc(db, "solicitacoes", b.dataset.cancelar)); avisar("Solicitação cancelada.");
+    }
+  });
+}
+
+function desenharMeuMes(lista) {
+  const mapa = new Map(lista.map(b => [b.data, b]));
+  const hoje = hojeISO();
+  const dias = datasEntre(`${hoje.slice(0, 7)}-01`, hoje).reverse();
+  $("func-mes").innerHTML = `<thead><tr><th>Dia</th>${CAMPOS.map(c => `<th>${ROTULOS_CURTOS[c]}</th>`).join("")}</tr></thead><tbody>` +
+    dias.map(d => { const b = mapa.get(d); const dow = diaDaSemana(d);
+      return `<tr class="${dow === 0 || dow === 6 ? "fim-de-semana" : ""}"><td>${fmtData(d).slice(0, 5)} ${SEMANA[dow]}</td>${CAMPOS.map(c => `<td>${b?.[c] ? horaDe(b[c]) + (b.origem?.[c] ? "*" : "") : ""}</td>`).join("")}</tr>`;
+    }).join("") + "</tbody>";
+}
+
+$("func-pedir-ajuste").onclick = () => {
+  abrirDialogo(`<h3>Solicitar ajuste de horário</h3>
+    <label class="campo">Dia<input type="date" id="aj-data" max="${hojeISO()}" value="${hojeISO()}"></label>
+    <div class="linha-campos">
+      <label class="campo">Marcação<select id="aj-campo">${CAMPOS.map(c => `<option value="${c}">${ROTULOS[c]}</option>`).join("")}</select></label>
+      <label class="campo">Horário correto<input type="time" id="aj-hora"></label>
+    </div>
+    <label class="campo">Motivo<textarea id="aj-motivo" placeholder="Ex.: esqueci de bater a volta do almoço"></textarea></label>
+    <p class="mensagem-erro" id="aj-erro"></p>
+    <div class="rodape"><button class="botao secundario" id="aj-cancelar">Cancelar</button><button class="botao" id="aj-enviar">Enviar para aprovação</button></div>`);
+  $("aj-cancelar").onclick = fecharDialogo;
+  $("aj-enviar").onclick = async () => {
+    const data = $("aj-data").value, horario = $("aj-hora").value, motivo = $("aj-motivo").value.trim();
+    if (!data || !horario || !motivo) { $("aj-erro").textContent = "Preencha o dia, o horário e o motivo."; return; }
+    $("aj-enviar").disabled = true;
+    try {
+      await addDoc(collection(db, "solicitacoes"), { uid: usuario.uid, nome: perfil.nome, tipo: "ajuste", data, mes: data.slice(0, 7),
+        campo: $("aj-campo").value, horario, motivo, status: "pendente", criadaEm: serverTimestamp() });
+      fecharDialogo(); avisar("Ajuste enviado para aprovação.");
+    } catch (err) {
+      $("aj-erro").textContent = err.code === "permission-denied" ? "O ponto deste mês já foi fechado. Fale com a gestora." : "Não foi possível enviar.";
+      $("aj-enviar").disabled = false;
+    }
+  };
+};
+
+$("func-pedir-atestado").onclick = () => {
+  abrirDialogo(`<h3>Enviar atestado</h3>
+    <label class="campo" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="at-inteiro"> O atestado cobre o dia inteiro</label>
+    <div class="linha-campos">
+      <label class="campo">Dia<input type="date" id="at-data" value="${hojeISO()}"></label>
+      <label class="campo oculto" id="at-fim-rotulo">Até o dia<input type="date" id="at-data-fim"></label>
+    </div>
+    <div class="linha-campos" id="at-horas">
+      <label class="campo">Saí às<input type="time" id="at-inicio"></label>
+      <label class="campo">Voltei às<input type="time" id="at-fim"></label>
+    </div>
+    <label class="campo">Arquivo do atestado<input type="file" id="at-arquivo" accept="application/pdf,image/*">
+      <span class="ajuda">PDF ou foto, até 10 MB.</span></label>
+    <label class="campo">Observação<textarea id="at-motivo" placeholder="Opcional"></textarea></label>
+    <p class="mensagem-erro" id="at-erro"></p>
+    <div class="rodape"><button class="botao secundario" id="at-cancelar">Cancelar</button><button class="botao" id="at-enviar">Enviar para aprovação</button></div>`);
+  $("at-inteiro").onchange = (e) => { $("at-horas").classList.toggle("oculto", e.target.checked); $("at-fim-rotulo").classList.toggle("oculto", !e.target.checked); };
+  $("at-cancelar").onclick = fecharDialogo;
+  $("at-enviar").onclick = async () => {
+    const inteiro = $("at-inteiro").checked, data = $("at-data").value, arq = $("at-arquivo").files[0];
+    const inicio = $("at-inicio").value, fim = $("at-fim").value, dataFim = $("at-data-fim").value || data;
+    if (!data || !arq) { $("at-erro").textContent = "Informe o dia e anexe o atestado."; return; }
+    if (!inteiro && (!inicio || !fim || hm(fim) <= hm(inicio))) { $("at-erro").textContent = "Informe o horário de saída e o de volta, com a volta depois da saída."; return; }
+    if (inteiro && dataFim < data) { $("at-erro").textContent = "A data final não pode ser anterior à inicial."; return; }
+    if (arq.size > 10 * 1024 * 1024) { $("at-erro").textContent = "O arquivo passa de 10 MB."; return; }
+    $("at-enviar").disabled = true; $("at-erro").textContent = "Enviando o arquivo...";
+    try {
+      const caminho = `atestados/${usuario.uid}/${Date.now()}-${arq.name.replace(/[^\w.\- ]/g, "")}`;
+      await uploadBytes(ref(storage, caminho), arq, { contentType: arq.type });
+      await addDoc(collection(db, "solicitacoes"), { uid: usuario.uid, nome: perfil.nome, tipo: "atestado", data, mes: data.slice(0, 7),
+        diaInteiro: inteiro, dataFim: inteiro ? dataFim : null, inicio: inteiro ? null : inicio, fim: inteiro ? null : fim,
+        arquivo: caminho, arquivoNome: arq.name, motivo: $("at-motivo").value.trim(), status: "pendente", criadaEm: serverTimestamp() });
+      fecharDialogo(); avisar("Atestado enviado para aprovação.");
+    } catch (err) {
+      $("at-erro").textContent = err.code === "permission-denied" ? "Envio recusado. O mês pode já estar fechado ou o arquivo não é PDF nem imagem." : "Não foi possível enviar o atestado.";
+      $("at-enviar").disabled = false;
+    }
+  };
+};
+
+/* ===================== Gestora ===================== */
+async function iniciarAdmin() {
+  $("admin-nome").textContent = usuario.email;
+  mostrar("tela-admin");
+  document.querySelectorAll(".aba").forEach(b => b.onclick = () => trocarAba(b.dataset.aba));
+  trocarAba("hoje");
+  $("fech-mes").value = mesAnterior();
+  $("ativar-notificacoes").onclick = async () => {
+    try { await Notification.requestPermission(); } catch {}
+    estadoNotificacoes();
+    if (Notification.permission === "granted") new Notification("Ponto Demo", { body: "Pronto. Os avisos da equipe vão aparecer aqui." });
+  };
+
+  cancelamentos.push(onSnapshot(collection(db, "usuarios"), (qs) => {
+    usuarios = new Map(qs.docs.map(d => [d.id, { uid: d.id, ...d.data() }]));
+    desenharFuncionarias(); preencherSelects(); desenharHoje();
+  }));
+  cancelamentos.push(onSnapshot(doc(db, "config", "folgas"), (s) => {
+    folgas = s.exists() ? (s.data().lista || []) : []; desenharFolgas(); desenharHoje();
+  }));
+  cancelamentos.push(onSnapshot(collection(db, "solicitacoes"), (qs) => desenharSolicitacoesAdmin(qs.docs.map(d => ({ id: d.id, ...d.data() })))));
+  const hoje = hojeISO();
+  $("hoje-data").textContent = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date());
+  cancelamentos.push(onSnapshot(query(collection(db, "batidas"), where("data", "==", hoje)), (qs) => { batidasDeHoje = qs.docs.map(d => d.data()); desenharHoje(); }));
+  const timerHoje = setInterval(() => {
+    if (hojeISO() !== hoje) { limparEscutas(); iniciarAdmin(); return; }   // virou o dia
+    desenharHoje();
+  }, 30000);
+  cancelamentos.push(() => clearInterval(timerHoje));
+  carregarHistorico();
+}
+
+function trocarAba(nome) {
+  document.querySelectorAll(".aba").forEach(b => b.classList.toggle("ativa", b.dataset.aba === nome));
+  document.querySelectorAll("[data-painel]").forEach(p => p.classList.toggle("oculto", p.dataset.painel !== nome));
+}
+
+function ativas() { return [...usuarios.values()].filter(u => u.ativa && u.jornada && !u.desligadaEm).sort((a, b) => a.nome.localeCompare(b.nome)); }
+function paraFechamento() { return [...usuarios.values()].filter(u => u.jornada && (u.ativa || u.desligadaEm)).sort((a, b) => (!!a.desligadaEm - !!b.desligadaEm) || a.nome.localeCompare(b.nome)); }
+
+function preencherSelects() {
+  const atual = $("fech-func").value;
+  $("fech-func").innerHTML = paraFechamento().map(u => `<option value="${u.uid}">${esc(u.nome)}${u.desligadaEm ? ` (desligada em ${fmtData(u.desligadaEm)})` : ""}</option>`).join("");
+  if (atual) $("fech-func").value = atual;
+  $("fol-para").innerHTML = `<option value="todas">Todas</option>` + ativas().map(u => `<option value="${u.uid}">Só ${esc(u.nome)}</option>`).join("");
+  desenharFolgas();
+}
+
+/* ---------- solicitações ---------- */
+async function mesFechado(uid, mes) {
+  const s = await getDoc(doc(db, "fechamentos", `${mes}_${uid}`));
+  return s.exists() && s.data().status === "concluido";
+}
+
+function desenharSolicitacoesAdmin(lista) {
+  const pend = lista.filter(s => s.status === "pendente").sort((a, b) => a.data.localeCompare(b.data));
+  const dec = lista.filter(s => s.status !== "pendente").sort((a, b) => (paraData(b.decididaEm)?.getTime?.() || 0) - (paraData(a.decididaEm)?.getTime?.() || 0)).slice(0, 10);
+  $("contador-solic").textContent = pend.length;
+  $("contador-solic").classList.toggle("oculto", pend.length === 0);
+  $("admin-pendentes").innerHTML = pend.length === 0 ? `<div class="aviso ok">Nenhuma solicitação aguardando a sua decisão.</div>` :
+    pend.map(s => `<div class="item"><div class="cabeca"><strong>${esc(s.nome)}</strong><span class="selo pendente">${s.tipo === "ajuste" ? "Ajuste" : "Atestado"}</span></div>
+      <p>${esc(descreverSolicitacao(s))}</p>
+      ${s.motivo ? `<p class="ajuda">${esc(s.motivo)}</p>` : ""}
+      <p class="ajuda" id="atual-${s.id}"></p>
+      <div class="botoes">
+        ${s.arquivo ? `<button class="botao secundario pequeno" data-ver="${s.id}">Ver atestado</button>` : ""}
+        <button class="botao ok pequeno" data-aprovar="${s.id}">Aprovar</button>
+        <button class="botao perigo pequeno" data-reprovar="${s.id}">Reprovar</button>
+      </div></div>`).join("");
+  $("admin-decididas").innerHTML = dec.length === 0 ? `<p class="ajuda">Nada decidido ainda.</p>` :
+    `<div class="rolagem"><table class="tabela"><thead><tr><th>Funcionária</th><th>Pedido</th><th>Situação</th><th>Comentário</th></tr></thead><tbody>` +
+    dec.map(s => `<tr><td>${esc(s.nome)}</td><td>${esc(descreverSolicitacao(s))}</td><td><span class="selo ${s.status}">${STATUS[s.status]}</span></td><td>${esc(s.comentario || "")}</td></tr>`).join("") + `</tbody></table></div>`;
+
+  const porId = new Map(pend.map(s => [s.id, s]));
+  pend.forEach(async s => {
+    const b = await getDoc(doc(db, "batidas", `${s.uid}_${s.data}`));
+    const el = $(`atual-${s.id}`); if (!el) return;
+    const d = b.exists() ? b.data() : null;
+    el.textContent = "Registrado no dia: " + CAMPOS.map(c => `${ROTULOS_CURTOS[c].toLowerCase()} ${d?.[c] ? horaDe(d[c]) : "sem registro"}`).join(", ") + ".";
+  });
+  document.querySelectorAll("[data-ver]").forEach(b => b.onclick = async () => {
+    try { window.open(await getDownloadURL(ref(storage, porId.get(b.dataset.ver).arquivo)), "_blank"); }
+    catch { avisar("Não foi possível abrir o arquivo."); }
+  });
+  document.querySelectorAll("[data-aprovar]").forEach(b => b.onclick = () => aprovar(porId.get(b.dataset.aprovar)));
+  document.querySelectorAll("[data-reprovar]").forEach(b => b.onclick = () => reprovar(porId.get(b.dataset.reprovar)));
+}
+
+async function aprovar(s) {
+  const datas = s.tipo === "atestado" && s.diaInteiro ? datasEntre(s.data, s.dataFim) : [s.data];
+  for (const d of datas) if (await mesFechado(s.uid, d.slice(0, 7))) { avisar(`O ponto de ${nomeMes(d.slice(0, 7))} já está fechado. Reabra o fechamento antes de aprovar.`); return; }
+  if (!await confirmar("Aprovar esta solicitação?", descreverSolicitacao(s), "Aprovar", "ok")) return;
+  try {
+    if (s.tipo === "ajuste") {
+      await setDoc(doc(db, "batidas", `${s.uid}_${s.data}`), { uid: s.uid, data: s.data, mes: s.data.slice(0, 7),
+        [s.campo]: paraTimestamp(s.data, s.horario), origem: { [s.campo]: "ajuste" } }, { merge: true });
+    } else if (s.diaInteiro) {
+      for (const d of datas) await setDoc(doc(db, "batidas", `${s.uid}_${d}`), { uid: s.uid, data: d, mes: d.slice(0, 7),
+        abonoDiaInteiro: true, abonos: arrayUnion({ solicitacao: s.id, tipo: "dia inteiro" }) }, { merge: true });
+    } else {
+      const min = hm(s.fim) - hm(s.inicio);
+      await setDoc(doc(db, "batidas", `${s.uid}_${s.data}`), { uid: s.uid, data: s.data, mes: s.mes,
+        abonoMin: increment(min), abonos: arrayUnion({ solicitacao: s.id, inicio: s.inicio, fim: s.fim, min }) }, { merge: true });
+    }
+    await updateDoc(doc(db, "solicitacoes", s.id), { status: "aprovada", decididaEm: serverTimestamp(), decididaPor: usuario.email });
+    avisar("Solicitação aprovada e lançada no ponto.");
+  } catch (err) { avisar("Não foi possível aprovar: " + err.message); }
+}
+
+function reprovar(s) {
+  abrirDialogo(`<h3>Reprovar solicitação</h3><p>${esc(s.nome)}: ${esc(descreverSolicitacao(s))}</p>
+    <label class="campo">Motivo da reprovação<textarea id="rp-motivo" placeholder="A funcionária verá esta resposta"></textarea></label>
+    <div class="rodape"><button class="botao secundario" id="rp-cancelar">Cancelar</button><button class="botao perigo" id="rp-ok">Reprovar</button></div>`);
+  $("rp-cancelar").onclick = fecharDialogo;
+  $("rp-ok").onclick = async () => {
+    await updateDoc(doc(db, "solicitacoes", s.id), { status: "reprovada", comentario: $("rp-motivo").value.trim(), decididaEm: serverTimestamp(), decididaPor: usuario.email });
+    fecharDialogo(); avisar("Solicitação reprovada.");
+  };
+}
+
+/* ---------- equipe hoje, ao vivo ---------- */
+function situacaoAoVivo(u, b, hoje, agora) {
+  const j = u.jornada;
+  const jornadaMin = hm(j.saida) - hm(j.entrada) - Number(j.almocoMin);
+  const feriado = new Map(feriadosDa(u.cidade)).get(hoje);
+  const folga = folgas.find(f => f.data === hoje && (f.para === "todas" || f.para === u.uid));
+  const expediente = j.dias.includes(diaDaSemana(hoje)) && !feriado && !folga;
+  const t = CAMPOS.map(c => b?.[c] ? minutosDe(b[c]) : null);
+  const [e, sa, va, s] = t;
+  const tol = TOLERANCIA_MARCACAO;
+
+  if (b?.abonoDiaInteiro) return { tipo: "neutro", selo: "Atestado", destaque: "Afastada", linhas: ["Atestado aprovado para o dia inteiro."] };
+
+  if (e === null) {
+    if (!expediente) return { tipo: "neutro", selo: "Sem expediente", destaque: "Folga hoje",
+      linhas: [feriado ? `Feriado: ${feriado}.` : folga ? `Folga: ${folga.nome}.` : "Hoje não é dia de trabalho dela."] };
+    const atraso = agora - hm(j.entrada);
+    if (atraso > tol) return { tipo: "erro", selo: "Atrasada", destaque: `${fmtHM(atraso)} de atraso`, linhas: [`Deveria ter entrado às ${j.entrada} e ainda não registrou a entrada.`] };
+    return { tipo: "neutro", selo: "Ainda não entrou", destaque: `Entra às ${j.entrada}`, linhas: [] };
+  }
+
+  const linhas = [];
+  const atrasoEntrada = e - hm(j.entrada);
+  if (expediente && atrasoEntrada > tol) linhas.push(`Entrou às ${fmtHM(e)}, com ${fmtHM(atrasoEntrada)} de atraso.`);
+  else linhas.push(`Entrou às ${fmtHM(e)}.`);
+
+  // tempo trabalhado até agora
+  let trab = 0;
+  if (sa !== null) trab += sa - e;
+  if (va !== null) trab += (s ?? agora) - va;
+  if (sa === null && va === null) trab = (s ?? agora) - e;
+
+  if (s !== null) {
+    const saldo = expediente ? trab - jornadaMin : trab;
+    return { tipo: "concluido", selo: "Encerrou", destaque: `Saiu às ${fmtHM(s)}`,
+      linhas: [...linhas, `Trabalhou ${fmtHM(trab)} hoje${Math.abs(saldo) > tol ? `, saldo de ${fmtSaldo(saldo)}` : ""}.`] };
+  }
+
+  if (sa !== null && va === null) {
+    const volta = sa + Number(j.almocoMin);
+    const passou = agora - volta;
+    if (passou > tol) return { tipo: "erro", selo: "Almoço passou do horário", destaque: `Deveria ter voltado às ${fmtHM(volta)}`,
+      linhas: [...linhas, `Saiu para o almoço às ${fmtHM(sa)}. Está ${fmtHM(passou)} além do previsto.`] };
+    return { tipo: "atencao", selo: "No almoço", destaque: `Volta às ${fmtHM(volta)}`,
+      linhas: [...linhas, `Saiu para o almoço às ${fmtHM(sa)}. Faltam ${fmtHM(Math.max(0, volta - agora))} para voltar.`] };
+  }
+
+  if (!expediente) return { tipo: "atencao", selo: "Trabalhando fora do expediente", destaque: `${fmtHM(trab)} trabalhadas`,
+    linhas: [...linhas, feriado ? `Hoje é feriado: ${feriado}. Todo o tempo conta como hora extra.` : "Hoje não é dia de trabalho dela. Todo o tempo conta como hora extra."] };
+
+  // saída prevista para completar a jornada
+  const saidaPrevista = va !== null ? va + (jornadaMin - (sa - e)) : e + jornadaMin + Number(j.almocoMin);
+  if (va !== null) linhas.push(`Voltou do almoço às ${fmtHM(va)}.`);
+  else if (sa === null) linhas.push("Ainda não saiu para o almoço.");
+  const extra = agora - saidaPrevista;
+  if (extra > tol) return { tipo: "atencao", selo: "Em hora extra", destaque: `+${fmtHM(extra)} de hora extra`,
+    linhas: [...linhas, `A jornada dela terminou às ${fmtHM(saidaPrevista)}.`] };
+  return { tipo: "ok", selo: "Trabalhando", destaque: `Sai às ${fmtHM(saidaPrevista)}`,
+    linhas: [...linhas, `Trabalhou ${fmtHM(trab)} até agora.`] };
+}
+
+/* avisos: entrada antes do horário e hora extra */
+function avisosDe(u, b, hoje, st) {
+  const lista = [];
+  if (!b?.entrada) return lista;
+  const j = u.jornada;
+  const feriado = new Map(feriadosDa(u.cidade)).get(hoje);
+  const folga = folgas.find(f => f.data === hoje && (f.para === "todas" || f.para === u.uid));
+  const expediente = j.dias.includes(diaDaSemana(hoje)) && !feriado && !folga;
+  const e = minutosDe(b.entrada);
+  if (!expediente) lista.push({ chave: `${u.uid}-fora`, texto: `${u.nome} bateu ponto hoje às ${fmtHM(e)}, num dia sem expediente para ela.` });
+  else if (e < hm(j.entrada) - TOLERANCIA_MARCACAO) lista.push({ chave: `${u.uid}-antes`, texto: `${u.nome} bateu a entrada às ${fmtHM(e)}, antes do horário dela (${j.entrada}).` });
+  if (st.selo === "Em hora extra") lista.push({ chave: `${u.uid}-extra`, texto: `${u.nome} está fazendo hora extra. ${st.linhas[st.linhas.length - 1]}` });
+  return lista;
+}
+function lerAvisos(hoje) { try { return JSON.parse(localStorage.getItem(`ponto-avisos-${hoje}`) || "{}"); } catch { return {}; } }
+function gravarAvisos(hoje, avisos) { try { localStorage.setItem(`ponto-avisos-${hoje}`, JSON.stringify(avisos)); } catch {} }
+function notificar(texto) {
+  avisar(texto);
+  try { if ("Notification" in window && Notification.permission === "granted") new Notification("Ponto Demo", { body: texto }); } catch {}
+}
+function estadoNotificacoes() {
+  const botao = $("ativar-notificacoes"), estado = $("notificacoes-estado");
+  if (!botao) return;
+  if (!("Notification" in window)) { botao.classList.add("oculto"); estado.textContent = "Este navegador não permite avisos no computador. Os avisos aparecem só nesta tela."; return; }
+  const p = Notification.permission;
+  botao.classList.toggle("oculto", p !== "default");
+  estado.textContent = p === "granted" ? "Os avisos também aparecem nas notificações do computador enquanto a plataforma estiver aberta, mesmo minimizada."
+    : p === "denied" ? "As notificações foram bloqueadas neste navegador. Para recebê-las, libere as notificações deste site nas configurações do navegador."
+    : "Clique no botão ao lado para receber os avisos também nas notificações do computador.";
+}
+function processarAvisos(novos, hoje, agoraTxt) {
+  const guardados = lerAvisos(hoje);
+  novos.forEach(a => { if (!guardados[a.chave]) { guardados[a.chave] = { texto: a.texto, hora: agoraTxt }; notificar(a.texto); } else guardados[a.chave].texto = a.texto; });
+  gravarAvisos(hoje, guardados);
+  const itens = Object.values(guardados).sort((a, b) => b.hora.localeCompare(a.hora));
+  $("contador-avisos").textContent = itens.length;
+  $("contador-avisos").classList.toggle("oculto", itens.length === 0);
+  $("lista-avisos").innerHTML = itens.length === 0 ? `<p class="ajuda" style="margin:0">Nenhum aviso até agora.</p>` :
+    itens.map(a => `<div class="item pendencia alerta" style="margin-bottom:8px"><p style="margin:0"><strong>${esc(a.hora)}</strong> ${esc(a.texto)}</p></div>`).join("");
+  estadoNotificacoes();
+}
+
+function desenharHoje() {
+  const alvo = $("admin-hoje"); if (!alvo) return;
+  const hoje = hojeISO();
+  const agoraTxt = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
+  const agora = hm(agoraTxt);
+  $("hoje-hora").textContent = agoraTxt;
+  const mapa = new Map(batidasDeHoje.map(b => [b.uid, b]));
+  const pessoas = ativas();
+  const avisosAgora = [];
+  alvo.innerHTML = pessoas.length === 0 ? `<div class="aviso atencao">Configure as funcionárias na aba Funcionárias para acompanhar a equipe aqui.</div>` :
+    pessoas.map(u => {
+      const b = mapa.get(u.uid);
+      const st = situacaoAoVivo(u, b, hoje, agora);
+      avisosAgora.push(...avisosDe(u, b, hoje, st));
+      return `<article class="pessoa ${st.tipo}">
+        <div class="cabeca"><strong>${esc(u.nome)}</strong><span class="selo ${st.tipo === "neutro" ? "neutro" : st.tipo === "concluido" ? "concluido" : st.tipo}">${esc(st.selo)}</span></div>
+        ${u.cidade ? `<span class="ajuda">${CIDADES[u.cidade]}</span>` : ""}
+        <p class="destaque">${esc(st.destaque)}</p>
+        ${st.linhas.map(l => `<p class="linha">${esc(l)}</p>`).join("")}
+        <div class="marcas">${CAMPOS.map(c => `<div><span>${ROTULOS_CURTOS[c]}</span><b>${b?.[c] ? horaDe(b[c]) : "--:--"}</b></div>`).join("")}</div>
+      </article>`;
+    }).join("");
+  processarAvisos(avisosAgora, hoje, agoraTxt);
+}
+
+/* ---------- funcionárias ---------- */
+function desenharFuncionarias() {
+  const lista = [...usuarios.values()].sort((a, b) => a.nome.localeCompare(b.nome));
+  $("admin-funcionarias").innerHTML = lista.length === 0 ? `<div class="aviso atencao">Ninguém acessou ainda. Crie os acessos no console do Firebase e peça para cada funcionária entrar uma vez.</div>` :
+    lista.map(u => `<div class="item"><div class="cabeca"><strong>${esc(u.nome)}</strong>
+      <span class="selo ${u.desligadaEm ? "reprovada" : u.ativa && u.jornada ? "concluido" : "pendente"}">${u.desligadaEm ? `Desligada em ${fmtData(u.desligadaEm)}` : u.ativa && u.jornada ? "Ativa" : "Aguardando configuração"}</span></div>
+      <p class="ajuda">${esc(u.email)}${u.cidade ? `, ${CIDADES[u.cidade]}` : ""}</p>
+      ${u.jornada ? `<p>Jornada: ${esc(descreverJornada(u.jornada))}</p>` : ""}
+      <div class="botoes"><button class="botao secundario pequeno" data-editar-func="${u.uid}">Configurar</button></div></div>`).join("");
+  document.querySelectorAll("[data-editar-func]").forEach(b => b.onclick = () => editarFuncionaria(usuarios.get(b.dataset.editarFunc)));
+}
+
+function editarFuncionaria(u) {
+  const j = u.jornada || { entrada: "08:00", saida: "17:00", almocoMin: 60, dias: [1, 2, 3, 4, 5] };
+  abrirDialogo(`<h3>Configurar ${esc(u.nome)}</h3>
+    <label class="campo">Nome<input type="text" id="f-nome" value="${esc(u.nome)}"></label>
+    <label class="campo">Cidade onde trabalha<select id="f-cidade"><option value="">Escolha a cidade</option>${Object.entries(CIDADES).map(([k, v]) => `<option value="${k}" ${u.cidade === k ? "selected" : ""}>${v}</option>`).join("")}</select>
+      <span class="ajuda">Define quais feriados estaduais e municipais valem para ela.</span></label>
+    <div class="linha-campos">
+      <label class="campo">Entrada<input type="time" id="f-entrada" value="${j.entrada}"></label>
+      <label class="campo">Saída<input type="time" id="f-saida" value="${j.saida}"></label>
+      <label class="campo">Almoço (minutos)<input type="number" id="f-almoco" min="0" step="5" value="${j.almocoMin}"></label>
+    </div>
+    <p class="ajuda" style="margin:0 0 6px">Dias de trabalho</p>
+    <div class="dias-semana">${[1, 2, 3, 4, 5, 6, 0].map(d => `<label><input type="checkbox" value="${d}" ${j.dias.includes(d) ? "checked" : ""} class="oculto">${SEMANA[d]}</label>`).join("")}</div>
+    <label class="campo" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="f-ativa" ${u.ativa !== false && !u.desligadaEm ? "checked" : ""}> Acesso ao ponto liberado</label>
+    <label class="campo">Último dia de trabalho<input type="date" id="f-deslig" value="${u.desligadaEm || ""}">
+      <span class="ajuda">Preencha só quando ela sair da empresa. O acesso ao ponto é bloqueado, ela sai das telas do dia a dia e o histórico continua guardado para o fechamento.</span></label>
+    <div class="rodape"><button class="botao secundario" id="f-cancelar">Cancelar</button><button class="botao" id="f-salvar">Salvar</button></div>`);
+  $("f-cancelar").onclick = fecharDialogo;
+  $("f-salvar").onclick = async () => {
+    const dias = [...document.querySelectorAll(".dias-semana input:checked")].map(i => Number(i.value));
+    const jornada = { entrada: $("f-entrada").value, saida: $("f-saida").value, almocoMin: Number($("f-almoco").value), dias };
+    if (!jornada.entrada || !jornada.saida || hm(jornada.saida) <= hm(jornada.entrada) || dias.length === 0) { avisar("Confira os horários e os dias de trabalho."); return; }
+    if (!$("f-cidade").value) { avisar("Escolha a cidade onde ela trabalha."); return; }
+    const deslig = $("f-deslig").value;
+    const dados = { nome: $("f-nome").value.trim() || u.nome, cidade: $("f-cidade").value, jornada,
+      ativa: deslig ? false : $("f-ativa").checked, desligadaEm: deslig || deleteField() };
+    if (deslig && !u.desligadaEm && !await confirmar(`Desligar ${u.nome}?`, `O último dia de trabalho será ${fmtData(deslig)}. Ela perde o acesso ao ponto, mas o histórico fica guardado.`, "Desligar", "perigo")) return;
+    await updateDoc(doc(db, "usuarios", u.uid), dados);
+    if ($("dialogo").open) fecharDialogo();
+    avisar("Configuração salva.");
+  };
+}
+
+/* ---------- folgas e feriados ---------- */
+let calMes = hojeISO().slice(0, 7);
+function mudarMesCal(delta) {
+  let [y, m] = calMes.split("-").map(Number);
+  m += delta; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; }
+  calMes = `${y}-${String(m).padStart(2, "0")}`; desenharFolgas();
+}
+$("cal-anterior").onclick = () => mudarMesCal(-1);
+$("cal-proximo").onclick = () => mudarMesCal(1);
+
+function desenharFolgas() {
+  const grade = $("cal-grade"); if (!grade) return;
+  const titulo = nomeMes(calMes); $("cal-titulo").textContent = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+  const pessoas = ativas();
+  const nomeDe = (para) => para === "todas" ? "Todas" : (usuarios.get(para)?.nome || "Funcionária removida");
+
+  // feriados do mês, agrupados por dia e por nome, com quem é afetada
+  const feriadosDoDia = new Map();
+  const cidades = pessoas.length ? pessoas : [{ nome: "", cidade: null }];
+  cidades.forEach(u => feriadosDa(u.cidade).filter(([d]) => d.startsWith(calMes)).forEach(([d, nome]) => {
+    if (!feriadosDoDia.has(d)) feriadosDoDia.set(d, new Map());
+    const m = feriadosDoDia.get(d); if (!m.has(nome)) m.set(nome, []); if (u.nome) m.get(nome).push(u.nome);
+  }));
+
+  const [y, m] = calMes.split("-").map(Number);
+  const ultimo = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const inicio = diaDaSemana(`${calMes}-01`);
+  const hoje = hojeISO();
+  let html = SEMANA.map(d => `<div class="cal-cab">${d}</div>`).join("");
+  for (let i = 0; i < inicio; i++) html += `<div></div>`;
+  for (let d = 1; d <= ultimo; d++) {
+    const data = `${calMes}-${String(d).padStart(2, "0")}`;
+    const dow = diaDaSemana(data);
+    const tags = [];
+    (feriadosDoDia.get(data) || new Map()).forEach((quem, nome) => {
+      const todas = pessoas.length > 0 && quem.length === pessoas.length;
+      tags.push(`<span class="cal-tag feriado">${esc(nome)}${quem.length && !todas ? `<small>${esc(listaPt(quem))}</small>` : ""}</span>`);
+    });
+    folgas.filter(f => f.data === data).forEach(f => tags.push(
+      `<button class="cal-tag folga" data-remover-fol="${f.data}|${f.para}" title="Remover esta folga">${esc(f.nome)}<small>${esc(nomeDe(f.para))}</small></button>`));
+    html += `<div class="cal-dia ${dow === 0 || dow === 6 ? "fds" : ""} ${data === hoje ? "hoje" : ""}" data-dia="${data}" tabindex="0">
+      <span class="num">${d}</span>${tags.join("")}</div>`;
+  }
+  grade.innerHTML = html;
+
+  grade.querySelectorAll("[data-dia]").forEach(el => {
+    const escolher = () => { $("fol-data").value = el.dataset.dia; $("fol-motivo").focus(); $("fol-data").scrollIntoView({ behavior: "smooth", block: "center" }); };
+    el.onclick = escolher;
+    el.onkeydown = (e) => { if (e.key === "Enter") escolher(); };
+  });
+  grade.querySelectorAll("[data-remover-fol]").forEach(b => b.onclick = async (e) => {
+    e.stopPropagation();
+    const [data, para] = b.dataset.removerFol.split("|");
+    if (!await confirmar("Remover esta folga?", `${fmtData(data)}, ${nomeDe(para)}.`, "Remover", "perigo")) return;
+    for (const uid of (para === "todas" ? pessoas.map(u => u.uid) : [para])) if (await mesFechado(uid, data.slice(0, 7))) { avisar("O ponto deste mês já está fechado. Reabra o fechamento antes de mudar a folga."); return; }
+    await setDoc(doc(db, "config", "folgas"), { lista: folgas.filter(f => !(f.data === data && f.para === para)) });
+    avisar("Folga removida.");
+  });
+}
+$("fol-adicionar").onclick = async () => {
+  const data = $("fol-data").value, nome = $("fol-motivo").value.trim() || "Folga", para = $("fol-para").value;
+  if (!data) { avisar("Informe a data da folga."); return; }
+  const afetadas = para === "todas" ? ativas().map(u => u.uid) : [para];
+  for (const uid of afetadas) if (await mesFechado(uid, data.slice(0, 7))) { avisar("O ponto deste mês já está fechado. Reabra o fechamento antes de lançar a folga."); return; }
+  await setDoc(doc(db, "config", "folgas"), { lista: [...folgas.filter(f => !(f.data === data && f.para === para)), { data, nome, para }] });
+  $("fol-data").value = ""; $("fol-motivo").value = ""; avisar("Folga lançada.");
+};
+
+/* ---------- cálculo do mês ---------- */
+function calcularMes({ mes, uid, cidade, jornada, batidas, pendentes, desligadaEm }) {
+  const [y, m] = mes.split("-").map(Number);
+  const ultimo = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const hoje = hojeISO();
+  const jornadaMin = hm(jornada.saida) - hm(jornada.entrada) - Number(jornada.almocoMin);
+  const mapaFer = new Map(feriadosDa(cidade));
+  const mapaFolga = new Map(folgas.filter(f => f.para === "todas" || f.para === uid).map(f => [f.data, f.nome]));
+  const diasPendentes = new Set();
+  pendentes.forEach(s => (s.tipo === "atestado" && s.diaInteiro ? datasEntre(s.data, s.dataFim) : [s.data]).forEach(d => diasPendentes.add(d)));
+
+  const dias = [], bloqueios = [], alertas = [];
+  const r = { extras: 0, extrasDomFer: 0, faltantes: 0, diasTrabalhados: 0, faltas: 0, diasAbonados: 0, abonoMin: 0 };
+
+  for (let d = 1; d <= ultimo; d++) {
+    const data = `${mes}-${String(d).padStart(2, "0")}`;
+    const b = batidas.get(data) || null;
+    const dow = diaDaSemana(data);
+    const feriado = mapaFer.get(data) || null;
+    const folga = mapaFolga.get(data) || null;
+    const cls = b?.classificacao || (folga && !feriado ? "folga" : null);
+    const aposDeslig = !!desligadaEm && data > desligadaEm;
+    const futuro = data > hoje || aposDeslig;
+    const diaUtil = !aposDeslig && jornada.dias.includes(dow) && !feriado && !["feriado", "folga", "ferias"].includes(cls);
+    const previsto = diaUtil ? jornadaMin : 0;
+    const t = CAMPOS.map(c => b?.[c] ? minutosDe(b[c]) : null);
+    const n = t.filter(x => x !== null).length;
+    const abonoDia = !!b?.abonoDiaInteiro;
+    const abono = abonoDia ? 0 : (b?.abonoMin || 0);
+    const just = (b?.justificativa || "").trim();
+    const presentes = t.filter(x => x !== null);
+    const ordemOk = presentes.every((x, i) => i === 0 || x > presentes[i - 1]);
+    const obs = [];
+    const bloquear = (codigo, texto) => bloqueios.push({ data, codigo, texto });
+    const alertar = (codigo, texto) => alertas.push({ data, codigo, texto, justificativa: just });
+
+    let trabalhado = 0;
+    if (t[0] !== null && t[1] !== null) trabalhado += t[1] - t[0];
+    if (t[2] !== null && t[3] !== null) trabalhado += t[3] - t[2];
+    if (t[0] !== null && t[1] === null && t[2] === null && t[3] !== null) trabalhado = t[3] - t[0];
+
+    if (aposDeslig) obs.push("Após o desligamento");
+    if (feriado) obs.push(feriado);
+    if (folga && !feriado && !b?.classificacao) obs.push(folga === "Folga" ? "Folga" : `Folga: ${folga}`);
+    else if (cls && cls !== "falta") obs.push(CLASSIFICACOES[cls]);
+
+    let saldo = 0, tolerado = false;
+    if (!futuro) {
+      if (!ordemOk) bloquear("ordem", "Os horários estão fora de ordem.");
+      if (n === 1 || n === 3) {
+        const faltam = CAMPOS.filter((c, i) => t[i] === null).map(c => ROTULOS[c].toLowerCase());
+        bloquear("incompleto", `${faltam.length > 1 ? "Faltam" : "Falta"} ${listaPt(faltam)}.`);
+      }
+      if (previsto > 0 && n === 0 && !cls && !abonoDia) bloquear("sem_registro", "Dia útil sem nenhuma marcação. Lance os horários ou classifique o dia como falta, feriado, folga ou férias.");
+      if (diasPendentes.has(data)) bloquear("solicitacao", "Há uma solicitação pendente para este dia na aba Solicitações.");
+
+      if (abonoDia) { obs.push("Atestado (dia inteiro)"); }
+      else if (cls === "falta") { saldo = -previsto; obs.push("Falta"); }
+      else if (n === 2 || n === 4) {
+        if (ordemOk) {
+          if (previsto > 0 && n === 4 && abono === 0) {
+            const vE = Math.abs(t[0] - hm(jornada.entrada)), vS = Math.abs(t[3] - hm(jornada.saida)), vA = Math.abs((t[2] - t[1]) - jornada.almocoMin);
+            tolerado = vE <= TOLERANCIA_MARCACAO && vS <= TOLERANCIA_MARCACAO && vA <= TOLERANCIA_MARCACAO && vE + vS + vA <= TOLERANCIA_DIA;
+          }
+          saldo = tolerado ? 0 : trabalhado + abono - previsto;
+          if (abono > 0 && saldo > 0) saldo = Math.max(0, trabalhado - previsto);
+          if (abono > 0) obs.push(`Atestado ${fmtHM(abono)}`);
+          if (tolerado && trabalhado !== previsto) obs.push("Dentro da tolerância");
+          if (previsto === 0) alertar("sem_expediente", `Trabalho registrado em dia sem expediente (${feriado ? "feriado" : cls ? CLASSIFICACOES[cls].toLowerCase() : SEMANA_LONGA[dow]}).`);
+          else if (!tolerado && abono === 0 && Math.abs(saldo) >= LIMITE_ALERTA_MIN) alertar("diferenca", `Diferença de ${fmtSaldo(saldo)} em relação à jornada.`);
+          if (n === 4 && previsto > 0 && !tolerado) {
+            const alm = t[2] - t[1];
+            if (alm < 60) alertar("intervalo_curto", `Intervalo de almoço de ${fmtHM(alm)}, menor que 1 hora.`);
+            if (alm > 120) alertar("intervalo_longo", `Intervalo de almoço de ${fmtHM(alm)}, maior que 2 horas.`);
+          }
+          if (n === 2 && abono === 0) alertar("duas_marcacoes", "Só 2 marcações no dia. Confira se faltou alguma ou justifique.");
+        }
+      }
+      if (just) obs.push(just);
+    }
+
+    if (n > 0) r.diasTrabalhados++;
+    if (cls === "falta") r.faltas++;
+    if (abonoDia) r.diasAbonados++;
+    r.abonoMin += abono;
+    if (saldo > 0) { if (dow === 0 || feriado || cls === "feriado") r.extrasDomFer += saldo; else r.extras += saldo; }
+    if (saldo < 0) r.faltantes += -saldo;
+
+    dias.push({ data, semana: SEMANA[dow], fds: !diaUtil, futuro,
+      h: CAMPOS.map(c => b?.[c] ? horaDe(b[c]) : ""), aj: CAMPOS.map(c => !!b?.origem?.[c]),
+      trabalhado: n >= 2 ? trabalhado : 0, saldo, obs: obs.join(". ") });
+  }
+  return { dias, bloqueios, alertas, resumo: r };
+}
+
+/* ---------- fechamento ---------- */
+let contextoFech = null;
+
+$("fech-verificar").onclick = verificarMes;
+
+async function verificarMes() {
+  const mes = $("fech-mes").value, uid = $("fech-func").value;
+  if (!mes || !uid) { avisar("Escolha o mês e a funcionária."); return; }
+  const func = usuarios.get(uid);
+  if (!func?.jornada || !func.cidade) { avisar("Configure a jornada e a cidade desta funcionária na aba Funcionárias."); return; }
+  $("fech-resultado").innerHTML = `<p class="ajuda">Verificando...</p>`;
+  const [fechSnap, batSnap, solSnap] = await Promise.all([
+    getDoc(doc(db, "fechamentos", `${mes}_${uid}`)),
+    getDocs(query(collection(db, "batidas"), where("uid", "==", uid), where("mes", "==", mes))),
+    getDocs(query(collection(db, "solicitacoes"), where("uid", "==", uid), where("status", "==", "pendente")))
+  ]);
+  if (fechSnap.exists() && fechSnap.data().status === "concluido") {
+    const f = fechSnap.data();
+    $("fech-resultado").innerHTML = `<div class="aviso ok">O ponto de ${esc(func.nome)} em ${nomeMes(mes)} já está fechado.</div>
+      ${cardsResumo(f.resumo)}
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="botao" id="fech-imprimir">Imprimir ou salvar espelho em PDF</button>
+      <button class="botao secundario" id="fech-reabrir">Reabrir o fechamento</button></div>`;
+    $("fech-imprimir").onclick = () => imprimirEspelho(f);
+    $("fech-reabrir").onclick = () => reabrir(mes, uid);
+    return;
+  }
+  const batidas = new Map(batSnap.docs.map(d => [d.data().data, d.data()]));
+  const pendentes = solSnap.docs.map(d => d.data()).filter(s => (s.tipo === "atestado" && s.diaInteiro ? datasEntre(s.data, s.dataFim) : [s.data]).some(d => d.startsWith(mes)));
+  const calc = calcularMes({ mes, uid, cidade: func.cidade, jornada: func.jornada, batidas, pendentes, desligadaEm: func.desligadaEm || null });
+  contextoFech = { mes, uid, func, batidas, calc };
+  desenharVerificacao();
+}
+
+function cardsResumo(r) {
+  return `<div class="numeros">
+    <div class="numero extra"><div class="valor">${fmtHM(r.extras)}</div><div class="legenda">Horas extras</div></div>
+    <div class="numero extra"><div class="valor">${fmtHM(r.extrasDomFer)}</div><div class="legenda">Extras em domingos e feriados</div></div>
+    <div class="numero falta"><div class="valor">${fmtHM(r.faltantes)}</div><div class="legenda">Horas faltantes</div></div>
+    <div class="numero"><div class="valor">${r.diasTrabalhados}</div><div class="legenda">Dias trabalhados</div></div>
+    <div class="numero"><div class="valor">${r.faltas}</div><div class="legenda">Faltas</div></div>
+    <div class="numero"><div class="valor">${r.diasAbonados}d ${fmtHM(r.abonoMin)}</div><div class="legenda">Abonos por atestado</div></div>
+  </div>`;
+}
+
+function desenharVerificacao() {
+  const { mes, func, calc } = contextoFech;
+  const mesEncerrado = mes < hojeISO().slice(0, 7) || (!!func.desligadaEm && func.desligadaEm.slice(0, 7) <= mes && func.desligadaEm < hojeISO());
+  const alertasAbertos = calc.alertas.filter(a => !a.justificativa);
+  const podeFechar = mesEncerrado && calc.bloqueios.length === 0 && alertasAbertos.length === 0;
+  let status;
+  if (!mesEncerrado) status = `<div class="aviso atencao">${nomeMes(mes).charAt(0).toUpperCase() + nomeMes(mes).slice(1)} ainda não terminou. Você pode acompanhar as pendências, mas o fechamento só é liberado depois do último dia do mês.</div>`;
+  else if (podeFechar) status = `<div class="aviso ok">Tudo conferido. O ponto de ${esc(func.nome)} pode ser fechado.</div>`;
+  else status = `<div class="aviso erro">${calc.bloqueios.length} ${calc.bloqueios.length === 1 ? "pendência precisa" : "pendências precisam"} ser ${calc.bloqueios.length === 1 ? "resolvida" : "resolvidas"} e ${alertasAbertos.length} ${alertasAbertos.length === 1 ? "diferença precisa" : "diferenças precisam"} de justificativa antes do fechamento.</div>`;
+
+  const itemPend = (p, tipo) => `<div class="item pendencia ${tipo} ${tipo === "alerta" && p.justificativa ? "resolvida" : ""}">
+    <div class="cabeca"><strong>${fmtData(p.data)} (${SEMANA_LONGA[diaDaSemana(p.data)]})</strong>
+    <span class="selo ${tipo === "alerta" ? (p.justificativa ? "aprovada" : "pendente") : "reprovada"}">${tipo === "alerta" ? (p.justificativa ? "Justificada" : "Precisa de justificativa") : "Pendência"}</span></div>
+    <p>${esc(p.texto)}</p>${p.justificativa ? `<p class="ajuda">Justificativa: ${esc(p.justificativa)}</p>` : ""}
+    <div class="botoes">${p.codigo === "solicitacao" ? `<button class="botao secundario pequeno" data-ir-solic>Abrir solicitações</button>` : `<button class="botao secundario pequeno" data-editar-dia="${p.data}">Resolver</button>`}</div></div>`;
+
+  $("fech-resultado").innerHTML = `${status}
+    ${cardsResumo(calc.resumo)}
+    ${calc.bloqueios.length ? `<h2 style="font-size:18px;margin:8px 0 12px">Pendências</h2>${calc.bloqueios.map(p => itemPend(p, "bloqueio")).join("")}` : ""}
+    ${calc.alertas.length ? `<h2 style="font-size:18px;margin:20px 0 12px">Diferenças</h2>${calc.alertas.map(p => itemPend(p, "alerta")).join("")}` : ""}
+    <h2 style="font-size:18px;margin:20px 0 4px">Espelho de ${esc(func.nome)}, ${nomeMes(mes)}</h2>
+    <p class="ajuda" style="margin:0 0 12px">Clique em qualquer dia para lançar horários, classificar o dia ou escrever uma justificativa. O asterisco indica horário ajustado.</p>
+    <div class="rolagem"><table class="tabela">${cabecalhoTabela()}<tbody>${calc.dias.map(d => `<tr class="clicavel ${d.fds ? "fim-de-semana" : ""}" data-editar-dia="${d.data}">
+      <td>${fmtData(d.data).slice(0, 5)}</td><td>${d.semana}</td>${d.h.map((h, i) => `<td>${h}${h && d.aj[i] ? "*" : ""}</td>`).join("")}
+      <td>${d.trabalhado ? fmtHM(d.trabalhado) : ""}</td><td class="${d.saldo > 0 ? "positivo" : d.saldo < 0 ? "negativo" : ""}">${d.saldo ? fmtSaldo(d.saldo) : ""}</td><td>${esc(d.obs)}</td></tr>`).join("")}</tbody></table></div>
+    <div style="margin-top:20px"><button class="botao" id="fech-fechar" ${podeFechar ? "" : "disabled"}>Fechar o ponto de ${esc(func.nome)}</button></div>`;
+
+  document.querySelectorAll("[data-editar-dia]").forEach(el => el.onclick = () => editarDia(el.dataset.editarDia));
+  document.querySelectorAll("[data-ir-solic]").forEach(el => el.onclick = () => trocarAba("solicitacoes"));
+  $("fech-fechar").onclick = fecharPonto;
+}
+
+function cabecalhoTabela() {
+  return `<thead><tr><th>Dia</th><th>Sem.</th>${CAMPOS.map(c => `<th>${ROTULOS_CURTOS[c]}</th>`).join("")}<th>Trabalhado</th><th>Saldo</th><th>Observação</th></tr></thead>`;
+}
+
+function editarDia(data) {
+  const { uid, func, batidas } = contextoFech;
+  const b = batidas.get(data) || {};
+  const alertasDia = contextoFech.calc.alertas.filter(a => a.data === data);
+  const bloqDia = contextoFech.calc.bloqueios.filter(a => a.data === data);
+  abrirDialogo(`<h3>${fmtData(data)}, ${SEMANA_LONGA[diaDaSemana(data)]}</h3>
+    <p class="ajuda">${esc(func.nome)}. Jornada: ${esc(descreverJornada(func.jornada))}.</p>
+    ${[...bloqDia, ...alertasDia].map(p => `<p class="aviso ${bloqDia.includes(p) ? "erro" : "atencao"}" style="margin:0 0 10px;padding:8px 12px;font-size:14px">${esc(p.texto)}</p>`).join("")}
+    <div class="linha-campos">${CAMPOS.map(c => `<label class="campo">${ROTULOS_CURTOS[c]}<input type="time" id="ed-${c}" value="${b[c] ? horaDe(b[c]) : ""}"></label>`).join("")}</div>
+    <label class="campo">Classificação do dia<select id="ed-cls"><option value="">Dia normal</option>${Object.entries(CLASSIFICACOES).map(([k, v]) => `<option value="${k}" ${b.classificacao === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+    <label class="campo">Justificativa<textarea id="ed-just" placeholder="Ex.: ficou até mais tarde para entregar a tradução urgente">${esc(b.justificativa || "")}</textarea>
+      <span class="ajuda">Aparece na coluna de observação do espelho.</span></label>
+    ${b.abonoDiaInteiro || b.abonoMin ? `<p class="ajuda">Abono por atestado neste dia: ${b.abonoDiaInteiro ? "dia inteiro" : fmtHM(b.abonoMin)}.</p>` : ""}
+    <div class="rodape"><button class="botao secundario" id="ed-cancelar">Cancelar</button><button class="botao" id="ed-salvar">Salvar dia</button></div>`);
+  $("ed-cancelar").onclick = fecharDialogo;
+  $("ed-salvar").onclick = async () => {
+    const dados = { uid, data, mes: data.slice(0, 7) };
+    const origem = {};
+    for (const c of CAMPOS) {
+      const novo = $(`ed-${c}`).value, antigo = b[c] ? horaDe(b[c]) : "";
+      if (novo && novo !== antigo) { dados[c] = paraTimestamp(data, novo); origem[c] = "gestora"; }
+      else if (!novo && antigo) { dados[c] = deleteField(); origem[c] = deleteField(); }
+    }
+    if (Object.keys(origem).length) dados.origem = origem;
+    const cls = $("ed-cls").value, just = $("ed-just").value.trim();
+    dados.classificacao = cls || deleteField();
+    dados.justificativa = just || deleteField();
+    try {
+      await setDoc(doc(db, "batidas", `${uid}_${data}`), dados, { merge: true });
+      fecharDialogo(); avisar("Dia atualizado."); verificarMes();
+    } catch (err) { avisar("Não foi possível salvar: " + err.message); }
+  };
+}
+
+async function fecharPonto() {
+  const { mes, uid, func, calc } = contextoFech;
+  if (!await confirmar("Fechar o ponto?", `O ponto de ${func.nome} em ${nomeMes(mes)} será fechado. Depois disso, ela não consegue mais pedir ajustes para este mês.`, "Fechar o ponto", "ok")) return;
+  const registro = { uid, nome: func.nome, mes, status: "concluido", jornada: func.jornada, resumo: calc.resumo,
+    dias: calc.dias.map(d => ({ data: d.data, semana: d.semana, fds: d.fds, h: d.h, aj: d.aj, trabalhado: d.trabalhado, saldo: d.saldo, obs: d.obs })),
+    fechadoEm: serverTimestamp(), fechadoPor: usuario.email, empresa: EMPRESA, desligadaEm: func.desligadaEm || null };
+  await setDoc(doc(db, "fechamentos", `${mes}_${uid}`), registro);
+  avisar("Ponto fechado.");
+  await carregarHistorico();
+  verificarMes();
+}
+
+async function reabrir(mes, uid) {
+  if (!await confirmar("Reabrir o fechamento?", "O espelho deixa de valer e o mês volta a aceitar ajustes. Depois de corrigir, feche de novo.", "Reabrir", "perigo")) return;
+  await updateDoc(doc(db, "fechamentos", `${mes}_${uid}`), { status: "reaberto", reabertoEm: serverTimestamp() });
+  avisar("Fechamento reaberto."); await carregarHistorico(); verificarMes();
+}
+
+async function carregarHistorico() {
+  const qs = await getDocs(collection(db, "fechamentos"));
+  const lista = qs.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.mes.localeCompare(a.mes) || a.nome.localeCompare(b.nome));
+  $("fech-historico").innerHTML = lista.length === 0 ? `<tbody><tr><td class="ajuda">Nenhum fechamento realizado.</td></tr></tbody>` :
+    `<thead><tr><th>Mês</th><th>Funcionária</th><th>Situação</th><th>Horas extras</th><th>Horas faltantes</th><th>Fechado em</th><th></th></tr></thead><tbody>` +
+    lista.map(f => `<tr><td>${nomeMes(f.mes)}</td><td>${esc(f.nome)}</td><td><span class="selo ${f.status}">${f.status === "concluido" ? "Concluído" : "Reaberto"}</span></td>
+      <td>${fmtHM(f.resumo.extras + f.resumo.extrasDomFer)}</td><td>${fmtHM(f.resumo.faltantes)}</td>
+      <td>${f.fechadoEm ? new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO }).format(paraData(f.fechadoEm)) : ""}</td>
+      <td>${f.status === "concluido" ? `<button class="link" data-imprimir="${f.id}">Espelho</button>` : ""}</td></tr>`).join("") + "</tbody>";
+  const porId = new Map(lista.map(f => [f.id, f]));
+  document.querySelectorAll("[data-imprimir]").forEach(b => b.onclick = () => imprimirEspelho(porId.get(b.dataset.imprimir)));
+}
+
+/* ---------- espelho em uma página ---------- */
+function imprimirEspelho(f) {
+  const [y, m] = f.mes.split("-").map(Number);
+  const ultimo = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const r = f.resumo;
+  $("impressao").innerHTML = `<div class="espelho">
+    <h1>Espelho de ponto</h1>
+    <p class="empresa">${esc(f.empresa?.nome || EMPRESA.nome)}, CNPJ ${esc(f.empresa?.cnpj || EMPRESA.cnpj)}</p>
+    <div class="cards">
+      <div class="card"><b>${fmtHM(r.extras)}</b><span>Horas extras</span></div>
+      <div class="card"><b>${fmtHM(r.extrasDomFer)}</b><span>Extras em domingos e feriados</span></div>
+      <div class="card"><b>${fmtHM(r.faltantes)}</b><span>Horas faltantes</span></div>
+      <div class="card"><b>${r.diasTrabalhados}</b><span>Dias trabalhados</span></div>
+      <div class="card"><b>${r.faltas}</b><span>Faltas</span></div>
+      <div class="card"><b>${r.diasAbonados}d ${fmtHM(r.abonoMin)}</b><span>Abonos por atestado</span></div>
+    </div>
+    <div class="cabecalho">
+      <div><span>Funcionária</span><b>${esc(f.nome)}</b></div>
+      <div><span>Período</span>01/${String(m).padStart(2, "0")}/${y} a ${f.desligadaEm && f.desligadaEm.startsWith(f.mes) ? fmtData(f.desligadaEm) + " (desligamento)" : `${ultimo}/${String(m).padStart(2, "0")}/${y}`}</div>
+      <div><span>Jornada</span>${esc(descreverJornada(f.jornada))}</div>
+    </div>
+    <table>${cabecalhoTabela()}<tbody>${f.dias.map(d => `<tr class="${d.fds ? "fds" : ""}"><td>${fmtData(d.data).slice(0, 5)}</td><td>${d.semana}</td>
+      ${d.h.map((h, i) => `<td>${h}${h && d.aj[i] ? "*" : ""}</td>`).join("")}
+      <td>${d.trabalhado ? fmtHM(d.trabalhado) : ""}</td><td>${d.saldo ? fmtSaldo(d.saldo) : ""}</td><td class="obs">${esc(d.obs)}</td></tr>`).join("")}</tbody></table>
+    <p class="legenda">* Horário ajustado por solicitação aprovada ou lançado pela gestora. Tolerância aplicada conforme o art. 58, § 1º, da CLT: variações de até ${TOLERANCIA_MARCACAO} minutos por marcação, com limite de ${TOLERANCIA_DIA} minutos diários.</p>
+    <div class="assinaturas"><div>${esc(f.nome)}</div><div>${esc(f.empresa?.nome || EMPRESA.nome)}</div></div>
+    <p class="rodape-esp">Fechado em ${f.fechadoEm ? new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, dateStyle: "short", timeStyle: "short" }).format(paraData(f.fechadoEm)) : ""} por ${esc(f.fechadoPor || "")}</p>
+  </div>`;
+  const tituloAntigo = document.title;
+  document.title = `Espelho de Ponto ${f.nome} ${MESES[m - 1].charAt(0).toUpperCase() + MESES[m - 1].slice(1)} ${y}`;
+  window.print();
+  document.title = tituloAntigo;
+}
+
+/* ===================== Controles da demonstração ===================== */
+document.querySelectorAll("[data-entrar]").forEach(b => b.onclick = () => {
+  $("login-email").value = b.dataset.entrar; $("login-senha").value = "demo1234";
+  $("form-login").requestSubmit();
+});
+function atualizarRelogioDemo() {
+  $("relogio-demo").textContent = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }).format(new Date());
+}
+atualizarRelogioDemo(); setInterval(atualizarRelogioDemo, 1000);
+document.querySelectorAll("[data-hora]").forEach(b => b.onclick = () => {
+  ajustarRelogio(b.dataset.hora);
+  document.querySelectorAll("[data-hora]").forEach(x => x.classList.toggle("ativo", x === b));
+  try { localStorage.removeItem(`ponto-avisos-${DIA_DEMO}`); } catch {}
+  atualizarRelogioDemo();
+  avisarEscutas();
+  avisar(`Horário simulado: ${b.dataset.hora}.`);
+});
+$("reiniciar-demo").onclick = async () => {
+  if (await confirmar("Restaurar o exemplo?", "Tudo o que foi alterado nesta demonstração será apagado e os dados fictícios voltam ao início.", "Restaurar", "perigo")) location.reload();
+};
+document.querySelectorAll("[data-visao]").forEach(b => b.onclick = () => {
+  const c = contas.get(b.dataset.visao);
+  document.querySelectorAll("[data-visao]").forEach(x => x.classList.toggle("ativo", x === b));
+  mudarUsuario({ uid: c.uid, email: c.email });
+});
+</script>
+</body>
+</html>
