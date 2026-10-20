@@ -1,0 +1,3134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Daimoku">
+<meta name="theme-color" content="#F2EBDA">
+<title>Contador de daimoku demonstrativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daimoku">
+<meta name="theme-color" content="#000000">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #F2EBDA;
+    color: #2C2419;
+    font-family: 'Manrope', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: contain;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    background-image:
+      radial-gradient(circle at 18% 22%, rgba(60, 40, 20, 0.025) 0%, transparent 45%),
+      radial-gradient(circle at 82% 78%, rgba(60, 40, 20, 0.03) 0%, transparent 50%);
+    padding-bottom: 140px;
+    padding-bottom: calc(140px + env(safe-area-inset-bottom));
+  }
+
+  .tabs {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #F2EBDA;
+    border-bottom: 1px solid #D6CAB0;
+    padding-top: env(safe-area-inset-top);
+  }
+  .tabs-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 18px 8px 16px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8A7E63;
+    cursor: pointer;
+    position: relative;
+    transition: color 150ms ease;
+  }
+  .tab.active { color: #2C2419; }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: -1px;
+    height: 2px;
+    background: #2C2419;
+  }
+
+  .subheader {
+    background: #F2EBDA;
+    border-bottom: 1px solid #D6CAB0;
+  }
+  .subheader-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 18px 20px 16px;
+  }
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+  .header-actions { display: flex; gap: 4px; }
+  .header-btn {
+    background: none;
+    border: none;
+    color: #8A7E63;
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 6px 4px;
+  }
+  .header-btn:hover { color: #5B3A2A; }
+
+  .count-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .count-of {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-track {
+    height: 1px;
+    background: #D6CAB0;
+    position: relative;
+  }
+  .progress-fill {
+    height: 1px;
+    background: #2C2419;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 400ms ease;
+  }
+
+  .days-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .days-side {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .days-side-right {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .days-side-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .days-buttons-row {
+    display: flex;
+    gap: 14px;
+  }
+  .days-adjust-btn {
+    background: none;
+    border: none;
+    color: #8A7E63;
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 2px 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .days-adjust-btn:hover { color: #5B3A2A; }
+  .days-streak-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .total-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .days-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1;
+    color: #2C2419;
+    font-variant-numeric: tabular-nums;
+  }
+  .days-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+  .days-separator {
+    font-size: 11px;
+    color: #B8AE9A;
+    margin: 0 2px;
+  }
+  .days-total {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1;
+    color: #2C2419;
+    font-variant-numeric: tabular-nums;
+  }
+  .days-total-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+
+  .sheet-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8A7E63;
+    margin-bottom: 8px;
+  }
+
+  .history-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin: 0 0 22px;
+    padding: 0;
+    list-style: none;
+  }
+  .history-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 12px 4px;
+    border-bottom: 1px solid #D6CAB0;
+    gap: 12px;
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: #2C2419;
+  }
+  .history-date {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #8A7E63;
+  }
+  .history-empty {
+    text-align: center;
+    padding: 24px 0;
+    color: #8A7E63;
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .grid-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 22px 14px 16px;
+  }
+  .grid {
+    display: grid;
+    gap: 3px;
+  }
+  .circle {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    padding: 0;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid #8A7B5E;
+    cursor: pointer;
+    transition: transform 120ms ease, background-color 150ms ease, border-color 150ms ease;
+  }
+  .circle.checked {
+    background: #1F1B16;
+    border-color: #1F1B16;
+  }
+  .circle:active { transform: scale(0.7); }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #F2EBDA;
+    border-top: 1px solid #D6CAB0;
+    z-index: 10;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .footer-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 14px 20px 18px;
+  }
+  .actions { display: flex; gap: 10px; }
+
+  .mark-btn {
+    flex: 1;
+    background: #1F1B16;
+    color: #F2EBDA;
+    border: none;
+    padding: 14px 20px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .mark-btn:active { background: #5B3A2A; }
+  .mark-btn:disabled {
+    background: #B8AE9A;
+    cursor: default;
+  }
+
+  .undo-btn {
+    background: transparent;
+    color: #2C2419;
+    border: 1px solid #B8AE9A;
+    padding: 14px 18px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .undo-btn:disabled {
+    color: #B8AE9A;
+    border-color: #D6CAB0;
+    cursor: default;
+  }
+
+  .status {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+    min-height: 12px;
+  }
+  .status.syncing { color: #5B7A8A; }
+  .status.error { color: #A04030; }
+
+  .demo-selo-daimoku {
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #8A4A64;
+    background: #F1E3E9;
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-right: auto;
+  }
+  body.dark .demo-selo-daimoku {
+    color: #CF94AD;
+    background: #35242D;
+  }
+  .sync-bar {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #D6CAB0;
+  }
+  .sync-bar-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+  .sync-bar-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: #2C2419;
+    flex: 1;
+  }
+  .sync-bar-btn {
+    background: none;
+    border: none;
+    color: #8A7E63;
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .sync-bar-btn:hover { color: #5B3A2A; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .timer-container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+    text-align: center;
+  }
+  .timer-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 92px;
+    line-height: 1;
+    color: #2C2419;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .timer-display:active { opacity: 0.6; }
+  .timer-clock {
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5B5141;
+    font-variant-numeric: tabular-nums;
+    min-height: 30px;
+    margin-bottom: 56px;
+    font-weight: 500;
+  }
+  .timer-mantra-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .mantra-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mantra-switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .mantra-slider {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    background: #B8AE9A;
+    border-radius: 22px;
+    transition: background 200ms ease;
+  }
+  .mantra-slider::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: #F2EBDA;
+    border-radius: 50%;
+    transition: transform 200ms ease;
+  }
+  .mantra-switch input:checked + .mantra-slider {
+    background: #2C2419;
+  }
+  .mantra-switch input:checked + .mantra-slider::before {
+    transform: translateX(18px);
+  }
+  .mantra-toggle-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+
+  .timer-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .timer-option {
+    background: transparent;
+    color: #2C2419;
+    border: 1px solid #8A7B5E;
+    padding: 16px 24px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+  .timer-option:hover { background: rgba(184, 174, 154, 0.2); }
+  .timer-option:active { background: rgba(184, 174, 154, 0.4); }
+
+  .timer-controls {
+    display: flex;
+    gap: 12px;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  .timer-primary-btn {
+    flex: 1;
+    background: #1F1B16;
+    color: #F2EBDA;
+    border: none;
+    padding: 16px 24px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+  }
+  .timer-primary-btn:hover { background: #3A2F22; }
+  .timer-secondary-btn {
+    background: transparent;
+    color: #2C2419;
+    border: 1px solid #B8AE9A;
+    padding: 16px 24px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+  }
+  .timer-secondary-btn:hover { background: rgba(184, 174, 154, 0.2); }
+
+  .timer-display.finished {
+    color: #5B3A2A;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .audio-main {
+    padding: 24px 22px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .audio-intro {
+    color: #5B3A2A;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 4px;
+  }
+  .audio-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .audio-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #2C2419;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+  .audio-player-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid #B8AE9A;
+    background: #1F1B16;
+    overflow: hidden;
+  }
+  .audio-player-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 22, 16, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 20px;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: #F8F2E2;
+    max-width: 380px;
+    width: 100%;
+    padding: 28px 26px 22px;
+    border: 1px solid #D6CAB0;
+    box-shadow: 0 20px 60px rgba(28, 22, 16, 0.2);
+  }
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 24px;
+    margin: 0 0 10px;
+  }
+  .modal p {
+    margin: 0 0 22px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5B5141;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .modal-btn {
+    padding: 10px 18px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+  }
+  .modal-btn.cancel { background: transparent; color: #5B5141; }
+  .modal-btn.confirm-red { background: #A04030; color: #F8F2E2; }
+  .modal-btn.confirm-dark { background: #1F1B16; color: #F2EBDA; }
+  .modal-btn.confirm-dark:disabled { background: #B8AE9A; cursor: default; }
+
+  .modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 0 0 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: #2C2419;
+    background: #F2EBDA;
+    border: 1px solid #B8AE9A;
+  }
+  .modal-input:focus { outline: none; border-color: #2C2419; }
+
+  .custom-timer-inputs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .custom-timer-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .custom-timer-input {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    margin-bottom: 0;
+    padding: 14px 8px;
+  }
+  .custom-timer-input::-webkit-inner-spin-button,
+  .custom-timer-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .custom-timer-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8A7E63;
+    text-align: center;
+  }
+
+  .modal-days { max-width: 420px; }
+  .days-bulk-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 14px;
+    background: rgba(184, 174, 154, 0.18);
+    border: 1px solid #C8BCA3;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .days-bulk-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 110px;
+  }
+  .days-bulk-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5B3A2A;
+  }
+  .days-bulk-input {
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    border: 1px solid #8A7B5E;
+    background: #F2EBDA;
+    color: #1F1B16;
+  }
+  .days-bulk-input::-webkit-inner-spin-button,
+  .days-bulk-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .days-bulk-input:focus { outline: none; border-color: #2C2419; }
+  .days-bulk-btn {
+    margin-left: auto;
+    background: #1F1B16;
+    color: #F2EBDA;
+    border: none;
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .days-bulk-btn:hover { background: #2C2419; }
+  .days-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    margin: 0 0 22px;
+    border: 1px solid #B8AE9A;
+    background: #F2EBDA;
+  }
+  .days-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #D6CAB0;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .days-list-item:last-child { border-bottom: none; }
+  .days-list-item:active { background: rgba(184, 174, 154, 0.3); }
+  .days-list-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .days-list-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: #2C2419;
+    line-height: 1;
+  }
+  .days-list-weekday {
+    font-size: 10px;
+    color: #8A7E63;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .days-list-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #8A7B5E;
+    flex-shrink: 0;
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+  .days-list-circle.checked {
+    background: #1F1B16;
+    border-color: #1F1B16;
+  }
+  .days-list-item.today .days-list-date::after {
+    content: ' · hoje';
+    font-size: 11px;
+    color: #8A7E63;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .days-list-item.in-streak {
+    box-shadow: inset 3px 0 0 0 #5B3A2A;
+  }
+
+  /* Modal de relatório */
+  .modal-report { max-width: 440px; }
+  .report-totals {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .report-total-card {
+    flex: 1;
+    padding: 14px 8px;
+    border: 1px solid #B8AE9A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+  .report-total-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #2C2419;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .report-total-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+  .report-calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .report-nav-btn {
+    background: none;
+    border: 1px solid #8A7B5E;
+    color: #2C2419;
+    font-size: 20px;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-family: serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .report-nav-btn:hover { background: rgba(184, 174, 154, 0.2); }
+  .report-month-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #2C2419;
+  }
+  .report-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .report-calendar-weekdays span {
+    text-align: center;
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+  .report-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .report-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: #2C2419;
+    border: 1px solid transparent;
+    position: relative;
+  }
+  .report-day.empty { visibility: hidden; }
+  .report-day.no-practice {
+    color: #C8BCA3;
+  }
+  .report-day.practiced {
+    background: #2C2419;
+    color: #F2EBDA;
+  }
+  .report-day.today {
+    border-color: #5B3A2A;
+    font-weight: 700;
+  }
+  .report-day-count {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 8px;
+    font-family: 'Manrope', sans-serif;
+    color: inherit;
+    opacity: 0.75;
+  }
+
+  /* Modo escuro do relatório */
+  body.dark .report-total-card { border-color: #4A4640; }
+  body.dark .report-total-value { color: #E6DED4; }
+  body.dark .report-total-label { color: #8B847C; }
+  body.dark .report-nav-btn {
+    border-color: #4A4640;
+    color: #E6DED4;
+  }
+  body.dark .report-nav-btn:hover { background: rgba(230, 222, 212, 0.1); }
+  body.dark .report-month-label { color: #E6DED4; }
+  body.dark .report-calendar-weekdays span { color: #8B847C; }
+  body.dark .report-day { color: #E6DED4; }
+  body.dark .report-day.no-practice { color: #4A4640; }
+  body.dark .report-day.practiced {
+    background: #8B847C;
+    color: #000;
+  }
+  body.dark .report-day.today { border-color: #E6DED4; }
+
+  /* Confetes e mensagem de parabéns */
+  #confettiContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    overflow: hidden;
+  }
+  .confetti {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 14px;
+    opacity: 0.9;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-20px) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(105vh) rotate(720deg);
+      opacity: 0.7;
+    }
+  }
+  #congratsMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 500ms ease, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #congratsMessage.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .congrats-inner {
+    background: #F2EBDA;
+    padding: 32px 44px;
+    text-align: center;
+    border: 1px solid #8A7B5E;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+  .congrats-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 500;
+    color: #2C2419;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .congrats-sub {
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8A7E63;
+  }
+  body.dark .congrats-inner {
+    background: #0A0908;
+    border-color: #E6DED4;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+  body.dark .congrats-title { color: #E6DED4; }
+  body.dark .congrats-sub { color: #8B847C; }
+
+  /* ===== MODO NOTURNO ===== */
+  body.dark {
+    background: #000;
+    background-color: #000;
+    color: #E6DED4;
+    background-image: none;
+  }
+  body.dark .sync-bar {
+    background: #000;
+    border-bottom-color: #2A2520;
+    color: #8B847C;
+  }
+  body.dark .sync-bar-label,
+  body.dark .sync-bar-value { color: #8B847C; }
+  body.dark .sync-bar-btn { color: #8B847C; }
+  body.dark .sync-bar-btn:hover { color: #E6DED4; }
+  body.dark .tabs-bar { background: #000; border-bottom-color: #2A2520; }
+  body.dark .tab { color: #8B847C; }
+  body.dark .tab.active { color: #E6DED4; }
+  body.dark .tab.active::after { background: #E6DED4; }
+  body.dark .header { background: #000; border-bottom-color: #2A2520; }
+  body.dark .title { color: #E6DED4; }
+  body.dark .header-btn { color: #8B847C; }
+  body.dark .header-btn:hover { color: #E6DED4; }
+  body.dark .sheet-label { color: #8B847C; }
+  body.dark .count { color: #E6DED4; }
+  body.dark .count-of { color: #8B847C; }
+  body.dark .progress-track { background: #2A2520; }
+  body.dark .progress-fill { background: #8B847C; }
+  body.dark .days-adjust-btn { color: #8B847C; }
+  body.dark .days-adjust-btn:hover { color: #E6DED4; }
+  body.dark .days-count { color: #E6DED4; }
+  body.dark .days-label { color: #8B847C; }
+  body.dark .days-separator { color: #4A4640; }
+  body.dark .days-total { color: #E6DED4; }
+  body.dark .days-total-label { color: #8B847C; }
+  body.dark .circle { border-color: #4A4640; background: transparent; }
+  body.dark .circle.checked { background: #8B847C; border-color: #8B847C; }
+  body.dark .footer { background: #000; border-top-color: #2A2520; }
+  body.dark .undo-btn {
+    background: #000; color: #E6DED4; border-color: #4A4640;
+  }
+  body.dark .undo-btn:disabled { color: #4A4640; border-color: #2A2520; }
+  body.dark .mark-btn {
+    background: #000; color: #E6DED4;
+    border: 1px solid #E6DED4;
+  }
+  body.dark .mark-btn:active { background: #1F1C18; }
+  body.dark .save-status { color: #8B847C; }
+
+  /* tabs */
+  body.dark .panel { background: #000; }
+
+  /* modais */
+  body.dark .modal-backdrop { background: rgba(0, 0, 0, 0.75); }
+  body.dark .modal {
+    background: #0A0908;
+    border-color: #2A2520;
+    color: #E6DED4;
+  }
+  body.dark .modal h2 { color: #E6DED4; }
+  body.dark .modal p { color: #8B847C; }
+  body.dark .modal-input {
+    background: #000;
+    border-color: #4A4640;
+    color: #E6DED4;
+  }
+  body.dark .modal-input:focus { border-color: #E6DED4; }
+  body.dark .modal-input::placeholder { color: #4A4640; }
+  body.dark .modal-btn.cancel {
+    background: transparent; color: #8B847C; border-color: #4A4640;
+  }
+  body.dark .modal-btn.cancel:hover { color: #E6DED4; border-color: #E6DED4; }
+  body.dark .modal-btn.confirm-dark {
+    background: #000; color: #E6DED4;
+    border: 1px solid #E6DED4;
+  }
+  body.dark .modal-btn.confirm-dark:hover { background: #1F1C18; }
+  body.dark .modal-btn.confirm-danger {
+    background: #000; color: #E6DED4;
+    border: 1px solid #B05540;
+  }
+
+  /* modal de dias */
+  body.dark .days-bulk-row {
+    background: transparent;
+    border-color: #4A4640;
+  }
+  body.dark .days-bulk-label { color: #8B847C; }
+  body.dark .days-bulk-input {
+    background: #000;
+    border-color: #4A4640;
+    color: #E6DED4;
+  }
+  body.dark .days-bulk-input:focus { border-color: #E6DED4; }
+  body.dark .days-bulk-btn {
+    background: #000; color: #E6DED4;
+    border: 1px solid #E6DED4;
+  }
+  body.dark .days-bulk-btn:hover { background: #1F1C18; }
+  body.dark .days-list {
+    background: #000;
+    border-color: #4A4640;
+  }
+  body.dark .days-list-item { border-bottom-color: #2A2520; }
+  body.dark .days-list-item:active { background: rgba(230, 222, 212, 0.1); }
+  body.dark .days-list-date { color: #E6DED4; }
+  body.dark .days-list-weekday { color: #8B847C; }
+  body.dark .days-list-circle { border-color: #4A4640; }
+  body.dark .days-list-circle.checked {
+    background: #8B847C; border-color: #8B847C;
+  }
+  body.dark .days-list-item.today .days-list-date::after { color: #8B847C; }
+  body.dark .days-list-item.in-streak {
+    box-shadow: inset 3px 0 0 0 #E6DED4;
+  }
+
+  /* timer */
+  body.dark .timer-display { color: #E6DED4; }
+  body.dark .timer-display.finished { color: #E6DED4; }
+  body.dark .mantra-slider { background: #4A4640; }
+  body.dark .mantra-slider::before { background: #8B847C; }
+  body.dark .mantra-switch input:checked + .mantra-slider { background: #E6DED4; }
+  body.dark .mantra-switch input:checked + .mantra-slider::before { background: #000; }
+  body.dark .mantra-toggle-label { color: #8B847C; }
+  body.dark .timer-clock { color: #8B847C; }
+  body.dark .timer-option {
+    background: transparent;
+    color: #E6DED4;
+    border-color: #4A4640;
+  }
+  body.dark .timer-option:hover { background: rgba(230, 222, 212, 0.1); }
+  body.dark .timer-option:active { background: rgba(230, 222, 212, 0.2); }
+  body.dark .timer-primary-btn {
+    background: #000; color: #E6DED4;
+    border: 1px solid #E6DED4;
+  }
+  body.dark .timer-primary-btn:hover { background: #1F1C18; }
+  body.dark .timer-secondary-btn {
+    background: transparent; color: #E6DED4; border-color: #4A4640;
+  }
+  body.dark .timer-secondary-btn:hover { color: #E6DED4; border-color: #E6DED4; }
+  body.dark .custom-timer-input {
+    background: #000;
+    border-color: #4A4640;
+    color: #E6DED4;
+  }
+  body.dark .custom-timer-label { color: #8B847C; }
+
+  /* aba áudio */
+  body.dark .audio-intro { color: #8B847C; }
+  body.dark .audio-card-title { color: #E6DED4; }
+  body.dark .audio-player-frame {
+    background: #000;
+    border-color: #4A4640;
+  }
+</style>
+</head>
+<body>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab active" data-tab="daimoku">Daimoku</button>
+    <button class="tab" data-tab="estudo">Estudo e Leitura</button>
+    <button class="tab" data-tab="timer">Timer</button>
+    <button class="tab" data-tab="audio">Áudio</button>
+  </div>
+</nav>
+
+<div class="sync-bar">
+  <span class="demo-selo-daimoku">Demonstração com dados fictícios</span>
+  <span class="sync-bar-value" id="syncValue" style="display:none;">demonstração</span>
+  <button class="sync-bar-btn" id="themeToggleBtn">noturno</button>
+  <button class="sync-bar-btn" id="recomecarBtn">Restaurar exemplo</button>
+  <button class="sync-bar-btn" id="syncEditBtn" style="display:none;">alterar</button>
+</div>
+
+<div class="panel active" id="panel-daimoku" data-total="7500" data-columns="25" data-storage="daimoku-v1" data-label-base="prática" data-title="Contador de Daimoku">
+  <div class="subheader">
+    <div class="subheader-inner">
+      <div class="title-row">
+        <h1 class="title">Contador de Daimoku</h1>
+        <div class="header-actions">
+          <button class="header-btn" data-action="report">relatório</button>
+          <button class="header-btn" data-action="history" data-history-btn style="display: none;">folhas</button>
+        </div>
+      </div>
+      <div class="sheet-label" data-sheet-label style="display: none;">Folha 1</div>
+      <div class="count-row">
+        <span class="count" data-count>0</span>
+        <span class="count-of">de 7.500 · <span data-percent>0,0</span>%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" data-progress style="width: 0%"></div>
+      </div>
+      <div class="days-row">
+        <div class="days-side days-side-left">
+          <div class="days-buttons-row">
+            <button class="days-adjust-btn" data-action="adjust">ajustar contagem</button>
+            <button class="days-adjust-btn" data-action="reset">reiniciar</button>
+            <button class="days-adjust-btn" data-action="days">ajustar dias</button>
+          </div>
+          <div class="days-streak-line">
+            <span class="days-count" data-days>0</span>
+            <span class="days-label" data-days-label>dias com prática</span>
+          </div>
+        </div>
+        <div class="days-side days-side-right">
+          <button class="days-adjust-btn" data-action="days">ajustar dias</button>
+          <div class="days-streak-line">
+            <span class="days-count days-streak" data-streak>0</span>
+            <span class="days-label" data-streak-label>dias seguidos</span>
+          </div>
+        </div>
+      </div>
+      <div class="total-row" data-total-row style="display: none;">
+        <span class="days-total" data-total-acc>0</span>
+        <span class="days-total-label" data-total-label>no total</span>
+      </div>
+    </div>
+  </div>
+  <main class="grid-wrap">
+    <div class="grid" data-grid></div>
+  </main>
+</div>
+
+<div class="panel" id="panel-estudo" data-total="1000" data-columns="20" data-storage="estudo-v1" data-label-base="estudo" data-title="Estudo e Leitura">
+  <div class="subheader">
+    <div class="subheader-inner">
+      <div class="title-row">
+        <h1 class="title">Estudo e Leitura</h1>
+        <div class="header-actions">
+          <button class="header-btn" data-action="report">relatório</button>
+          <button class="header-btn" data-action="history" data-history-btn style="display: none;">folhas</button>
+        </div>
+      </div>
+      <div class="sheet-label" data-sheet-label style="display: none;">Folha 1</div>
+      <div class="count-row">
+        <span class="count" data-count>0</span>
+        <span class="count-of">de 1.000 · <span data-percent>0,0</span>%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" data-progress style="width: 0%"></div>
+      </div>
+      <div class="days-row">
+        <div class="days-side days-side-left">
+          <div class="days-buttons-row">
+            <button class="days-adjust-btn" data-action="adjust">ajustar contagem</button>
+            <button class="days-adjust-btn" data-action="reset">reiniciar</button>
+            <button class="days-adjust-btn" data-action="days">ajustar dias</button>
+          </div>
+          <div class="days-streak-line">
+            <span class="days-count" data-days>0</span>
+            <span class="days-label" data-days-label>dias de estudo</span>
+          </div>
+        </div>
+        <div class="days-side days-side-right">
+          <button class="days-adjust-btn" data-action="days">ajustar dias</button>
+          <div class="days-streak-line">
+            <span class="days-count days-streak" data-streak>0</span>
+            <span class="days-label" data-streak-label>dias seguidos</span>
+          </div>
+        </div>
+      </div>
+      <div class="total-row" data-total-row style="display: none;">
+        <span class="days-total" data-total-acc>0</span>
+        <span class="days-total-label" data-total-label>no total</span>
+      </div>
+    </div>
+  </div>
+  <main class="grid-wrap">
+    <div class="grid" data-grid></div>
+  </main>
+</div>
+
+<div class="panel" id="panel-timer">
+  <div class="timer-container">
+    <div class="timer-display" id="timerDisplay">00:00</div>
+    <div class="timer-clock" id="timerClock">&nbsp;</div>
+    <div class="timer-mantra-row">
+      <label class="mantra-switch">
+        <input type="checkbox" id="mantraToggle">
+        <span class="mantra-slider"></span>
+        <span class="mantra-toggle-label">tocar mantra durante o timer</span>
+      </label>
+    </div>
+    <div class="timer-options" id="timerOptions">
+      <button class="timer-option" data-minutes="5">5 minutos</button>
+      <button class="timer-option" data-minutes="10">10 minutos</button>
+      <button class="timer-option" data-minutes="15">15 minutos</button>
+      <button class="timer-option" data-minutes="30">30 minutos</button>
+      <button class="timer-option" data-minutes="60">60 minutos</button>
+      <button class="timer-option timer-option-custom" id="timerCustomBtn">personalizar</button>
+    </div>
+    <div class="timer-controls" id="timerControls" style="display: none;">
+      <button class="timer-secondary-btn" id="timerStopBtn">parar</button>
+      <button class="timer-primary-btn" id="timerPauseBtn">pausar</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-audio">
+  <div class="header">
+    <div class="title-row">
+      <h1 class="title">Áudio</h1>
+    </div>
+  </div>
+  <main class="audio-main">
+    <p class="audio-intro">Toque play em uma das opções abaixo para acompanhar sua prática.</p>
+    <div class="audio-card">
+      <h2 class="audio-card-title">Daimoku</h2>
+      <div class="audio-player-frame">
+        <iframe src="https://www.youtube.com/embed/wFfkQY4ldxk"
+                title="Daimoku"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="audio-card">
+      <h2 class="audio-card-title">Gongyo</h2>
+      <div class="audio-player-frame">
+        <iframe src="https://www.youtube.com/embed/MAcNybWeOaY"
+                title="Gongyo"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+  </main>
+</div>
+
+<audio id="gongoAudio" preload="auto" playsinline>
+  <source src="gongo.mp3" type="audio/mpeg">
+</audio>
+<audio id="beepAudio" preload="auto" playsinline>
+  <source src="beep.mp3" type="audio/mpeg">
+</audio>
+<audio id="mantraAudio" preload="auto" playsinline>
+  <source src="mantra.mp3" type="audio/mpeg">
+</audio>
+<audio id="mantraAudio2" preload="auto" playsinline>
+  <source src="mantra.mp3" type="audio/mpeg">
+</audio>
+<audio id="silenceAudio" preload="auto" playsinline>
+  <source src="silence.mp3" type="audio/mpeg">
+</audio>
+
+<div id="confettiContainer"></div>
+<div id="congratsMessage">
+  <div class="congrats-inner">
+    <div class="congrats-title">parabéns</div>
+    <div class="congrats-sub">você completou o ciclo</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="actions">
+      <button class="undo-btn" id="undoBtn" disabled>desfazer</button>
+      <button class="mark-btn" id="markBtn">marcar próximo</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="resetModal">
+  <div class="modal">
+    <h2>Reiniciar a contagem?</h2>
+    <p id="resetMsg"></p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('resetModal')">cancelar</button>
+      <button class="modal-btn confirm-red" onclick="confirmReset()">reiniciar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="adjustModal">
+  <div class="modal">
+    <h2>Ajustar contagem</h2>
+    <p>Digite o número correto de círculos marcados.</p>
+    <input type="number" inputmode="numeric" min="0" class="modal-input" id="adjustInput" placeholder="0">
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('adjustModal')">cancelar</button>
+      <button class="modal-btn confirm-dark" onclick="confirmAdjust()">aplicar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="daysModal">
+  <div class="modal modal-days">
+    <h2>Dias com prática</h2>
+    <p>Para ajustar rápido, preencha quantos dias você praticou no total e quantos formam sua sequência atual sem falhar. O sistema marca os dias automaticamente. Você também pode tocar em dias individuais na lista abaixo para ajustes finos.</p>
+    <div class="days-bulk-row">
+      <div class="days-bulk-field">
+        <label class="days-bulk-label" for="daysTotalInput">dias com prática</label>
+        <input type="number" class="days-bulk-input" id="daysTotalInput" min="0" max="365" placeholder="0" inputmode="numeric">
+      </div>
+      <div class="days-bulk-field">
+        <label class="days-bulk-label" for="daysStreakInput">dias seguidos</label>
+        <input type="number" class="days-bulk-input" id="daysStreakInput" min="0" max="365" placeholder="0" inputmode="numeric">
+      </div>
+      <button class="days-bulk-btn" onclick="bulkSetDays()">aplicar</button>
+    </div>
+    <div class="days-list" id="daysList"></div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('daysModal')">fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="reportModal">
+  <div class="modal modal-report">
+    <h2>Relatório</h2>
+    <div class="report-totals">
+      <div class="report-total-card">
+        <span class="report-total-value" id="reportToday">0</span>
+        <span class="report-total-label">hoje</span>
+      </div>
+      <div class="report-total-card">
+        <span class="report-total-value" id="reportWeek">0</span>
+        <span class="report-total-label">esta semana</span>
+      </div>
+      <div class="report-total-card">
+        <span class="report-total-value" id="reportMonth">0</span>
+        <span class="report-total-label">este mês</span>
+      </div>
+    </div>
+    <div class="report-calendar-nav">
+      <button class="report-nav-btn" onclick="changeReportMonth(-1)">‹</button>
+      <span class="report-month-label" id="reportMonthLabel">Junho 2026</span>
+      <button class="report-nav-btn" onclick="changeReportMonth(1)">›</button>
+    </div>
+    <div class="report-calendar-weekdays">
+      <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+    </div>
+    <div class="report-calendar" id="reportCalendar"></div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('reportModal')">fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="syncModal">
+  <div class="modal">
+    <h2>Código de sincronização</h2>
+    <p>Para sincronizar a contagem entre celular, desktop e outros aparelhos, use o mesmo código em todos. Pode ser uma palavra simples e particular sua. Se ficar em branco, cada aparelho mantém uma contagem separada.</p>
+    <input type="text" class="modal-input" id="syncInput" placeholder="ex: minha-pratica" autocapitalize="none" autocorrect="off" spellcheck="false">
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('syncModal')">cancelar</button>
+      <button class="modal-btn confirm-dark" onclick="confirmSync()">salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="customTimerModal">
+  <div class="modal">
+    <h2>Tempo personalizado</h2>
+    <p>Defina quantos minutos e segundos você quer. Para dois minutos e meio, por exemplo, use 2 minutos e 30 segundos.</p>
+    <div class="custom-timer-inputs">
+      <div class="custom-timer-field">
+        <input type="number" class="modal-input custom-timer-input" id="customMinutesInput" min="0" max="180" placeholder="0" inputmode="numeric">
+        <span class="custom-timer-label">minutos</span>
+      </div>
+      <div class="custom-timer-field">
+        <input type="number" class="modal-input custom-timer-input" id="customSecondsInput" min="0" max="59" placeholder="0" inputmode="numeric">
+        <span class="custom-timer-label">segundos</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('customTimerModal')">cancelar</button>
+      <button class="modal-btn confirm-dark" onclick="confirmCustomTimer()">iniciar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="newSheetModal">
+  <div class="modal">
+    <h2>Começar uma nova folha?</h2>
+    <p id="newSheetMsg">Você concluiu a folha atual. A folha será arquivada com a data de hoje e uma nova folha em branco será aberta.</p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('newSheetModal')">agora não</button>
+      <button class="modal-btn confirm-dark" onclick="confirmNewSheet()">começar nova folha</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="historyModal">
+  <div class="modal">
+    <h2>Folhas concluídas</h2>
+    <ul class="history-list" id="historyList"></ul>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal('historyModal')">fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Demonstração: Firebase desligado, nenhuma sincronização na nuvem.
+window._fb = null;
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
+const state = {};
+
+// === DEMONSTRAÇÃO: dados ficam só na memória, voltam ao exemplo quando a página recarrega ===
+const DEMO_STORE = {};
+const demoStorage = {
+  getItem: function(k) { return (k in DEMO_STORE) ? DEMO_STORE[k] : null; },
+  setItem: function(k, v) { DEMO_STORE[k] = String(v); },
+  removeItem: function(k) { delete DEMO_STORE[k]; },
+  clear: function() { for (const k of Object.keys(DEMO_STORE)) delete DEMO_STORE[k]; }
+};
+// substitui todas as chamadas localStorage pelo armazenamento em memória da demo
+const localStorage = demoStorage;
+
+let syncCode = '';
+let firestoreUnsubs = [];
+let initialSyncDone = {};
+let saveTimers = {};
+let pendingSaves = {};
+
+function loadLocal(storageKey) {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return new Set();
+    const data = JSON.parse(raw);
+    if (Array.isArray(data)) return new Set(data);
+    return new Set();
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function saveLocal(storageKey, set) {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(Array.from(set)));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function daysKey(storageKey) { return storageKey + ':days'; }
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function loadDays(storageKey) {
+  try {
+    const raw = localStorage.getItem(daysKey(storageKey));
+    if (!raw) return new Set();
+    const data = JSON.parse(raw);
+    if (Array.isArray(data)) return new Set(data);
+    return new Set();
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function saveDays(storageKey, set) {
+  try {
+    localStorage.setItem(daysKey(storageKey), JSON.stringify(Array.from(set)));
+  } catch (e) {}
+}
+
+function registerToday(storageKey) {
+  const days = loadDays(storageKey);
+  const today = todayKey();
+  if (!days.has(today)) {
+    days.add(today);
+    saveDays(storageKey, days);
+    return true;
+  }
+  return false;
+}
+
+function seedInitialDays(storageKey, dateStrings) {
+  const existing = loadDays(storageKey);
+  if (existing.size > 0) return;
+  saveDays(storageKey, new Set(dateStrings));
+}
+
+// gera uma chave AAAA-MM-DD a partir de um objeto Date
+function dateToKey(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+// calcula quantos dias seguidos de prática a pessoa tem
+// regra: se hoje está marcado, conta de hoje para trás
+// se hoje não está marcado mas ontem está, ainda conta de ontem para trás
+// (o dia de hoje ainda está em aberto)
+// se nem hoje nem ontem estão marcados, retorna zero
+function calcularStreak(storageKey) {
+  const days = loadDays(storageKey);
+  if (days.size === 0) return 0;
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  let cursor = new Date(hoje);
+  if (!days.has(dateToKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
+    if (!days.has(dateToKey(cursor))) {
+      return 0;
+    }
+  }
+
+  let streak = 0;
+  while (days.has(dateToKey(cursor))) {
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
+
+// chave para armazenar histórico de folhas concluídas (apenas para Daimoku)
+function sheetsKey(storageKey) { return storageKey + ':sheets'; }
+
+function loadSheets(storageKey) {
+  try {
+    const raw = localStorage.getItem(sheetsKey(storageKey));
+    if (!raw) return [];
+    const data = JSON.parse(raw);
+    if (Array.isArray(data)) return data;
+    return [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveSheets(storageKey, sheets) {
+  try {
+    localStorage.setItem(sheetsKey(storageKey), JSON.stringify(sheets));
+  } catch (e) {}
+}
+
+// formata data ISO como "7 de maio de 2026"
+function formatDateBr(iso) {
+  if (!iso) return '';
+  const parts = iso.split('-');
+  if (parts.length !== 3) return iso;
+  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const y = parseInt(parts[0], 10);
+  const m = parseInt(parts[1], 10) - 1;
+  const d = parseInt(parts[2], 10);
+  if (isNaN(y) || isNaN(m) || isNaN(d) || m < 0 || m > 11) return iso;
+  return `${d} de ${months[m]} de ${y}`;
+}
+
+// total acumulado de daimokus (folhas concluídas + folha atual)
+function totalAcumulado(storageKey, currentCount, sheetTotal) {
+  const sheets = loadSheets(storageKey);
+  return sheets.length * sheetTotal + currentCount;
+}
+
+// salva no Firebase com debounce
+function scheduleCloudSave(storageKey) {
+  if (!syncCode || !window._fb) return;
+  clearTimeout(saveTimers[storageKey]);
+  pendingSaves[storageKey] = true;
+  saveTimers[storageKey] = setTimeout(() => doCloudSave(storageKey), 800);
+}
+
+async function doCloudSave(storageKey) {
+  if (!syncCode || !window._fb) return;
+  pendingSaves[storageKey] = false;
+  try {
+    flashStatus('sincronizando', 'syncing');
+    const set = state[storageKey];
+    const days = loadDays(storageKey);
+    const sheets = loadSheets(storageKey);
+    const docRef = window._fb.doc(window._fb.db, 'counters', syncCode + '__' + storageKey);
+    await window._fb.setDoc(docRef, {
+      checked: Array.from(set),
+      days: Array.from(days),
+      sheets: sheets,
+      updatedAt: Date.now(),
+    });
+    flashStatus('sincronizado');
+  } catch (e) {
+    flashStatus('erro de sincronia', 'error');
+  }
+}
+
+function subscribeCloud(storageKey) {
+  if (!syncCode || !window._fb) return;
+  try {
+    const docRef = window._fb.doc(window._fb.db, 'counters', syncCode + '__' + storageKey);
+    const unsub = window._fb.onSnapshot(docRef, (snap) => {
+      if (!snap.exists()) {
+        // primeira vez para esta sync code: sobe dados locais
+        if (!initialSyncDone[storageKey]) {
+          initialSyncDone[storageKey] = true;
+          doCloudSave(storageKey);
+        }
+        return;
+      }
+      const data = snap.data();
+      // ignora atualizações que viemos de salvar agora mesmo (evita loops)
+      if (pendingSaves[storageKey]) return;
+
+      const remoteChecked = new Set(data.checked || []);
+      const remoteDays = new Set(data.days || []);
+      const remoteSheets = Array.isArray(data.sheets) ? data.sheets : [];
+
+      // mescla por união: nunca apaga círculos ou dias localmente
+      // a não ser que o usuário use "reiniciar" explicitamente
+      const localChecked = state[storageKey];
+      const localDays = loadDays(storageKey);
+      const localSheets = loadSheets(storageKey);
+
+      let changedChecked = false;
+      let changedDays = false;
+      let changedSheets = false;
+
+      // adiciona o que tem na nuvem e não tem local
+      for (const i of remoteChecked) {
+        if (!localChecked.has(i)) {
+          localChecked.add(i);
+          changedChecked = true;
+        }
+      }
+      for (const d of remoteDays) {
+        if (!localDays.has(d)) {
+          localDays.add(d);
+          changedDays = true;
+        }
+      }
+      // se a nuvem tiver mais folhas concluídas que o local, usa a versão da nuvem
+      if (remoteSheets.length > localSheets.length) {
+        saveSheets(storageKey, remoteSheets);
+        changedSheets = true;
+      }
+
+      // remove círculos marcados que tem local e não tem na nuvem APENAS se a
+      // contagem na nuvem for menor (para propagar "reiniciar" e "ajustar contagem")
+      // IMPORTANTE: dias com prática NUNCA são apagados por sincronização,
+      // apenas por união. Só ficam removidos se o usuário editar manualmente
+      // pelo modal de "ajustar dias".
+      if (remoteChecked.size < localChecked.size && data.updatedAt) {
+        const localUpdate = parseInt(localStorage.getItem(storageKey + ':updatedAt') || '0', 10);
+        if (data.updatedAt > localUpdate) {
+          state[storageKey] = new Set(remoteChecked);
+          saveLocal(storageKey, state[storageKey]);
+          changedChecked = true;
+        }
+      }
+
+      if (changedChecked) {
+        saveLocal(storageKey, localChecked);
+        const panel = document.querySelector(`[data-storage="${storageKey}"]`);
+        if (panel) {
+          renderGrid(panel);
+          updateHeader(panel);
+        }
+      }
+      if ((changedDays || changedSheets) && !changedChecked) {
+        const panel = document.querySelector(`[data-storage="${storageKey}"]`);
+        if (panel) updateHeader(panel);
+      }
+      initialSyncDone[storageKey] = true;
+    }, (err) => {
+      console.error('erro de subscrição', err);
+      flashStatus('sem conexão com nuvem', 'error');
+    });
+    firestoreUnsubs.push(unsub);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function unsubscribeAll() {
+  for (const u of firestoreUnsubs) {
+    try { u(); } catch (e) {}
+  }
+  firestoreUnsubs = [];
+  initialSyncDone = {};
+}
+
+function getActivePanel() { return document.querySelector('.panel.active'); }
+
+function getActiveConfig() {
+  const panel = getActivePanel();
+  return {
+    panel,
+    id: panel.id.replace('panel-', ''),
+    total: parseInt(panel.dataset.total, 10),
+    columns: parseInt(panel.dataset.columns, 10),
+    storageKey: panel.dataset.storage,
+    labelBase: panel.dataset.labelBase,
+  };
+}
+
+function renderGrid(panel) {
+  const grid = panel.querySelector('[data-grid]');
+  if (!grid) return;
+  const total = parseInt(panel.dataset.total, 10);
+  const columns = parseInt(panel.dataset.columns, 10);
+  const storageKey = panel.dataset.storage;
+  grid.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+  const set = state[storageKey];
+  let html = '';
+  for (let i = 0; i < total; i++) {
+    html += `<button class="circle${set.has(i) ? ' checked' : ''}" data-index="${i}"></button>`;
+  }
+  grid.innerHTML = html;
+}
+
+function updateHeader(panel) {
+  if (!panel || !panel.dataset.storage) return;
+  const total = parseInt(panel.dataset.total, 10);
+  const storageKey = panel.dataset.storage;
+  const labelBase = panel.dataset.labelBase;
+  const set = state[storageKey];
+  const count = set.size;
+  const percent = (count / total) * 100;
+  panel.querySelector('[data-count]').textContent = count.toLocaleString('pt-BR');
+  panel.querySelector('[data-percent]').textContent = percent.toFixed(1).replace('.', ',');
+  panel.querySelector('[data-progress]').style.width = percent + '%';
+
+  const daysCount = loadDays(storageKey).size;
+  panel.querySelector('[data-days]').textContent = daysCount.toLocaleString('pt-BR');
+  const labelEl = panel.querySelector('[data-days-label]');
+  if (labelBase === 'prática') {
+    labelEl.textContent = daysCount === 1 ? 'dia com prática' : 'dias com prática';
+  } else {
+    labelEl.textContent = daysCount === 1 ? 'dia de estudo' : 'dias de estudo';
+  }
+
+  // contagem de dias seguidos (streak) - sempre visível
+  const streak = calcularStreak(storageKey);
+  const streakEl = panel.querySelector('[data-streak]');
+  const streakLabel = panel.querySelector('[data-streak-label]');
+  if (streakEl) {
+    streakEl.textContent = streak.toLocaleString('pt-BR');
+  }
+  if (streakLabel) {
+    streakLabel.textContent = streak === 1 ? 'dia seguido' : 'dias seguidos';
+  }
+
+  // gestão de folhas (apenas para o painel Daimoku)
+  const sheetLabel = panel.querySelector('[data-sheet-label]');
+  const historyBtn = panel.querySelector('[data-history-btn]');
+  const totalRow = panel.querySelector('[data-total-row]');
+  const totalAcc = panel.querySelector('[data-total-acc]');
+  const totalLabel = panel.querySelector('[data-total-label]');
+
+  if (sheetLabel) {
+    const sheets = loadSheets(storageKey);
+    const sheetNumber = sheets.length + 1;
+    if (sheetNumber > 1) {
+      sheetLabel.style.display = 'block';
+      sheetLabel.textContent = `Folha ${sheetNumber}`;
+      if (historyBtn) historyBtn.style.display = '';
+      const totalAcum = totalAcumulado(storageKey, count, total);
+      if (totalRow) totalRow.style.display = '';
+      if (totalAcc) {
+        totalAcc.textContent = totalAcum.toLocaleString('pt-BR');
+      }
+      if (totalLabel) {
+        totalLabel.textContent = 'no total';
+      }
+    } else {
+      sheetLabel.style.display = 'none';
+      if (historyBtn) historyBtn.style.display = sheets.length > 0 ? '' : 'none';
+      if (totalRow) totalRow.style.display = 'none';
+    }
+  }
+
+  if (panel.classList.contains('active')) {
+    document.getElementById('undoBtn').disabled = count === 0;
+    const markBtn = document.getElementById('markBtn');
+    if (count >= total) {
+      markBtn.disabled = false;
+      // se for o painel Daimoku (com sheet-label), oferece nova folha; senão "concluído"
+      markBtn.textContent = sheetLabel ? 'começar nova folha' : 'concluído';
+      if (!sheetLabel) markBtn.disabled = true;
+    } else {
+      markBtn.disabled = false;
+      markBtn.textContent = 'marcar próximo';
+    }
+  }
+}
+
+function flashStatus(msg, kind) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status' + (kind ? ' ' + kind : '');
+  clearTimeout(flashStatus._t);
+  flashStatus._t = setTimeout(() => {
+    if (el.textContent === msg) {
+      el.textContent = '';
+      el.className = 'status';
+    }
+  }, 1800);
+}
+
+function persistChange(storageKey) {
+  saveLocal(storageKey, state[storageKey]);
+  localStorage.setItem(storageKey + ':updatedAt', String(Date.now()));
+  scheduleCloudSave(storageKey);
+}
+
+// ===== Rastreamento diário de daimokus =====
+function dailyCountsKey(storageKey) { return storageKey + ':daily-counts'; }
+
+function loadDailyCounts(storageKey) {
+  try {
+    const raw = localStorage.getItem(dailyCountsKey(storageKey));
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+
+function saveDailyCounts(storageKey, counts) {
+  try {
+    localStorage.setItem(dailyCountsKey(storageKey), JSON.stringify(counts));
+  } catch (e) {}
+}
+
+function incrementDailyCount(storageKey, delta) {
+  const counts = loadDailyCounts(storageKey);
+  const today = todayKey();
+  counts[today] = (counts[today] || 0) + delta;
+  if (counts[today] <= 0) delete counts[today];
+  saveDailyCounts(storageKey, counts);
+}
+
+function toggleCircle(index) {
+  const { panel, storageKey } = getActiveConfig();
+  const set = state[storageKey];
+  if (set.has(index)) {
+    set.delete(index);
+    incrementDailyCount(storageKey, -1);
+  } else {
+    set.add(index);
+    registerToday(storageKey);
+    incrementDailyCount(storageKey, 1);
+  }
+  const btn = panel.querySelector(`[data-index="${index}"]`);
+  if (btn) btn.classList.toggle('checked', set.has(index));
+  updateHeader(panel);
+  persistChange(storageKey);
+  flashStatus('salvo');
+}
+
+function markNext() {
+  const { panel, total, storageKey } = getActiveConfig();
+  const set = state[storageKey];
+
+  // se a folha já está completa e é um painel com folhas (só Daimoku)
+  if (set.size >= total) {
+    const sheetLabel = panel.querySelector('[data-sheet-label]');
+    if (sheetLabel) {
+      openNewSheetModal();
+    }
+    return;
+  }
+
+  for (let i = 0; i < total; i++) {
+    if (!set.has(i)) {
+      set.add(i);
+      registerToday(storageKey);
+      incrementDailyCount(storageKey, 1);
+      const btn = panel.querySelector(`[data-index="${i}"]`);
+      if (btn) {
+        btn.classList.add('checked');
+        const rect = btn.getBoundingClientRect();
+        const vh = window.innerHeight;
+        if (rect.top < 180 || rect.bottom > vh - 120) {
+          btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      updateHeader(panel);
+      persistChange(storageKey);
+      flashStatus('salvo');
+
+      // se acabou de completar a folha, oferece automaticamente a nova folha
+      if (set.size >= total) {
+        const sheetLabel2 = panel.querySelector('[data-sheet-label]');
+        if (sheetLabel2) {
+          setTimeout(() => openNewSheetModal(), 600);
+        }
+      }
+      return;
+    }
+  }
+}
+
+function undoLast() {
+  const { panel, storageKey } = getActiveConfig();
+  const set = state[storageKey];
+  if (set.size === 0) return;
+  let last = -1;
+  for (const i of set) if (i > last) last = i;
+  if (last < 0) return;
+  set.delete(last);
+  incrementDailyCount(storageKey, -1);
+  const btn = panel.querySelector(`[data-index="${last}"]`);
+  if (btn) btn.classList.remove('checked');
+  updateHeader(panel);
+  persistChange(storageKey);
+  flashStatus('salvo');
+}
+
+function openResetModal() {
+  const { storageKey } = getActiveConfig();
+  const count = state[storageKey].size;
+  document.getElementById('resetMsg').textContent =
+    `Todos os ${count.toLocaleString('pt-BR')} círculos marcados desta aba voltarão para o estado inicial. Esta ação não pode ser desfeita.`;
+  document.getElementById('resetModal').classList.add('active');
+}
+
+function confirmReset() {
+  const { panel, storageKey } = getActiveConfig();
+  state[storageKey] = new Set();
+  renderGrid(panel);
+  updateHeader(panel);
+  persistChange(storageKey);
+  closeModal('resetModal');
+  flashStatus('salvo');
+}
+
+function openAdjustModal() {
+  const { storageKey } = getActiveConfig();
+  document.getElementById('adjustInput').value = state[storageKey].size;
+  document.getElementById('adjustModal').classList.add('active');
+  setTimeout(() => document.getElementById('adjustInput').focus(), 50);
+}
+
+function confirmAdjust() {
+  const { panel, total, storageKey } = getActiveConfig();
+  const v = parseInt(document.getElementById('adjustInput').value, 10);
+  if (isNaN(v) || v < 0 || v > total) return;
+  const set = new Set();
+  for (let i = 0; i < v; i++) set.add(i);
+  state[storageKey] = set;
+  if (v > 0) registerToday(storageKey);
+  renderGrid(panel);
+  updateHeader(panel);
+  persistChange(storageKey);
+  closeModal('adjustModal');
+  flashStatus('salvo');
+}
+
+// ===== Relatório =====
+let reportViewDate = new Date();
+
+function openReportModal() {
+  reportViewDate = new Date();
+  reportViewDate.setDate(1);
+  renderReport();
+  document.getElementById('reportModal').classList.add('active');
+}
+
+function changeReportMonth(delta) {
+  reportViewDate.setMonth(reportViewDate.getMonth() + delta);
+  renderReport();
+}
+
+function renderReport() {
+  const { storageKey } = getActiveConfig();
+  const counts = loadDailyCounts(storageKey);
+  const days = loadDays(storageKey);
+
+  // Cálculos de totais (hoje, semana, mês)
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const hojeKey = dateToKey(hoje);
+
+  // início da semana (domingo)
+  const inicioSemana = new Date(hoje);
+  inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+
+  // início do mês corrente (não do mês em visualização)
+  const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+
+  let totalHoje = counts[hojeKey] || 0;
+  let totalSemana = 0;
+  let totalMes = 0;
+
+  for (const k of Object.keys(counts)) {
+    const partes = k.split('-');
+    const d = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
+    if (d >= inicioSemana && d <= hoje) totalSemana += counts[k];
+    if (d >= inicioMes && d <= hoje) totalMes += counts[k];
+  }
+
+  document.getElementById('reportToday').textContent = totalHoje.toLocaleString('pt-BR');
+  document.getElementById('reportWeek').textContent = totalSemana.toLocaleString('pt-BR');
+  document.getElementById('reportMonth').textContent = totalMes.toLocaleString('pt-BR');
+
+  // Label do mês em visualização
+  const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const mesLabel = meses[reportViewDate.getMonth()] + ' ' + reportViewDate.getFullYear();
+  document.getElementById('reportMonthLabel').textContent = mesLabel;
+
+  // Grid do calendário
+  const primeiroDia = new Date(reportViewDate.getFullYear(), reportViewDate.getMonth(), 1);
+  const ultimoDia = new Date(reportViewDate.getFullYear(), reportViewDate.getMonth() + 1, 0);
+  const diasNoMes = ultimoDia.getDate();
+  const diaDaSemanaInicio = primeiroDia.getDay(); // 0=domingo
+
+  let html = '';
+  // células vazias no início
+  for (let i = 0; i < diaDaSemanaInicio; i++) {
+    html += '<div class="report-day empty"></div>';
+  }
+  // dias do mês
+  for (let d = 1; d <= diasNoMes; d++) {
+    const data = new Date(reportViewDate.getFullYear(), reportViewDate.getMonth(), d);
+    const key = dateToKey(data);
+    const praticou = days.has(key);
+    const qtd = counts[key] || 0;
+    const isToday = key === hojeKey;
+
+    let classes = 'report-day';
+    if (praticou) classes += ' practiced';
+    else if (data <= hoje) classes += ' no-practice';
+    if (isToday) classes += ' today';
+
+    html += `<div class="${classes}">`;
+    html += d;
+    if (qtd > 0) html += `<span class="report-day-count">${qtd}</span>`;
+    html += '</div>';
+  }
+  document.getElementById('reportCalendar').innerHTML = html;
+}
+
+function openDaysModal() {
+  const { storageKey } = getActiveConfig();
+  buildDaysList(storageKey);
+  document.getElementById('daysModal').classList.add('active');
+}
+
+function buildDaysList(storageKey) {
+  const days = loadDays(storageKey);
+  const list = document.getElementById('daysList');
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const todayStr = dateToKey(hoje);
+
+  // calcula até onde mostrar (do dia mais antigo de prática até hoje)
+  // mínimo de 90 dias para sempre dar visão de continuidade
+  let menorData = hoje;
+  for (const k of days) {
+    const partes = k.split('-');
+    const d = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
+    if (d < menorData) menorData = d;
+  }
+  // limite mínimo de 90 dias atrás
+  const limite90 = new Date(hoje);
+  limite90.setDate(limite90.getDate() - 89);
+  if (menorData > limite90) menorData = limite90;
+
+  const totalDias = Math.floor((hoje - menorData) / (1000 * 60 * 60 * 24)) + 1;
+
+  // pré-calcula quais dias fazem parte do streak atual
+  const streakSet = new Set();
+  let cursor = new Date(hoje);
+  if (!days.has(dateToKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  while (days.has(dateToKey(cursor))) {
+    streakSet.add(dateToKey(cursor));
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const semanas = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+
+  let html = '';
+  for (let i = 0; i < totalDias; i++) {
+    const d = new Date(hoje);
+    d.setDate(d.getDate() - i);
+    const key = dateToKey(d);
+    const checked = days.has(key);
+    const inStreak = streakSet.has(key);
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mesNome = meses[d.getMonth()];
+    const semanaStr = semanas[d.getDay()];
+    const isToday = key === todayStr;
+    let itemClass = 'days-list-item';
+    if (isToday) itemClass += ' today';
+    if (inStreak) itemClass += ' in-streak';
+    html += `<div class="${itemClass}" data-key="${key}">`;
+    html += `<div class="days-list-item-text">`;
+    html += `<span class="days-list-date">${dia} de ${mesNome}</span>`;
+    html += `<span class="days-list-weekday">${semanaStr}</span>`;
+    html += `</div>`;
+    html += `<div class="days-list-circle${checked ? ' checked' : ''}"></div>`;
+    html += `</div>`;
+  }
+  list.innerHTML = html;
+}
+
+function toggleDayInList(key) {
+  const { storageKey, panel } = getActiveConfig();
+  const days = loadDays(storageKey);
+  if (days.has(key)) {
+    days.delete(key);
+  } else {
+    days.add(key);
+  }
+  saveDays(storageKey, days);
+
+  // atualiza o header (streak e contagem podem mudar)
+  updateHeader(panel);
+
+  // reconstrói a lista para refletir mudanças no streak destacado
+  buildDaysList(storageKey);
+
+  // sincroniza com a nuvem
+  scheduleCloudSave(storageKey);
+}
+
+function bulkSetDays() {
+  const totalInput = document.getElementById('daysTotalInput');
+  const streakInput = document.getElementById('daysStreakInput');
+  const total = parseInt(totalInput.value, 10);
+  const streak = parseInt(streakInput.value, 10);
+
+  if (isNaN(total) || total < 0) {
+    alert('Preencha um número válido de dias com prática.');
+    return;
+  }
+  if (isNaN(streak) || streak < 0) {
+    alert('Preencha um número válido de dias seguidos.');
+    return;
+  }
+  if (streak > total) {
+    alert('Os dias seguidos não podem ser maiores que o total de dias com prática.');
+    return;
+  }
+
+  const confirmacao = confirm(
+    'Isso vai limpar os dias atuais e marcar ' + total + ' dias com ' + streak +
+    ' dias seguidos. Os dias específicos serão escolhidos automaticamente. Continuar?'
+  );
+  if (!confirmacao) return;
+
+  const { storageKey, panel } = getActiveConfig();
+  const novosDias = new Set();
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  // marca os últimos N dias seguidos (a sequência atual)
+  for (let i = 0; i < streak; i++) {
+    const d = new Date(hoje);
+    d.setDate(d.getDate() - i);
+    novosDias.add(dateToKey(d));
+  }
+
+  // se o total é maior que o streak, marca dias anteriores com um pulo entre eles
+  const restante = total - streak;
+  if (restante > 0) {
+    // pula 1 dia (o dia que quebra o streak) e marca os próximos
+    let offset = streak + 1;
+    for (let i = 0; i < restante; i++) {
+      const d = new Date(hoje);
+      d.setDate(d.getDate() - (offset + i));
+      novosDias.add(dateToKey(d));
+    }
+  }
+
+  saveDays(storageKey, novosDias);
+  totalInput.value = '';
+  streakInput.value = '';
+  updateHeader(panel);
+  buildDaysList(storageKey);
+  scheduleCloudSave(storageKey);
+}
+
+function openSyncModal() {
+  document.getElementById('syncInput').value = syncCode || '';
+  document.getElementById('syncModal').classList.add('active');
+  setTimeout(() => document.getElementById('syncInput').focus(), 50);
+}
+
+function openNewSheetModal() {
+  const { total, labelBase } = getActiveConfig();
+  const noun = labelBase === 'prática' ? 'daimokus' : 'marcações';
+  const continuingText = labelBase === 'prática'
+    ? 'Seus dias de prática continuam contando normalmente.'
+    : 'Seus dias de estudo continuam contando normalmente.';
+  document.getElementById('newSheetMsg').textContent =
+    `Você concluiu a folha atual com ${total.toLocaleString('pt-BR')} ${noun}. A folha será arquivada com a data de hoje e uma nova folha em branco será aberta. ${continuingText}`;
+  document.getElementById('newSheetModal').classList.add('active');
+}
+
+function confirmNewSheet() {
+  const { panel, total, storageKey } = getActiveConfig();
+  // arquiva a folha atual
+  const sheets = loadSheets(storageKey);
+  sheets.push({
+    completedAt: todayKey(),
+    total: total,
+  });
+  saveSheets(storageKey, sheets);
+  // zera a folha atual
+  state[storageKey] = new Set();
+  renderGrid(panel);
+  updateHeader(panel);
+  persistChange(storageKey);
+  closeModal('newSheetModal');
+  flashStatus('nova folha aberta');
+}
+
+function openHistoryModal() {
+  const { storageKey } = getActiveConfig();
+  const sheets = loadSheets(storageKey);
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  if (sheets.length === 0) {
+    const empty = document.createElement('li');
+    empty.className = 'history-empty';
+    empty.textContent = 'Nenhuma folha concluída ainda.';
+    list.appendChild(empty);
+  } else {
+    sheets.forEach((sheet, idx) => {
+      const li = document.createElement('li');
+      li.className = 'history-item';
+      const num = document.createElement('span');
+      num.className = 'history-num';
+      num.textContent = `Folha ${idx + 1}`;
+      const date = document.createElement('span');
+      date.className = 'history-date';
+      date.textContent = `concluída em ${formatDateBr(sheet.completedAt)}`;
+      li.appendChild(num);
+      li.appendChild(date);
+      list.appendChild(li);
+    });
+  }
+  document.getElementById('historyModal').classList.add('active');
+}
+
+function confirmSync() {
+  const raw = document.getElementById('syncInput').value.trim().toLowerCase();
+  const cleaned = raw.replace(/[^a-z0-9_-]/g, '-');
+  setSyncCode(cleaned);
+  closeModal('syncModal');
+}
+
+function setSyncCode(code) {
+  syncCode = code;
+  try { localStorage.setItem('sync-code', code); } catch (e) {}
+  document.getElementById('syncValue').textContent = code || 'sem sincronia (só neste aparelho)';
+  unsubscribeAll();
+  if (code) {
+    // ao entrar em uma nova sync code, faz upload inicial e começa a ouvir
+    document.querySelectorAll('.panel').forEach(panel => {
+      subscribeCloud(panel.dataset.storage);
+    });
+    flashStatus('conectando à nuvem', 'syncing');
+  } else {
+    flashStatus('sincronia desligada');
+  }
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tabId);
+  });
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-' + tabId);
+  });
+  // esconde o footer dos contadores quando estiver no Timer
+  const footer = document.querySelector('.footer');
+  if (footer) {
+    footer.style.display = tabId === 'timer' ? 'none' : '';
+  }
+  document.body.style.paddingBottom = tabId === 'timer' ? '20px' : '';
+
+  if (tabId !== 'timer') {
+    const panel = getActivePanel();
+    if (panel) updateHeader(panel);
+  }
+  try { localStorage.setItem('active-tab', tabId); } catch (e) {}
+}
+
+// expõe globais para os onclicks inline
+window.closeModal = closeModal;
+window.confirmReset = confirmReset;
+window.confirmAdjust = confirmAdjust;
+window.confirmSync = confirmSync;
+window.confirmNewSheet = confirmNewSheet;
+
+// ===== TIMER =====
+const Timer = {
+  totalMs: 0,
+  remainingMs: 0,
+  endTime: 0,
+  intervalId: null,
+  clockIntervalId: null,
+  state: 'idle', // idle | running | paused | finished
+  audioCtx: null,
+  wakeLock: null,
+  showElapsed: false,
+  beepsMarked: new Set(),
+};
+
+function formatTimer(ms) {
+  if (ms < 0) ms = 0;
+  const totalSec = Math.ceil(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function formatClockTime(date) {
+  const h = String(date.getHours()).padStart(2, '0');
+  const m = String(date.getMinutes()).padStart(2, '0');
+  return h + 'h' + m;
+}
+
+function playBeep() {
+  try {
+    const audioEl = document.getElementById('beepAudio');
+    if (!audioEl) return;
+    // reduz volume do mantra temporariamente para o bip ter destaque
+    const mantraVolumes = duckMantra(0.15);
+    audioEl.currentTime = 0;
+    audioEl.volume = 1.0;
+    audioEl.muted = false;
+    const p = audioEl.play();
+    if (p && p.catch) p.catch(() => {});
+    // restaura volume do mantra após o bip
+    setTimeout(() => restoreMantra(mantraVolumes), 700);
+  } catch (e) {}
+}
+
+function duckMantra(targetVolume) {
+  const vols = {};
+  ['mantraAudio', 'mantraAudio2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      vols[id] = el.volume;
+      try { el.volume = targetVolume; } catch (e) {}
+    }
+  });
+  return vols;
+}
+
+function restoreMantra(vols) {
+  if (!vols) return;
+  ['mantraAudio', 'mantraAudio2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && vols[id] !== undefined) {
+      try { el.volume = vols[id]; } catch (e) {}
+    }
+  });
+}
+
+function updateTimerDisplay() {
+  try {
+    const display = document.getElementById('timerDisplay');
+    if (!display) return;
+    const remainingMs = Timer.state === 'running'
+      ? Math.max(0, Timer.endTime - Date.now())
+      : Timer.remainingMs;
+    Timer.remainingMs = remainingMs;
+
+    // se o usuário alternou para "tempo decorrido", mostra o que já passou
+    const displayMs = Timer.showElapsed
+      ? Timer.totalMs - remainingMs
+      : remainingMs;
+    display.textContent = formatTimer(displayMs);
+
+    // toca bip a cada 5 minutos transcorridos (exceto no final, que é gongo)
+    if (Timer.state === 'running') {
+      if (!Timer.beepsMarked) Timer.beepsMarked = new Set();
+      const elapsedMs = Timer.totalMs - remainingMs;
+      const elapsedMinutes = Math.floor(elapsedMs / 60000);
+      // se cruzou uma marca de 5 min que ainda não tocou e não é o final
+      if (elapsedMinutes > 0 && elapsedMinutes % 5 === 0 &&
+          elapsedMs < Timer.totalMs - 30000 &&
+          !Timer.beepsMarked.has(elapsedMinutes)) {
+        Timer.beepsMarked.add(elapsedMinutes);
+        playBeep();
+      }
+    }
+
+    if (Timer.state === 'running' && remainingMs <= 0) {
+      finishTimer();
+    }
+  } catch (e) {
+    // se der erro, para os intervals para não travar o Safari em loop
+    if (Timer.state === 'running') {
+      Timer.state = 'idle';
+      stopTimerTicks();
+    }
+  }
+}
+
+function toggleTimerDisplay() {
+  // só alterna se tem um timer ativo
+  if (Timer.totalMs <= 0) return;
+  Timer.showElapsed = !Timer.showElapsed;
+  try {
+    localStorage.setItem('timer-show-elapsed', Timer.showElapsed ? 'true' : 'false');
+  } catch (e) {}
+  updateTimerDisplay();
+}
+
+function updateTimerClock() {
+  const clock = document.getElementById('timerClock');
+  if (!clock) return;
+  const now = new Date();
+  if (Timer.state === 'running') {
+    const endDate = new Date(Timer.endTime);
+    clock.innerHTML = `agora ${formatClockTime(now)} &nbsp;·&nbsp; termina ${formatClockTime(endDate)}`;
+  } else if (Timer.state === 'paused') {
+    clock.textContent = 'pausado';
+  } else if (Timer.state === 'finished') {
+    clock.textContent = 'tempo concluído';
+  } else {
+    clock.innerHTML = `agora ${formatClockTime(now)}`;
+  }
+}
+
+function ensureAudioCtx() {
+  if (!Timer.audioCtx) {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      Timer.audioCtx = new AC();
+    } catch (e) {}
+  }
+  if (Timer.audioCtx && Timer.audioCtx.state === 'suspended') {
+    Timer.audioCtx.resume().catch(() => {});
+  }
+}
+
+function playGong() {
+  try {
+    const audioEl = document.getElementById('gongoAudio');
+    if (!audioEl) return;
+    // silencia o mantra para o gongo ter destaque total
+    ['mantraAudio', 'mantraAudio2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) try { el.volume = 0; } catch (e) {}
+    });
+    // garante que toca do início mesmo se já tocou antes
+    audioEl.currentTime = 0;
+    audioEl.volume = 1.0;
+    audioEl.muted = false;
+    const playPromise = audioEl.play();
+    if (playPromise && playPromise.catch) {
+      playPromise.catch(() => {
+        // se falhar, tenta de novo após uma breve pausa
+        setTimeout(() => {
+          try { audioEl.play().catch(() => {}); } catch (e) {}
+        }, 100);
+      });
+    }
+  } catch (e) {}
+}
+
+function vibrate() {
+  if (navigator.vibrate) {
+    try { navigator.vibrate([400, 200, 400, 200, 400]); } catch (e) {}
+  }
+}
+
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      Timer.wakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch (e) {}
+}
+
+function releaseWakeLock() {
+  if (Timer.wakeLock) {
+    try { Timer.wakeLock.release(); } catch (e) {}
+    Timer.wakeLock = null;
+  }
+}
+
+function startTimer(minutes) {
+  startTimerMs(minutes * 60 * 1000);
+}
+
+function startTimerMs(totalMs) {
+  if (!totalMs || totalMs <= 0) return;
+  Timer.totalMs = totalMs;
+  Timer.remainingMs = Timer.totalMs;
+  Timer.endTime = Date.now() + Timer.totalMs;
+  Timer.state = 'running';
+  // padrão é crescente (tempo decorrido); alterna e salva no localStorage
+  let showElapsedPref = true;
+  try {
+    const saved = localStorage.getItem('timer-show-elapsed');
+    if (saved === 'false') showElapsedPref = false;
+  } catch (e) {}
+  Timer.showElapsed = showElapsedPref;
+  Timer.beepsMarked = new Set();
+
+  // verifica se o mantra está ligado antes do unlock
+  const mantraToggle = document.getElementById('mantraToggle');
+  const mantraEnabled = mantraToggle && mantraToggle.checked;
+
+  // destrava cada áudio individualmente durante o gesto do usuário.
+  // no iOS Safari, cada elemento <audio> precisa receber um play() pelo menos
+  // uma vez durante um gesto para poder tocar depois em outros momentos.
+  // Estratégia: se o mantra estiver ligado, os dois elementos de mantra são
+  // destravados e o mantraAudio é tocado de verdade. Os outros (gongo, beep e
+  // mantraAudio2) ficam silenciados até serem usados.
+  ['gongoAudio', 'beepAudio', 'mantraAudio', 'mantraAudio2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    // caso especial: mantraAudio ligado, toca de verdade agora
+    if (id === 'mantraAudio' && mantraEnabled) {
+      try {
+        setupMantraLoop();
+        mantraActiveEl = 1;
+        el.currentTime = 0;
+        el.volume = 0.55;
+        el.muted = false;
+        const p = el.play();
+        if (p && p.catch) p.catch(() => {});
+      } catch (e) {}
+      return;
+    }
+
+    // demais casos: destrava silenciosamente
+    try {
+      el.volume = 0;
+      el.muted = true;
+      const p = el.play();
+      if (p && p.then) {
+        p.then(() => {
+          el.pause();
+          el.currentTime = 0;
+          el.muted = false;
+          el.volume = (id === 'mantraAudio' || id === 'mantraAudio2') ? 0.55 : 1.0;
+        }).catch(() => {
+          el.muted = false;
+          el.volume = (id === 'mantraAudio' || id === 'mantraAudio2') ? 0.55 : 1.0;
+        });
+      } else {
+        el.muted = false;
+        el.volume = (id === 'mantraAudio' || id === 'mantraAudio2') ? 0.55 : 1.0;
+      }
+    } catch (e) {}
+  });
+
+  showTimerControls();
+  document.getElementById('timerDisplay').classList.remove('finished');
+  document.getElementById('timerPauseBtn').textContent = 'pausar';
+  startTimerTicks();
+  requestWakeLock();
+}
+
+function startTimerTicks() {
+  if (Timer.intervalId) clearInterval(Timer.intervalId);
+  if (Timer.clockIntervalId) clearInterval(Timer.clockIntervalId);
+  updateTimerDisplay();
+  updateTimerClock();
+  Timer.intervalId = setInterval(updateTimerDisplay, 250);
+  Timer.clockIntervalId = setInterval(updateTimerClock, 1000);
+}
+
+function stopTimerTicks() {
+  if (Timer.intervalId) { clearInterval(Timer.intervalId); Timer.intervalId = null; }
+  if (Timer.clockIntervalId) { clearInterval(Timer.clockIntervalId); Timer.clockIntervalId = null; }
+}
+
+// ===== Mantra com dois elementos alternados para eliminar gap no loop =====
+let mantraLoopHandler1 = null;
+let mantraLoopHandler2 = null;
+let mantraActiveEl = 1;
+
+function setupMantraLoop() {
+  const el1 = document.getElementById('mantraAudio');
+  const el2 = document.getElementById('mantraAudio2');
+  if (!el1 || !el2) return;
+
+  // remove handlers antigos se existirem
+  if (mantraLoopHandler1) el1.removeEventListener('timeupdate', mantraLoopHandler1);
+  if (mantraLoopHandler2) el2.removeEventListener('timeupdate', mantraLoopHandler2);
+
+  // handler que dispara o segundo elemento pouco antes do primeiro terminar
+  mantraLoopHandler1 = function() {
+    if (!el1.duration || isNaN(el1.duration)) return;
+    if (mantraActiveEl !== 1) return;
+    if (el1.currentTime > el1.duration - 0.15) {
+      mantraActiveEl = 2;
+      try {
+        el2.currentTime = 0;
+        el2.volume = el1.volume;
+        el2.play().catch(() => {});
+      } catch (e) {}
+    }
+  };
+  mantraLoopHandler2 = function() {
+    if (!el2.duration || isNaN(el2.duration)) return;
+    if (mantraActiveEl !== 2) return;
+    if (el2.currentTime > el2.duration - 0.15) {
+      mantraActiveEl = 1;
+      try {
+        el1.currentTime = 0;
+        el1.volume = el2.volume;
+        el1.play().catch(() => {});
+      } catch (e) {}
+    }
+  };
+
+  el1.addEventListener('timeupdate', mantraLoopHandler1);
+  el2.addEventListener('timeupdate', mantraLoopHandler2);
+}
+
+function startMantraIfEnabled() {
+  const toggle = document.getElementById('mantraToggle');
+  if (!toggle || !toggle.checked) return;
+  const el1 = document.getElementById('mantraAudio');
+  if (!el1) return;
+  try {
+    setupMantraLoop();
+    mantraActiveEl = 1;
+    el1.currentTime = 0;
+    el1.volume = 0.55;
+    el1.muted = false;
+    const p = el1.play();
+    if (p && p.catch) p.catch(() => {});
+  } catch (e) {}
+}
+
+function pauseMantra() {
+  ['mantraAudio', 'mantraAudio2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) try { el.pause(); } catch (e) {}
+  });
+}
+
+function resumeMantraIfEnabled() {
+  const toggle = document.getElementById('mantraToggle');
+  if (!toggle || !toggle.checked) return;
+  const el = document.getElementById(mantraActiveEl === 1 ? 'mantraAudio' : 'mantraAudio2');
+  if (!el) return;
+  try {
+    const p = el.play();
+    if (p && p.catch) p.catch(() => {});
+  } catch (e) {}
+}
+
+function stopMantra() {
+  ['mantraAudio', 'mantraAudio2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      try {
+        el.pause();
+        el.currentTime = 0;
+      } catch (e) {}
+    }
+  });
+  mantraActiveEl = 1;
+}
+
+function pauseTimer() {
+  if (Timer.state !== 'running') return;
+  Timer.remainingMs = Math.max(0, Timer.endTime - Date.now());
+  Timer.state = 'paused';
+  stopTimerTicks();
+  updateTimerDisplay();
+  updateTimerClock();
+  document.getElementById('timerPauseBtn').textContent = 'continuar';
+  pauseMantra();
+  releaseWakeLock();
+}
+
+function resumeTimer() {
+  if (Timer.state !== 'paused') return;
+  Timer.endTime = Date.now() + Timer.remainingMs;
+  Timer.state = 'running';
+  document.getElementById('timerPauseBtn').textContent = 'pausar';
+  startTimerTicks();
+  resumeMantraIfEnabled();
+  requestWakeLock();
+}
+
+function stopTimer() {
+  Timer.state = 'idle';
+  Timer.totalMs = 0;
+  Timer.remainingMs = 0;
+  Timer.endTime = 0;
+  stopTimerTicks();
+  document.getElementById('timerDisplay').textContent = '00:00';
+  document.getElementById('timerDisplay').classList.remove('finished');
+  showTimerOptions();
+  updateTimerClock();
+  stopMantra();
+  releaseWakeLock();
+}
+
+function finishTimer() {
+  // proteção contra chamadas múltiplas
+  if (Timer.state === 'finished') return;
+  Timer.state = 'finished';
+  Timer.remainingMs = 0;
+  stopTimerTicks();
+  document.getElementById('timerDisplay').textContent = '00:00';
+  document.getElementById('timerDisplay').classList.add('finished');
+  updateTimerClock();
+  // toca o gongo PRIMEIRO enquanto o contexto de áudio está ativo
+  playGong();
+  // para o mantra logo depois, dando tempo do gongo começar a tocar
+  setTimeout(() => stopMantra(), 200);
+  vibrate();
+  celebrateTimerFinish();
+  // mostra os botões com "parar" e o pausar vira "ok"
+  document.getElementById('timerPauseBtn').textContent = 'pronto';
+  releaseWakeLock();
+}
+
+function celebrateTimerFinish() {
+  // mensagem de parabéns
+  const msg = document.getElementById('congratsMessage');
+  if (msg) {
+    msg.classList.add('active');
+    setTimeout(() => msg.classList.remove('active'), 5000);
+  }
+
+  // confetes
+  const container = document.getElementById('confettiContainer');
+  if (!container) return;
+  // limpa confetes anteriores que possam ter ficado
+  container.innerHTML = '';
+  const cores = ['#E6DED4', '#8A7B5E', '#5B3A2A', '#B8AE9A', '#2C2419'];
+  const N = 40;
+  for (let i = 0; i < N; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.left = Math.random() * 100 + '%';
+    c.style.animationDuration = (2.5 + Math.random() * 2.5) + 's';
+    c.style.animationDelay = (Math.random() * 0.8) + 's';
+    const rot = Math.random() * 360;
+    c.style.transform = `rotate(${rot}deg)`;
+    container.appendChild(c);
+    setTimeout(() => { if (c.parentNode) c.remove(); }, 6500);
+  }
+}
+
+function showTimerControls() {
+  document.getElementById('timerOptions').style.display = 'none';
+  document.getElementById('timerControls').style.display = 'flex';
+}
+
+function showTimerOptions() {
+  document.getElementById('timerOptions').style.display = 'flex';
+  document.getElementById('timerControls').style.display = 'none';
+}
+
+function openCustomTimerModal() {
+  document.getElementById('customMinutesInput').value = '';
+  document.getElementById('customSecondsInput').value = '';
+  document.getElementById('customTimerModal').classList.add('active');
+  setTimeout(() => document.getElementById('customMinutesInput').focus(), 50);
+}
+
+function confirmCustomTimer() {
+  const min = parseInt(document.getElementById('customMinutesInput').value, 10) || 0;
+  const sec = parseInt(document.getElementById('customSecondsInput').value, 10) || 0;
+  const totalSeconds = min * 60 + sec;
+  if (totalSeconds <= 0) return;
+  closeModal('customTimerModal');
+  startTimerMs(totalSeconds * 1000);
+}
+
+// === Aba de áudio: players fixos definidos diretamente no HTML ===
+
+
+function setupTimer() {
+  document.querySelectorAll('.timer-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.id === 'timerCustomBtn') {
+        openCustomTimerModal();
+        return;
+      }
+      const minutes = parseInt(btn.dataset.minutes, 10);
+      if (!isNaN(minutes)) startTimer(minutes);
+    });
+  });
+
+  // clicar no display alterna entre tempo restante e tempo decorrido
+  document.getElementById('timerDisplay').addEventListener('click', toggleTimerDisplay);
+
+  // toggle do mantra: carrega preferência e salva mudanças
+  const mantraToggle = document.getElementById('mantraToggle');
+  if (mantraToggle) {
+    try {
+      mantraToggle.checked = localStorage.getItem('mantra-enabled') === 'true';
+    } catch (e) {}
+    mantraToggle.addEventListener('change', (e) => {
+      try {
+        localStorage.setItem('mantra-enabled', e.target.checked ? 'true' : 'false');
+      } catch (err) {}
+    });
+  }
+
+  document.getElementById('timerPauseBtn').addEventListener('click', () => {
+    if (Timer.state === 'running') pauseTimer();
+    else if (Timer.state === 'paused') resumeTimer();
+    else if (Timer.state === 'finished') stopTimer();
+  });
+
+  document.getElementById('timerStopBtn').addEventListener('click', stopTimer);
+
+  // exibe o relógio atual quando o timer está parado
+  updateTimerClock();
+  setInterval(() => {
+    if (Timer.state === 'idle') updateTimerClock();
+  }, 1000);
+
+  // reativa o wake lock ao voltar para a aba (Safari libera ao sair)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && Timer.state === 'running') {
+      requestWakeLock();
+    }
+  });
+}
+
+function carregarDemo() {
+  // zera tudo
+  for (const k of Object.keys(DEMO_STORE)) delete DEMO_STORE[k];
+
+  // === DADOS FICTÍCIOS DA DEMONSTRAÇÃO ===
+  // Finge que hoje é 20 de outubro de 2026 e que a praticante vem fazendo
+  // daimoku há umas semanas, com alguns dias de pausa no meio.
+  const hoje = new Date();
+  function keyOf(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dia}`;
+  }
+
+  // 42 dias com prática nos últimos 60 dias, com algumas pausas
+  const diasFicticios = new Set();
+  const contagensDiarias = {};
+  const pausas = new Set([3, 4, 11, 18, 25, 32, 39, 46, 53]); // dias atrás sem prática
+  for (let i = 0; i < 60; i++) {
+    if (pausas.has(i)) continue;
+    const d = new Date(hoje);
+    d.setDate(hoje.getDate() - i);
+    const k = keyOf(d);
+    diasFicticios.add(k);
+    // contagem fictícia variando entre 90 e 220 daimokus por dia
+    contagensDiarias[k] = 90 + Math.floor(Math.random() * 130);
+  }
+
+  // Folha de daimoku: cerca de 4.200 círculos marcados (sequenciais do início)
+  const totalMarcadosDaimoku = 4215;
+  const marcadosDaimoku = [];
+  for (let i = 0; i < totalMarcadosDaimoku; i++) marcadosDaimoku.push(i);
+
+  // Estudo e leitura: cerca de 180 marcações
+  const marcadosEstudo = [];
+  for (let i = 0; i < 180; i++) marcadosEstudo.push(i);
+
+  // Grava tudo no armazenamento em memória
+  DEMO_STORE['daimoku-v1'] = JSON.stringify(marcadosDaimoku);
+  DEMO_STORE['estudo-v1'] = JSON.stringify(marcadosEstudo);
+  DEMO_STORE['daimoku-v1:days'] = JSON.stringify(Array.from(diasFicticios));
+  DEMO_STORE['estudo-v1:days'] = JSON.stringify(Array.from(diasFicticios).slice(0, 20));
+  DEMO_STORE['daimoku-v1:daily-counts'] = JSON.stringify(contagensDiarias);
+
+  // re-renderiza
+  document.querySelectorAll('.panel').forEach(panel => {
+    if (!panel.dataset.storage) return;
+    state[panel.dataset.storage] = loadLocal(panel.dataset.storage);
+    renderGrid(panel);
+    updateHeader(panel);
+  });
+}
+
+function init() {
+  // dados fictícios iniciais da demonstração
+  carregarDemo();
+
+  document.querySelectorAll('.panel').forEach(panel => {
+    if (!panel.dataset.storage) return;
+    state[panel.dataset.storage] = loadLocal(panel.dataset.storage);
+    renderGrid(panel);
+    updateHeader(panel);
+  });
+
+  let savedTab = 'daimoku';
+  try {
+    const t = localStorage.getItem('active-tab');
+    if (t === 'daimoku' || t === 'estudo' || t === 'timer' || t === 'audio') savedTab = t;
+  } catch (e) {}
+  switchTab(savedTab);
+
+  setupTimer();
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+
+  document.querySelectorAll('[data-grid]').forEach(grid => {
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-index]');
+      if (!btn) return;
+      const idx = parseInt(btn.dataset.index, 10);
+      if (!isNaN(idx)) toggleCircle(idx);
+    });
+  });
+
+  document.getElementById('markBtn').addEventListener('click', markNext);
+  document.getElementById('undoBtn').addEventListener('click', undoLast);
+
+  document.querySelectorAll('.panel').forEach(panel => {
+    panel.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.action === 'reset') openResetModal();
+        if (btn.dataset.action === 'adjust') openAdjustModal();
+        if (btn.dataset.action === 'history') openHistoryModal();
+        if (btn.dataset.action === 'days') openDaysModal();
+        if (btn.dataset.action === 'report') openReportModal();
+      });
+    });
+  });
+
+  document.getElementById('syncEditBtn').addEventListener('click', openSyncModal);
+
+  // ===== alternância de tema (claro/noturno) =====
+  const themeBtn = document.getElementById('themeToggleBtn');
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+      themeBtn.textContent = 'claro';
+    } else {
+      document.body.classList.remove('dark');
+      themeBtn.textContent = 'noturno';
+    }
+  }
+
+  // carrega preferência salva
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('theme') || 'light'; } catch (e) {}
+  applyTheme(savedTheme);
+
+  themeBtn.addEventListener('click', () => {
+    const current = document.body.classList.contains('dark') ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+
+  // botão Restaurar exemplo (demonstração)
+  const recomecarBtn = document.getElementById('recomecarBtn');
+  if (recomecarBtn) {
+    recomecarBtn.addEventListener('click', () => {
+      if (recomecarBtn.dataset.ok !== '1') {
+        recomecarBtn.dataset.ok = '1';
+        recomecarBtn.textContent = 'Confirmar: apagar alterações';
+        setTimeout(() => {
+          recomecarBtn.dataset.ok = '';
+          recomecarBtn.textContent = 'Restaurar exemplo';
+        }, 4000);
+        return;
+      }
+      recomecarBtn.dataset.ok = '';
+      recomecarBtn.textContent = 'Restaurar exemplo';
+      carregarDemo();
+      // volta para a aba daimoku
+      switchTab('daimoku');
+    });
+  }
+
+  // delegação de clique na lista de dias do modal de edição
+  document.getElementById('daysList').addEventListener('click', (e) => {
+    const item = e.target.closest('.days-list-item');
+    if (!item) return;
+    const key = item.dataset.key;
+    if (key) toggleDayInList(key);
+  });
+
+  document.querySelectorAll('.modal-backdrop').forEach(b => {
+    b.addEventListener('click', (e) => {
+      if (e.target === b) b.classList.remove('active');
+    });
+  });
+
+  // demonstração: nenhuma sincronização
+}
+
+// aguarda o Firebase carregar antes de inicializar
+if (window._fb) {
+  init();
+} else {
+  window.addEventListener('firebase-ready', init, { once: true });
+  // segurança: se Firebase falhar em 5s, inicia mesmo assim (modo offline)
+  setTimeout(() => { if (!state['daimoku-v1']) init(); }, 5000);
+}
+</script>
+</body>
+</html>
