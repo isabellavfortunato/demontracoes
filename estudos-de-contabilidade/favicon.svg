@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Razonete">
+  <rect width="512" height="512" rx="96" fill="#1F5490"/>
+  <rect x="96" y="148" width="320" height="46" fill="#FFFFFF"/>
+  <rect x="233" y="148" width="46" height="256" fill="#FFFFFF"/>
+  <rect x="124" y="250" width="92" height="26" fill="#A9C9E7"/>
+  <rect x="124" y="316" width="92" height="26" fill="#A9C9E7"/>
+  <rect x="296" y="250" width="92" height="26" fill="#A9C9E7"/>
+</svg>
