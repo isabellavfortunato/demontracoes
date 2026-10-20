@@ -57,6 +57,11 @@ footer .miolo{padding-block:18px;display:flex;justify-content:space-between;gap:
 footer .usuario{color:var(--cinza)}
 footer .site{color:var(--azul);font-weight:600}
 @media (prefers-reduced-motion:reduce){.botao{transition:none}}
+/* Cartões apagados até serem clicados na aula; o cartão clicado acende e fica aceso enquanto a aba estiver aberta */
+.grade .demo{cursor:pointer;opacity:.38;filter:grayscale(1);transition:opacity .35s ease,filter .35s ease,box-shadow .35s ease}
+.grade .demo:hover{opacity:.6}
+.grade .demo.aceso{opacity:1;filter:none;box-shadow:0 6px 18px rgba(20,33,61,.10)}
+@media (prefers-reduced-motion:reduce){.grade .demo{transition:none}}
 </style>
 </head>
 <body>
@@ -191,5 +196,27 @@ footer .site{color:var(--azul);font-weight:600}
 <footer class="lado">
   <div class="miolo"><span class="usuario">@isabellafortunato</span><span class="site">ferramentasobmedida.com.br</span></div>
 </footer>
+<script>
+/* Acende o cartão ao clicar; clicar de novo num cartão aceso, fora dos botões, apaga. Guarda só na aba atual */
+(function(){
+  var chave='cartoes-acesos', acesos=[];
+  try{acesos=JSON.parse(sessionStorage.getItem(chave)||'[]')}catch(e){}
+  function nome(c){var h=c.querySelector('h2');return h?h.textContent.trim():''}
+  function guardar(){try{sessionStorage.setItem(chave,JSON.stringify(acesos))}catch(e){}}
+  document.querySelectorAll('.grade .demo').forEach(function(c){
+    if(acesos.indexOf(nome(c))>-1)c.classList.add('aceso');
+    c.addEventListener('click',function(ev){
+      var n=nome(c), noBotao=ev.target.closest('a,summary,button');
+      if(c.classList.contains('aceso')){
+        if(noBotao)return;
+        c.classList.remove('aceso');acesos=acesos.filter(function(x){return x!==n});
+      }else{
+        c.classList.add('aceso');acesos.push(n);
+      }
+      guardar();
+    });
+  });
+})();
+</script>
 </body>
 </html>
