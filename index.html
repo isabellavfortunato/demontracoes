@@ -62,6 +62,10 @@ footer .site{color:var(--azul);font-weight:600}
 .grade .demo:hover{opacity:.6}
 .grade .demo.aceso{opacity:1;filter:none;box-shadow:0 6px 18px rgba(20,33,61,.10)}
 @media (prefers-reduced-motion:reduce){.grade .demo{transition:none}}
+/* Seção de sistemas: título menor com o mesmo traço mostarda, abaixo da grade das demonstrações */
+.secao-sistemas{margin-top:26px;display:flex;flex-direction:column;gap:18px}
+.secao-sistemas .titulo-secao{font-family:var(--titulo);font-weight:800;font-stretch:72%;font-size:clamp(36px,6vw,50px);line-height:1;margin:0;color:var(--navy)}
+.secao-sistemas .intro{margin:10px 0 0}
 </style>
 </head>
 <body>
@@ -191,6 +195,36 @@ footer .site{color:var(--azul);font-weight:600}
         <a class="botao" href="passeios/">Abrir demonstração</a>
       </article>
     </div>
+    <section class="secao-sistemas" aria-labelledby="titulo-sistemas">
+      <div>
+        <span class="traco" aria-hidden="true"></span>
+        <h2 class="titulo-secao" id="titulo-sistemas">Sistemas</h2>
+        <p class="intro">Sistemas completos feitos sob medida para um tipo de negócio, com login e dados guardados na nuvem. Nas demonstrações, a entrada é automática e todos os dados são fictícios.</p>
+      </div>
+      <div class="grade">
+      <article class="demo">
+        <span class="etiqueta">Psicologia</span>
+        <h2>Sistema de psicologia</h2>
+        <p>Agenda montada pelo horário fixo de cada paciente, ficha com a evolução das sessões, financeiro com recibos, documentos, sala da clínica e carreira.</p>
+        <span class="espaco"></span>
+        <a class="botao" href="sistema-de-psicologia/">Abrir demonstração</a>
+      </article>
+      <article class="demo">
+        <span class="etiqueta">Nutrição</span>
+        <h2>Sistema de nutrição</h2>
+        <p>Consultas por pacote, mensagens semanais de acompanhamento e quem ainda não respondeu, aniversários e, na mentoria, o quadro das etapas até a matrícula com as cobranças.</p>
+        <span class="espaco"></span>
+        <a class="botao" href="sistema-de-nutricao/">Abrir demonstração</a>
+      </article>
+      <article class="demo">
+        <span class="etiqueta">Comércio local</span>
+        <h2>Controle de encomendas</h2>
+        <p>Registro das encomendas que chegam para cada cliente, busca pelo rastreio ou pelo nome, entregas e pagamentos, filtros por data e bairro, painel e financeiro do mês.</p>
+        <span class="espaco"></span>
+        <a class="botao" href="controle-de-encomendas/">Abrir demonstração</a>
+      </article>
+      </div>
+    </section>
   </div>
 </main>
 <footer class="lado">

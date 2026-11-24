@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<title>Controle de encomendas · Demonstração</title>
+<meta name="theme-color" content="#1f2a33">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Encomendas">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAADq0lEQVR42u3drW4UYRSA4S2pwGBQKNDFkoBGEBThLtAVCK6AILgC7gIHqSANoimqrrJJVVUNBolosmna7XZ/ZuY73znP65ps02bm6ffX7M7Os+cvZtKiHrgEgkNwCA7BITgEh+AQHIJDcEhwCA7BITgEh+AQHIJDcAgOCQ7BITgEh+AQHIJDcAgOwSHBITgEh+AQHIJDcAgOwSE4BIcEh+AQHIJDcAiOwP358tZFmLfjYTwLWbz89NM1qY7j3qGispK6ONaaQWoSqYhj44VFNSK1cAyy3qxDpASOkfYg6ZUkxzHB1jQxkbQ4Jj6xSEkkFY7T44O9V28aHmQlI5IEx+nxwfUv//762vb3yaGkexw3WNyorZLeiXSMYzkLRIriuL6qePT64+rfSElmHEsWm6srQSQbjhX3IIjUwrHZ1rQLJcGJxMUxyHGFgSQbjsFPsRDJgGPsw01zTZc4pjzzRqQPHA3/D9LLAUlDJc1w/Njfe/zkaYRBK/5AcnJ0+OH7v+l/7m7Du3J5cT6bzZoTubrlqxC5es2URE6ODhtemd3mf7hXRJormd/ye5XMXzCekrYmAuEwkARkEQ5HcSKhWATFEZDI2HNNQBahcYRajow0kIQ10QeO3ueau5TEZ9ETjk7nmtsDSS8s+sMRishaA0l3LHrFEXM5slxJjzJmCT685fLifA6luZLmb4mAIzQROEITaaXk5Oiw0+kj25oj1KI1mYnkOCYjkpVFfhyjEsnNogqOYbe+FUyUw7H9QFKKRVEcGxApyKI0jhWJlGUBx53LkeIm4Fis5PzszHWY+WB8wSE4BIfgEByyla3c78/v4FAqFnBgYc1BBhyCQ3AIDsEhOASH4BAcEhyCQ3AIDsEhOASH4BAcgkOCQ3AIDs2yPlf2x/5eqMsR8MNbmjw0NNYTqYMoiYOjoYmgz7JvTiQCjggsIuJoTqQtjjgs4uJoSKQVjmgsouNoomRiHDFN9IRjSiKT4QjOojMc0xCZAEcXLLrEMTaRUXF0xKJjHOMpGQNHdyaS4BicyLA4+mWRB8eARIbC0TuLbDgGUbIljhwmMuPYhsjGOJKxSI5jMyIb4EjJogSOdYmshSMxi0I4VleyCo70JoriuJfIchx1WNTFsYTIXTiqsaiOYyGR2zhqsoBjgZI5jsom4Fjct/cPsYBDM+9bERyCQ3AIDsEhOASH4JDgEByCQ3AIDsEhOASH4BAcgkOCQ3AIDsEhOASH4BAcgkNwSHAIDm3Rf4FSx2snl5JvAAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: balcão de bairro, prático, direto, para usar o dia inteiro no celular
+   IDEA: a etiqueta de remessa colada na caixa de papelão
+   PICTURE: a própria lista de encomendas, cada uma como etiqueta com status
+   COLOUR and TYPE: tinta #1f2a33, papelão #c48a4e, alerta #d9472b; Barlow Condensed e Barlow Semi Condensed
+   LAYOUT: faixa escura com os números, abas, filtros por data, lista em uma coluna, painéis para cadastro e importação */
+:root{color-scheme:light dark;
+--bg:light-dark(#f6f3ee,#14191e);--card:light-dark(#ffffff,#1d252c);--ink:light-dark(#1f2a33,#ece7df);
+--mute:light-dark(#5f6b74,#9aa5ad);--line:light-dark(#e3ddd3,#2c363e);--kraft:light-dark(#b9793b,#d79a5c);
+--kraftbg:light-dark(#f4e6d4,#3a2c1d);--alert:light-dark(#c93c22,#ff7a5c);--alertbg:light-dark(#fbe3dc,#3d211b);
+--okbg:light-dark(#e4e8eb,#2a343c);--band:#1f2a33;--bandink:#f6f3ee}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none !important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Barlow Semi Condensed",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.num,.btn,.chip,.tab{font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 max(4vw,14px)}
+header{background:var(--band);color:var(--bandink);padding:calc(22px + env(safe-area-inset-top)) 0 0}
+html{-webkit-text-size-adjust:100%}button,label.btn,.chip,.tg{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.wrap{padding-left:max(4vw,14px,env(safe-area-inset-left));padding-right:max(4vw,14px,env(safe-area-inset-right))}
+.fbtn{display:none}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:clamp(32px,6vw,46px);line-height:1.05;font-weight:600}
+.status{font-size:14px;color:#b8c2c9;margin-top:4px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;min-height:44px;padding:0 18px;font-size:19px;font-weight:600;cursor:pointer;background:var(--card);color:var(--ink);display:inline-flex;align-items:center;justify-content:center}
+.btn.main{background:#d79a5c;color:#1f2a33}.btn.ghost{background:transparent;color:inherit;border:1.5px solid currentColor}
+.btn:disabled{opacity:.55;cursor:wait}
+:is(.btn,.chip,.tab,input,select,textarea,.tg):focus-visible{outline:3px solid #d79a5c;outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:22px}
+.c{background:#2a3741;border-radius:12px;padding:14px 16px}
+.c .l{font-size:14px;color:#c3ccd2}.c .num{font-size:clamp(28px,5vw,40px);font-weight:600;line-height:1.1;white-space:nowrap}
+.c .s{font-size:13px;color:#aab5bc}.c.k{background:#d79a5c;color:#1f2a33}.c.k .l,.c.k .s{color:#3b2a18}.c.a .num{color:#ff9a80}
+.money{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+.modos{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:18px}
+.modo{border:0;border-radius:14px;background:#2a3741;color:#f6f3ee;text-align:left;padding:16px 18px;cursor:pointer;min-height:84px;font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+.modo b{display:block;font-size:clamp(28px,6vw,38px);font-weight:600;line-height:1.05}.modo span{font:500 15px "Barlow Semi Condensed",sans-serif;color:#c3ccd2}
+.modo[aria-pressed=true]{background:#d79a5c;color:#1f2a33}.modo[aria-pressed=true] span{color:#3b2a18}
+.modo:focus-visible{outline:3px solid #f6f3ee;outline-offset:2px}
+.hdacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.seg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.seg button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;min-height:56px;font:600 21px "Barlow Condensed",sans-serif;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rform{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:12px}
+.rform .grande{font-size:19px;min-height:52px}
+.rcli{border-radius:10px;padding:10px 12px;background:var(--okbg);font-size:15px}.rcli.novo{background:var(--kraftbg)}
+.rcli b{font-size:17px}
+.seg.min button{min-height:44px;font-size:18px}
+.sug{display:grid;gap:6px}.sug button{text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 12px;min-height:48px;cursor:pointer;font:500 15px "Barlow Semi Condensed",sans-serif}
+.sug button b{font-size:17px;font-weight:600}.sug button span{color:var(--mute)}
+.btn.full{width:100%;min-height:56px;font-size:22px}
+.hojeL{display:grid;gap:6px;margin-top:10px}
+.hojeL .r{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.claro .c{background:var(--card);border:1px solid var(--line);color:var(--ink)}.claro .c .l,.claro .c .s{color:var(--mute)}
+.claro .c.k{background:#d79a5c;color:#1f2a33;border-color:transparent}.claro .c.k .l,.claro .c.k .s{color:#3b2a18}.claro .c.a .num{color:var(--alert)}
+.cards.claro{margin-top:0}.sub{font-size:24px;font-weight:600;margin:24px 0 10px}
+.search.grande{width:100%;min-height:56px;font-size:19px}
+.search:focus{outline:none;box-shadow:0 0 0 3px rgba(215,154,92,.35)}
+#vCon section{padding-top:18px}
+#vFil .filtros{margin-top:0}
+.tabs{display:flex;gap:4px;margin-top:22px}
+.tab{border:0;background:transparent;color:#c3ccd2;font-size:21px;font-weight:600;min-height:48px;padding:0 20px;border-radius:12px 12px 0 0;cursor:pointer}
+.tab[aria-selected=true]{background:var(--bg);color:var(--ink)}
+main{padding:22px 0 60px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{flex:1 1 260px;min-height:48px;border:2px solid #d79a5c;border-radius:10px;padding:0 14px;font:inherit;font-size:16px;background:var(--card);color:var(--ink)}
+.filtros{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:10px;margin-top:12px}
+.fg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:end}
+.fg .fl{grid-column:1/-1;font-weight:600;font-size:15px}
+.fg.b{grid-template-columns:minmax(0,1fr)}
+.bt{display:inline-block;border-radius:6px;padding:0 7px;font-size:13px;font-weight:600;background:var(--okbg);color:var(--ink);margin-left:6px;white-space:nowrap}
+.fg label{font-size:13px;color:var(--mute);font-weight:500}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;min-height:40px;padding:0 14px;font-size:17px;font-weight:500;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip b{font-weight:700;margin-left:4px}
+.limpar{border:0;background:none;color:var(--mute);text-decoration:underline;font:500 15px "Barlow Semi Condensed",sans-serif;cursor:pointer;min-height:40px}
+.fres{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:14px}
+.fres .c{background:var(--card);border:1px solid var(--line);color:var(--ink)}.fres .c .l,.fres .c .s{color:var(--mute)}.fres .c .num{font-size:28px}
+.fres .t{grid-column:1/-1;font-size:14px;color:var(--mute)}
+.list{display:grid;gap:10px;margin-top:16px}
+.it{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;border-left:6px solid var(--kraft)}
+.it.done{border-left-color:var(--mute)}.it.owe{border-left-color:var(--alert)}.it.cli{border-left-color:var(--ink)}
+.who{font-size:19px;font-weight:600;line-height:1.25}
+.addr{color:var(--mute);font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:14px;color:var(--mute);margin-top:4px}
+.trk{font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--ink);overflow-wrap:anywhere}
+.tag{display:inline-block;border-radius:6px;padding:1px 8px;font-size:13px;font-weight:600;background:var(--kraftbg);color:var(--ink)}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.val{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:600;white-space:nowrap}
+.tgs{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.tg{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;min-height:40px;padding:0 12px;font:600 15px "Barlow Semi Condensed",sans-serif;cursor:pointer;white-space:nowrap}
+.tg.on{background:var(--okbg);border-color:transparent}.tg.pend{background:var(--kraftbg);border-color:transparent}.tg.owe{background:var(--alertbg);color:var(--alert);border-color:transparent}
+.mini{display:flex;gap:4px;flex-wrap:wrap}.mini button{border:0;background:none;color:var(--mute);font:500 14px "Barlow Semi Condensed",sans-serif;cursor:pointer;min-height:32px;padding:0 6px;text-decoration:underline}
+.empty{text-align:center;color:var(--mute);padding:40px 10px;border:1.5px dashed var(--line);border-radius:12px}
+.note{font-size:13px;color:var(--mute);margin-top:10px}
+.foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;padding-top:16px;border-top:1px solid var(--line)}
+.foot .btn{font-size:17px;border:1.5px solid var(--line)}
+.ov{position:fixed;inset:0;background:rgba(15,20,25,.55);display:none;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow-y:auto;z-index:10}
+.ov.show{display:flex}
+.pane{background:var(--card);color:var(--ink);border-radius:14px;width:min(560px,100%);padding:20px 20px 16px}
+.pane.wide{width:min(860px,100%)}
+.pane h2{margin:0 0 4px;font-size:30px;font-weight:600}.pane h3{margin:8px 0 0;font-size:22px;font-weight:600}
+.f{display:grid;gap:12px}.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+label{display:grid;gap:4px;font-size:15px;font-weight:500}
+input,select,textarea{font:inherit;font-size:16px;min-height:44px;border:1.5px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--bg);color:var(--ink);width:100%}
+textarea{min-height:64px}
+.chk{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600}.chk input{width:22px;min-height:22px;height:22px;flex:none}
+.box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:10px}
+.warn{color:var(--alert);font-size:14px}
+.pbtn{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+.pbtn .btn{border:1.5px solid var(--line)}.pbtn .btn.main{border-color:transparent}
+.btn.del{background:var(--alert);color:#fff}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-weight:600;color:var(--mute);font-size:14px}
+td.ex{color:var(--mute);font-size:14px;overflow-wrap:anywhere}
+.mapt select{min-height:40px;padding:4px 8px}
+.ic{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.ic .c{background:var(--bg);color:var(--ink);border:1px solid var(--line)}.ic .c .l,.ic .c .s{color:var(--mute)}.ic .c .num{font-size:28px}
+.login{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:calc(24px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom));background:var(--band)}
+.login .pane{width:min(420px,100%)}
+.login h1{color:var(--ink);font-size:38px;margin-bottom:4px}
+.lnk{border:0;background:none;color:var(--mute);text-decoration:underline;font:500 15px "Barlow Semi Condensed",sans-serif;cursor:pointer;min-height:40px;padding:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90vw}
+.toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+@media(max-width:700px){
+ header{padding-top:calc(14px + env(safe-area-inset-top))}
+ h1{font-size:28px}.status{font-size:13px}.top{flex-wrap:nowrap;align-items:flex-start}.top .btn{min-height:40px;font-size:16px;padding:0 12px}
+ .modos{margin-top:12px;gap:8px}.modo{min-height:64px;padding:10px 14px}.modo b{font-size:26px}.modo span{font-size:13px;line-height:1.25}
+ .hdacts{flex-wrap:nowrap;overflow-x:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.hdacts .btn{flex:none;min-height:40px;font-size:16px;padding:0 14px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.money{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+ .c{padding:10px 12px;border-radius:10px}.c .num{font-size:26px}.c .l{font-size:13px}.c .s{font-size:12px}
+ .money .c .num{font-size:18px}.money .c .l{font-size:12px;line-height:1.2}
+ .tabs{margin-top:12px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{flex:1 0 auto;font-size:17px;min-height:46px;padding:0 10px;white-space:nowrap;border-radius:10px 10px 0 0}
+ h1{font-size:23px;white-space:nowrap}.status .r{display:none}.modo{min-height:54px;padding:8px 14px}.modo span{display:none}.modo b{font-size:25px}
+ #vCon section{padding-top:16px}#vReg{padding-top:4px}
+ main{padding:14px 0 calc(40px + env(safe-area-inset-bottom))}
+ .fbtn{display:flex;width:100%;margin-top:10px;border:1.5px solid var(--line);font-size:18px;min-height:46px}
+ 
+ .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.chip{flex:none}
+ .fres{grid-template-columns:repeat(2,minmax(0,1fr))}.fres .c .num{font-size:22px}
+ .it{padding:12px 12px 10px}.who{font-size:18px}
+ .side{display:grid !important;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}
+ .tgs{grid-column:1/-1;order:3;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tg{min-height:48px;font-size:16px;white-space:normal}
+ .mini{justify-content:flex-end}.mini button{min-height:40px;font-size:15px}
+ .foot .btn{flex:1 1 calc(50% - 8px);font-size:16px}
+ .ov{padding:0}.pane,.pane.wide{width:100%;min-height:100%;min-height:100dvh;border-radius:0;padding:calc(16px + env(safe-area-inset-top)) 16px 0}
+ .pane .pbtn{position:sticky;bottom:0;background:var(--card);margin:6px -16px 0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+ .pane .pbtn .btn{flex:1}
+ .login .pane{min-height:0;border-radius:14px;padding:20px}
+ .mapt thead{display:none}.mapt tr{display:grid;padding:8px 0;border-bottom:1px solid var(--line)}.mapt td{border:0;padding:2px 0}
+ .seg button{min-height:52px;font-size:19px}.rform{padding:14px}
+ .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top));width:max-content;max-width:calc(100vw - 28px);text-align:center}
+ .rform .pbtn,.btn.full{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom));z-index:2;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+}
+@media(max-width:600px){.it{grid-template-columns:minmax(0,1fr)}.side{align-items:flex-start;flex-direction:row;flex-wrap:wrap;justify-content:space-between}.tgs{justify-content:flex-start}.row2{grid-template-columns:minmax(0,1fr)}.fg{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.fg select{grid-column:1/-1}.tab{padding:0 14px}}
+</style>
+</head>
+<body>
+<section class="login" id="vLogin" hidden>
+ <form class="pane f" id="fLogin" autocomplete="on">
+  <h1>Controle de encomendas</h1>
+  <p class="note" style="margin:0" id="lSub">Entre com o seu e-mail e a sua senha.</p>
+  <label>E-mail<input id="lEmail" type="email" autocomplete="username" required></label>
+  <label>Senha<input id="lSenha" type="password" autocomplete="current-password" minlength="6" required></label>
+  <label id="lConfW" hidden>Repita a senha<input id="lConf" type="password" autocomplete="new-password"></label>
+  <label class="chk" style="font-size:16px;font-weight:500"><input type="checkbox" id="lManter" checked> Manter conectado neste aparelho</label>
+  <p class="note" style="margin:0">Desmarque se o celular ou o computador for usado por outras pessoas. Assim, a conta sai quando o navegador for fechado.</p>
+  <div class="warn" id="lErr"></div>
+  <button class="btn main" type="submit" id="lOk">Entrar</button>
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><button type="button" class="lnk" id="lModo">Criar uma conta</button><button type="button" class="lnk" id="lEsq">Esqueci a senha</button></div>
+ </form>
+</section>
+<div id="vApp" hidden>
+<header>
+ <div class="wrap">
+  <div class="top">
+   <div><h1>Controle de encomendas</h1><div class="status" id="status">Carregando os dados.</div></div>
+   <div class="acts"><button class="btn ghost" id="bSair">Sair</button></div>
+  </div>
+  <div class="modos"><button class="modo" id="mReg" data-tela="reg"><b>Registro</b><span>Chegou encomenda ou cliente novo</span></button><button class="modo" id="mCon" data-tela="con"><b>Controle</b><span>Entregas, pagamentos e números</span></button></div>
+  <div id="hdCon">
+   <div class="tabs" role="tablist"><button class="tab" role="tab" data-aba="bus">Buscar</button><button class="tab" role="tab" data-aba="cli">Clientes</button><button class="tab" role="tab" data-aba="fil">Filtros</button><button class="tab" role="tab" data-aba="pai">Painel</button><button class="tab" role="tab" data-aba="fin">Financeiro</button></div>
+  </div>
+  <div style="height:22px" id="hdPad"></div>
+ </div>
+</header>
+<main class="wrap">
+ <section id="vReg" hidden>
+  <div class="seg"><button id="sEnc" data-r="enc">Encomenda que chegou</button><button id="sCli" data-r="cli">Cliente novo</button></div>
+  <form class="rform f" id="rEnc" autocomplete="off">
+   <div class="seg min" id="rOrdem"><button type="button" data-o="cli">Começar pelo cliente</button><button type="button" data-o="trk">Começar pelo rastreio</button></div>
+   <div id="rBlocoCli" class="f">
+   <label>Para qual cliente<input id="rNome" class="grande" autocomplete="off" autocorrect="off" enterkeyhint="next" placeholder="Digite o nome, a rua, o bairro ou o telefone" required></label>
+   <div class="sug" id="rSug"></div>
+   <div id="rInfo"></div>
+   <div id="rNovo" class="f" hidden>
+    <label>Endereço de entrega (rua, número e complemento)<input id="rEnd"></label>
+    <div class="row2"><label>Bairro<input id="rBai" list="bairros"></label><label>Telefone (opcional)<input id="rTel" type="tel" inputmode="tel"></label></div>
+   </div>
+   </div>
+   <div id="rBlocoTrk" class="f">
+   <label>Código de rastreio<input id="rTrk" class="grande" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="next"></label>
+   <div class="warn" id="rWTrk"></div>
+   </div>
+   <div class="row2"><label>Transportadora ou plataforma<select id="rTr"></select></label><label>Chegou em<input id="rCh" type="date" required></label></div>
+   <label id="rOutraW" hidden>Qual transportadora?<input id="rOutra"></label>
+   <div class="row2"><label>Valor cobrado (R$)<input id="rVal" type="number" inputmode="decimal" min="0" step="0.01" required></label><label>Observação (opcional)<input id="rObs"></label></div>
+   <div class="warn" id="rErr"></div>
+   <button class="btn main full" type="submit" id="rOk">Registrar encomenda</button>
+  </form>
+  <form class="rform f" id="rCliF" autocomplete="off" hidden>
+   <label>Nome<input id="cNomeR" class="grande" required></label>
+   <label>Endereço de entrega (rua, número e complemento)<input id="cEndR"></label>
+   <div class="row2"><label>Bairro<input id="cBaiR" list="bairros"></label><label>Telefone (opcional)<input id="cTelR" type="tel" inputmode="tel"></label></div>
+   <label>Observação (opcional)<input id="cObsR"></label>
+   <div class="warn" id="cErrR"></div>
+   <button class="btn main full" type="submit">Registrar cliente</button>
+  </form>
+  <h2 style="font-size:26px;margin:26px 0 0;font-weight:600" id="hojeT"></h2>
+  <div class="hojeL" id="hojeL"></div>
+ </section>
+ <div id="vCon">
+ <section id="vBus">
+  <input class="search grande" id="q" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Rastreio ou nome do cliente" aria-label="Buscar encomenda">
+  <p class="note" id="busInfo"></p>
+  <div class="list" id="listBus"></div>
+ </section>
+ <section id="vFil" hidden>
+  <div class="filtros" id="filtros">
+   <div class="fg"><span class="fl">Data de chegada</span><label>Período<select id="chPre"></select></label><label>De<input type="date" id="chDe"></label><label>Até<input type="date" id="chAte"></label></div>
+   <div class="fg"><span class="fl">Data de entrega</span><label>Período<select id="enPre"></select></label><label>De<input type="date" id="enDe"></label><label>Até<input type="date" id="enAte"></label></div>
+   <div class="fg b"><span class="fl">Bairro</span><label>Mostrar encomendas do bairro<select id="bairroF"></select></label></div>
+  </div>
+  <div class="chips"><button class="limpar" id="bLimparF" hidden>Limpar filtros</button></div>
+  <div class="fres" id="fres"></div>
+  <div class="list" id="listFil"></div>
+ </section>
+ <section id="vPai" hidden>
+  <div class="cards claro" id="cards"></div>
+  <div class="chips" id="chips"></div>
+  <div class="list" id="list"></div>
+ </section>
+ <section id="vFin" hidden>
+  <div class="cards claro" id="money"></div>
+  <h2 class="sub">Recebido por mês</h2>
+  <div class="cards claro" id="meses"></div>
+  <p class="note">Os valores recebidos contam pela data do pagamento.</p>
+ </section>
+ <section id="vCli" hidden>
+  <form class="rform f" id="kForm" autocomplete="off" style="margin-top:0">
+   <h2 class="sub" style="margin:0">Cadastrar cliente</h2>
+   <label>Nome<input id="kNome" class="grande" autocomplete="off" required></label>
+   <label>Endereço de entrega (rua, número e complemento)<input id="kEnd"></label>
+   <div class="row2"><label>Bairro<input id="kBai" list="bairros"></label><label>Telefone (opcional)<input id="kTel" type="tel" inputmode="tel"></label></div>
+   <label>Observação (opcional)<input id="kObs"></label>
+   <div class="warn" id="kErr"></div>
+   <button class="btn main full" type="submit">Cadastrar cliente</button>
+  </form>
+  <h2 class="sub" id="kTit">Clientes cadastrados</h2>
+  <div class="tools"><input class="search" id="qc" type="search" enterkeyhint="search" autocomplete="off" placeholder="Nome, endereço, bairro ou telefone" aria-label="Buscar clientes"><select id="bairroC" aria-label="Filtrar clientes por bairro" style="flex:0 1 220px;width:auto"></select></div>
+  <div class="list" id="listCli"></div>
+ </section>
+ <p class="note" id="exNote" hidden data-x>Os registros marcados como exemplo são fictícios e servem só para mostrar o funcionamento. Use o botão Apagar exemplos para tirá-los.</p>
+ <div class="foot">
+  <button class="btn" id="bImp">Importar planilha</button>
+  <button class="btn" id="bExp">Exportar planilha</button>
+  <button class="btn" id="bCfg">Valor por encomenda</button>
+  <button class="btn" id="bBk">Baixar cópia de segurança</button>
+  <label class="btn" style="font-size:17px;border:1.5px solid var(--line)">Restaurar cópia<input type="file" id="fBk" accept=".json,application/json" hidden></label>
+  <button class="btn" id="bEx" hidden>Apagar exemplos</button>
+ </div>
+ </div>
+</main>
+
+<div class="ov" id="ovForm" role="dialog" aria-modal="true" aria-labelledby="fTit">
+ <form class="pane f" id="form" autocomplete="off">
+  <h2 id="fTit">Nova encomenda</h2>
+  <label>Código de rastreio<input id="iTrk" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false"></label>
+  <div class="warn" id="wTrk"></div>
+  <div class="row2">
+   <label>Transportadora ou plataforma<select id="iTr"></select></label>
+   <label>Chegou em<input id="iCh" type="date" required></label>
+  </div>
+  <label id="lOutra" hidden>Qual transportadora?<input id="iOutra"></label>
+  <label>Destinatário<input id="iNome" list="nomes" required></label>
+  <datalist id="nomes"></datalist>
+  <label>Endereço de entrega (rua, número e complemento)<input id="iEnd" required></label>
+  <div class="row2">
+   <label>Bairro<input id="iBai" list="bairros"></label>
+   <label>Telefone (opcional)<input id="iTel" type="tel" inputmode="tel"></label>
+  </div>
+  <datalist id="bairros"></datalist>
+  <label>Valor cobrado (R$)<input id="iVal" type="number" inputmode="decimal" min="0" step="0.01" required></label>
+  <div class="box">
+   <label class="chk"><input type="checkbox" id="iEnt"> Já foi entregue</label>
+   <label id="lEntD" hidden>Data da entrega<input id="iEntD" type="date"></label>
+  </div>
+  <div class="box">
+   <label class="chk"><input type="checkbox" id="iPg"> Já foi pago</label>
+   <div class="row2" id="lPg" hidden>
+    <label>Data do pagamento<input id="iPgD" type="date"></label>
+    <label>Forma de pagamento<select id="iForma"><option>Pix</option><option>Dinheiro</option><option>Cartão</option><option>Outra</option></select></label>
+   </div>
+  </div>
+  <label>Observação (opcional)<textarea id="iObs"></textarea></label>
+  <div class="pbtn"><button type="button" class="btn" id="bCanc">Cancelar</button><button type="submit" class="btn main">Salvar</button></div>
+ </form>
+</div>
+
+<div class="ov" id="ovImp" role="dialog" aria-modal="true" aria-labelledby="impTit">
+ <div class="pane wide f">
+  <h2 id="impTit">Importar planilha</h2>
+  <div id="imp1" class="f">
+   <p style="margin:0">Escolha o arquivo da planilha que a cliente já usa, em Excel (.xlsx ou .xls) ou .csv. Pode ser a lista de clientes, o histórico de encomendas ou um arquivo com as 2 coisas em abas separadas. Antes de gravar, o sistema mostra como vai ler cada coluna.</p>
+   <div class="acts"><label class="btn main">Escolher arquivo<input type="file" id="fImp" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" hidden></label><button class="btn" id="bModelo" style="border:1.5px solid var(--line)">Baixar planilha modelo</button></div>
+   <div class="warn" id="impErr"></div>
+  </div>
+  <div id="imp2" class="f" hidden>
+   <div class="note" id="impArq" style="margin:0"></div>
+   <div class="row2"><label>Aba da planilha<select id="impAba"></select></label><label>O que tem nessa aba<select id="impTipo"><option value="encomendas">Encomendas (o que já foi feito)</option><option value="clientes">Clientes</option></select></label></div>
+   <h3>Qual coluna tem cada informação</h3>
+   <div class="scroll"><table class="mapt"><thead><tr><th>Informação</th><th>Coluna da planilha</th><th>Exemplo da 1ª linha</th></tr></thead><tbody id="impMap"></tbody></table></div>
+   <label class="chk" id="lImpCli"><input type="checkbox" id="impCli" checked> Cadastrar também os destinatários como clientes</label>
+   <div id="impPrev" class="f"></div>
+  </div>
+  <div class="pbtn"><button class="btn" id="bImpCanc">Cancelar</button><button class="btn" id="bImpOutro" hidden>Escolher outro arquivo</button><button class="btn main" id="bImpOk" hidden>Importar</button></div>
+ </div>
+</div>
+
+<div class="ov" id="ovMsg" role="dialog" aria-modal="true" aria-labelledby="mTit">
+ <div class="pane f">
+  <h2 id="mTit"></h2>
+  <div id="mBody" class="f"></div>
+  <div class="pbtn" id="mBtns"></div>
+ </div>
+</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
