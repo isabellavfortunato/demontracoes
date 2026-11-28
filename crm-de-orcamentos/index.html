@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRM de Orçamentos · Demonstração</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fundo:#f6f5f2; --papel:#ffffff; --texto:#1f2328; --suave:#6b6f76; --borda:#e3e1dc;
+  --destaque:#7a5c1e; --destaque-claro:#f3ead6; --perigo:#b4232c; --ok:#1f7a45;
+  --fonte:'Barlow Semi Condensed','Arial Narrow',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fundo);color:var(--texto);font-family:var(--fonte);font-size:15px}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--destaque)}
+header.topo{background:var(--papel);border-bottom:1px solid var(--borda);position:sticky;top:0;z-index:20}
+.topo-dentro{max-width:1240px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.marca{font-weight:700;font-size:19px;letter-spacing:.3px}
+nav.abas{display:flex;gap:4px;flex-wrap:wrap}
+nav.abas button{border:0;background:none;padding:8px 12px;border-radius:6px;cursor:pointer;color:var(--suave);font-weight:500}
+nav.abas button.ativa{background:var(--destaque-claro);color:var(--destaque);font-weight:600}
+main{max-width:1240px;margin:0 auto;padding:18px 16px 60px}
+.painel{background:var(--papel);border:1px solid var(--borda);border-radius:10px;padding:16px;margin-bottom:16px}
+h1{font-size:24px;margin:0 0 14px;font-weight:600}
+h2{font-size:17px;margin:0 0 12px;font-weight:600}
+.linha{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.campo{display:flex;flex-direction:column;gap:4px;min-width:120px;flex:1}
+.campo label{font-size:13px;color:var(--suave)}
+input,select,textarea{border:1px solid var(--borda);border-radius:6px;padding:7px 9px;background:#fff;min-width:0;width:100%}
+textarea{min-height:64px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--destaque-claro);border-color:var(--destaque)}
+.botao{border:1px solid var(--borda);background:#fff;border-radius:6px;padding:7px 14px;cursor:pointer;white-space:nowrap}
+.botao:hover{border-color:var(--destaque)}
+.botao.principal{background:var(--destaque);border-color:var(--destaque);color:#fff}
+.botao.perigo{color:var(--perigo)}
+.botao.pequeno{padding:3px 9px;font-size:13px}
+.acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.espaco{flex:1}
+table.lista{width:100%;border-collapse:collapse}
+table.lista th{font-size:13px;color:var(--suave);font-weight:500;text-align:left;border-bottom:1px solid var(--borda);padding:7px 8px;white-space:nowrap}
+table.lista td{border-bottom:1px solid var(--borda);padding:7px 8px;vertical-align:middle}
+table.lista tr:last-child td{border-bottom:0}
+.direita{text-align:right!important}
+.suave{color:var(--suave)}
+.vazio{color:var(--suave);text-align:center;padding:22px!important}
+.rolagem{overflow-x:auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--papel);border:1px solid var(--borda);border-radius:10px;padding:12px 14px}
+.card .rotulo{font-size:13px;color:var(--suave)}
+.card .valor{font-size:24px;font-weight:600;margin-top:2px}
+.card .detalhe{font-size:13px;color:var(--suave);margin-top:4px}
+.etiqueta{display:inline-block;padding:2px 8px;border-radius:20px;font-size:13px;font-weight:500;white-space:nowrap}
+.sugestoes{position:absolute;z-index:30;background:#fff;border:1px solid var(--borda);border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.08);max-height:260px;overflow:auto;left:0;right:0;top:100%}
+.sugestoes div{padding:7px 10px;cursor:pointer}
+.sugestoes div:hover,.sugestoes div.marcada{background:var(--destaque-claro)}
+.relativo{position:relative}
+.aviso{background:var(--destaque-claro);border-radius:8px;padding:10px 12px;font-size:14px;margin-bottom:14px}
+.mesas{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.mesas button{border:1px solid var(--borda);background:#fff;border-radius:6px;padding:5px 10px;cursor:pointer;font-weight:500}
+.mesas button.ativa{background:var(--texto);color:#fff;border-color:var(--texto)}
+table.planilha{border-collapse:collapse;width:100%;font-size:14px;background:#fff}
+table.planilha th{background:#f0eee9;font-weight:600;text-align:left;padding:7px 8px;border:1px solid var(--borda);white-space:nowrap;cursor:pointer;user-select:none}
+table.planilha td{border:1px solid var(--borda);padding:4px 6px;white-space:nowrap}
+table.planilha td select,table.planilha td input{border:0;padding:3px 4px;background:transparent;width:auto;min-width:110px}
+table.planilha tfoot td{font-weight:600;background:#faf9f6}
+.modal-fundo{position:fixed;inset:0;background:rgba(20,20,20,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 12px}
+.modal{background:var(--papel);border-radius:10px;padding:18px;width:100%;max-width:560px}
+.modal.largo{max-width:900px}
+.historico{font-size:14px;border-left:3px solid var(--destaque-claro);padding-left:10px;margin:6px 0}
+.dica{font-size:13px;color:var(--suave)}
+
+/* ---------- documento do orçamento (tela e impressão) ---------- */
+.folha{background:#fff;color:#1f2328;width:210mm;min-height:297mm;padding:16mm 15mm;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,.12);font-size:11pt;line-height:1.4}
+.folha .cab{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid var(--cor-doc,#7a5c1e);padding-bottom:12px;margin-bottom:16px}
+.folha .cab img{max-height:60px;max-width:200px;margin-bottom:6px;display:block}
+.folha .empresa-nome{font-size:15pt;font-weight:700}
+.folha .titulo-doc{text-align:right}
+.folha .titulo-doc .t{font-size:20pt;font-weight:700;color:var(--cor-doc,#7a5c1e)}
+.folha .bloco{margin-bottom:14px}
+.folha .bloco h4{font-size:9pt;text-transform:uppercase;letter-spacing:.6px;color:#6b6f76;margin:0 0 4px;font-weight:600}
+.folha table{width:100%;border-collapse:collapse;margin:6px 0 10px}
+.folha th{font-size:9.5pt;text-align:left;border-bottom:1.5px solid #1f2328;padding:6px 6px}
+.folha td{border-bottom:1px solid #e3e1dc;padding:6px 6px;vertical-align:top}
+.folha .totais{margin-left:auto;width:270px}
+.folha .totais div{display:flex;justify-content:space-between;padding:3px 0}
+.folha .totais .final{border-top:1.5px solid #1f2328;margin-top:4px;padding-top:6px;font-weight:700;font-size:13pt}
+.folha .duas{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.folha .rodape{margin-top:24px;padding-top:10px;border-top:1px solid #e3e1dc;font-size:9pt;color:#6b6f76;text-align:center}
+.folha .texto-livre{white-space:pre-wrap}
+#area-impressao{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  html,body{background:#fff}
+  body > *:not(#area-impressao){display:none!important}
+  #area-impressao{display:block}
+  .folha{box-shadow:none;margin:0;width:auto;min-height:auto}
+}
+@media (max-width:700px){
+  .folha{width:100%;padding:16px;min-height:auto}
+  .folha .duas{grid-template-columns:1fr}
+}
+.selo-demo{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 14px;padding:7px 14px;background:#14213d;color:#f2c44e;font:600 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
+.selo-demo button{border:1px solid #f2c44e;background:transparent;color:#f2c44e;border-radius:8px;min-height:32px;padding:0 12px;font:600 13px system-ui,-apple-system,sans-serif;cursor:pointer}
+.selo-demo button:hover{background:#f2c44e;color:#14213d}
+</style>
+</head>
+<body>
+<div class="selo-demo"><span>Demonstração com dados fictícios. O que você mudar some quando a página é recarregada.</span><button type="button" onclick="if(confirm('Restaurar o exemplo? Tudo o que você mudou nesta demonstração será desfeito.'))location.reload()">Restaurar exemplo</button></div>
+
+<header class="topo">
+  <div class="topo-dentro">
+    <div class="marca" id="marca">CRM de Orçamentos</div>
+    <nav class="abas" id="abas">
+      <button data-aba="orcamentos">Orçamentos</button>
+      <button data-aba="planilha">Planilha</button>
+      <button data-aba="followup">Follow-up</button>
+      <button data-aba="clientes">Clientes</button>
+      <button data-aba="servicos">Serviços</button>
+      <button data-aba="empresa">Empresa</button>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo"></main>
+<div id="modais"></div>
+<div id="area-impressao"></div>
+
+<script>
+/* =====================================================================
+   CRM de Orçamentos: cadastro de serviços e clientes, montagem do
+   orçamento, PDF para impressão, planilha mensal preenchida pelos
+   orçamentos e follow-up dos orçamentos não aprovados.
+   Os dados ficam guardados neste navegador. Use "Baixar cópia dos
+   dados" na aba Empresa para guardar ou levar para outro computador.
+   ===================================================================== */
+
+const CHAVE = 'crm-orcamentos-v1';
+
+const STATUS = [
+  {nome:'Aguardando retorno', cor:'#fff1c2', texto:'#7a5a00'},
+  {nome:'Aprovado',           cor:'#d7f0df', texto:'#1f6b3b'},
+  {nome:'Em execução',        cor:'#d9e8fb', texto:'#1d4f91'},
+  {nome:'Pronto',             cor:'#e6dcf7', texto:'#55308f'},
+  {nome:'Entregue',           cor:'#e4e4e4', texto:'#3a3a3a'},
+  {nome:'Não aprovado',       cor:'#f8d9d9', texto:'#8e1d24'},
+  {nome:'Cancelado',          cor:'#efe7e7', texto:'#7a5555'},
+];
+const STATUS_INICIAL = 'Aguardando retorno';
+const APROVADOS = ['Aprovado','Em execução','Pronto','Entregue'];
+const EM_ABERTO = ['Aguardando retorno'];
+const CANAIS = ['WhatsApp','E-mail','Telefone','Outro'];
+const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+const PADRAO = {
+  empresa:{
+    nome:'Minha Empresa', documento:'', endereco:'', telefone:'', email:'', site:'', logo:'', cor:'#7a5c1e',
+    validade:7, diasFollowup:3,
+    condicoes:'Prazo de execução contado a partir da aprovação e da confirmação do pagamento.\nPagamento por Pix ou transferência bancária.',
+    mensagem:'Olá, {primeiro_nome}! Tudo bem? Passando para saber se ficou alguma dúvida sobre o orçamento nº {numero}, no valor de {total}.',
+    origens:['Instagram','Indicação','Google','Site','Cliente antigo'],
+    atendentes:['Atendente 1','Atendente 2'],
+    pagamentos:['Pix','Cartão de crédito','Boleto','Transferência','Faturado'],
+  },
+  servicos:[], clientes:[], orcamentos:[],
+};
+
+let S = carregar();
+let abaAtual = 'orcamentos';
+let mesPlanilha = null;
+let ordemPlanilha = {col:null, desc:false};
+let filtroFollowup = 'hoje';
+let rascunho = null;            // orçamento aberto na tela de montagem
+
+/* ---------------- dados ---------------- */
+
+function carregar(){
+  return structuredClone(PADRAO); /* demonstração: os dados de exemplo entram no início, mais abaixo */
+  try{
+    const d = JSON.parse(localStorage.getItem(CHAVE) || 'null');
+    if(d) return Object.assign(structuredClone(PADRAO), d, {empresa:Object.assign(structuredClone(PADRAO.empresa), d.empresa||{})});
+  }catch(e){}
+  return structuredClone(PADRAO);
+}
+function salvar(){
+  return; /* demonstração: nada é guardado, tudo volta ao exemplo ao recarregar */
+  try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }
+  catch(e){ alertar('Não foi possível guardar os dados neste navegador. Baixe uma cópia dos dados na aba Empresa.'); }
+}
+const id = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const hoje = () => new Date().toISOString().slice(0,10);
+function somarDias(iso, n){ const d = new Date(iso+'T12:00:00'); d.setDate(d.getDate()+Number(n||0)); return d.toISOString().slice(0,10); }
+function diasEntre(a, b){ return Math.round((new Date(b+'T12:00:00') - new Date(a+'T12:00:00'))/86400000); }
+function dataBR(iso){ if(!iso) return ''; const [a,m,d] = iso.split('-'); return `${d}/${m}/${a}`; }
+function diaMes(iso){ if(!iso) return ''; const [,m,d] = iso.split('-'); return `${d}/${m}`; }
+const moeda = v => (Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const num = v => (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+function lerNumero(t){
+  t = String(t ?? '').trim().replace(/[R$\s]/g,'');
+  if(!t) return 0;
+  if(t.includes(',')) t = t.replace(/\./g,'').replace(',','.');
+  const n = parseFloat(t); return isNaN(n) ? 0 : n;
+}
+function esc(t){ return String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function semAcento(t){ return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
+const cliente = cid => S.clientes.find(c => c.id === cid);
+const corStatus = n => STATUS.find(s => s.nome === n) || {cor:'#eee',texto:'#333'};
+const etiqueta = n => { const c = corStatus(n); return `<span class="etiqueta" style="background:${c.cor};color:${c.texto}">${esc(n||'')}</span>`; };
+
+function totais(o){
+  let servicos = 0, descontos = 0, reembolsos = 0;
+  (o.itens||[]).forEach(i => {
+    const bruto = (Number(i.quantidade)||0) * (Number(i.valor)||0);
+    if(i.reembolso){ reembolsos += bruto; return; }
+    servicos += bruto;
+    descontos += descontoDoItem(i);
+  });
+  return {servicos, descontos, reembolsos, total: servicos - descontos + reembolsos};
+}
+function descontoDoItem(i){
+  const bruto = (Number(i.quantidade)||0) * (Number(i.valor)||0);
+  const d = Number(i.desconto)||0;
+  return i.tipoDesconto === '%' ? bruto * d / 100 : Math.min(d, bruto);
+}
+const totalDoItem = i => (Number(i.quantidade)||0) * (Number(i.valor)||0) - (i.reembolso ? 0 : descontoDoItem(i));
+
+function proximoNumero(dataIso){
+  const pref = dataIso.slice(2,4) + dataIso.slice(5,7);
+  const usados = S.orcamentos.map(o => String(o.numero)).filter(n => n.startsWith(pref)).map(n => Number(n.slice(4)));
+  const seq = (usados.length ? Math.max(...usados) : 0) + 1;
+  return pref + String(seq).padStart(3,'0');
+}
+
+/* ---------------- navegação ---------------- */
+
+document.getElementById('abas').addEventListener('click', e => {
+  const b = e.target.closest('button[data-aba]'); if(!b) return;
+  irPara(b.dataset.aba);
+});
+function irPara(aba){
+  abaAtual = aba;
+  if(aba !== 'montar') rascunho = null;
+  document.querySelectorAll('#abas button').forEach(b => b.classList.toggle('ativa', b.dataset.aba === (aba==='montar'?'orcamentos':aba)));
+  ({orcamentos:telaOrcamentos, montar:telaMontar, planilha:telaPlanilha, followup:telaFollowup,
+    clientes:telaClientes, servicos:telaServicos, empresa:telaEmpresa})[aba]();
+  window.scrollTo(0,0);
+}
+const conteudo = document.getElementById('conteudo');
+function atualizarMarca(){ document.getElementById('marca').textContent = S.empresa.nome || 'CRM de Orçamentos'; }
+
+/* ---------------- avisos e modais ---------------- */
+
+function abrirModal(html, largo){
+  const m = document.getElementById('modais');
+  m.innerHTML = `<div class="modal-fundo"><div class="modal ${largo?'largo':''}">${html}</div></div>`;
+  m.querySelector('.modal-fundo').addEventListener('mousedown', e => { if(e.target.classList.contains('modal-fundo')) fecharModal(); });
+  const primeiro = m.querySelector('input,select,textarea'); if(primeiro) primeiro.focus();
+  return m.querySelector('.modal');
+}
+function fecharModal(){ document.getElementById('modais').innerHTML = ''; }
+function alertar(texto){
+  const m = abrirModal(`<p style="margin-top:0">${esc(texto)}</p><div class="acoes"><span class="espaco"></span><button class="botao principal" data-ok>OK</button></div>`);
+  m.querySelector('[data-ok]').onclick = fecharModal;
+}
+function confirmar(texto, sim){
+  const m = abrirModal(`<p style="margin-top:0">${esc(texto)}</p><div class="acoes"><span class="espaco"></span><button class="botao" data-nao>Voltar</button><button class="botao principal" data-sim>Confirmar</button></div>`);
+  m.querySelector('[data-nao]').onclick = fecharModal;
+  m.querySelector('[data-sim]').onclick = () => { fecharModal(); sim(); };
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharModal(); });
+
+/* Busca com lista de sugestões embaixo do campo */
+function autocompletar(input, fonte, escolher){
+  const caixa = document.createElement('div');
+  caixa.className = 'sugestoes'; caixa.hidden = true;
+  input.parentElement.classList.add('relativo');
+  input.parentElement.appendChild(caixa);
+  let itens = [], marcado = -1;
+  const desenhar = () => {
+    itens = fonte(input.value);
+    marcado = itens.length ? 0 : -1;
+    caixa.innerHTML = itens.map((it,i) => `<div data-i="${i}" class="${i===0?'marcada':''}">${it.html}</div>`).join('');
+    caixa.hidden = !itens.length;
+  };
+  input.addEventListener('input', desenhar);
+  input.addEventListener('focus', desenhar);
+  input.addEventListener('blur', () => setTimeout(() => caixa.hidden = true, 150));
+  input.addEventListener('keydown', e => {
+    if(caixa.hidden) return;
+    if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+      e.preventDefault();
+      marcado = Math.max(0, Math.min(itens.length-1, marcado + (e.key==='ArrowDown'?1:-1)));
+      caixa.querySelectorAll('div').forEach((d,i) => d.classList.toggle('marcada', i===marcado));
+    } else if(e.key === 'Enter' && marcado >= 0){
+      e.preventDefault(); escolher(itens[marcado].valor); caixa.hidden = true;
+    }
+  });
+  caixa.addEventListener('mousedown', e => {
+    const d = e.target.closest('[data-i]'); if(!d) return;
+    e.preventDefault(); escolher(itens[Number(d.dataset.i)].valor); caixa.hidden = true;
+  });
+}
+
+/* =====================================================================
+   SERVIÇOS
+   ===================================================================== */
+
+function telaServicos(){
+  const categorias = [...new Set(S.servicos.map(s => s.categoria).filter(Boolean))].sort();
+  conteudo.innerHTML = `
+    <h1>Serviços</h1>
+    <div class="painel">
+      <div class="acoes" style="margin-bottom:12px">
+        <input id="busca-serv" placeholder="Buscar serviço" style="max-width:320px">
+        <select id="filtro-cat" style="max-width:220px"><option value="">Todas as categorias</option>${categorias.map(c=>`<option>${esc(c)}</option>`).join('')}</select>
+        <span class="espaco"></span>
+        <button class="botao principal" id="novo-serv">Novo serviço</button>
+      </div>
+      <div class="rolagem"><table class="lista" id="tab-serv"></table></div>
+    </div>`;
+  const desenhar = () => {
+    const b = semAcento(document.getElementById('busca-serv').value);
+    const cat = document.getElementById('filtro-cat').value;
+    const lista = S.servicos.filter(s => (!b || semAcento(s.descricao+' '+s.codigo).includes(b)) && (!cat || s.categoria === cat))
+      .sort((a,c) => a.descricao.localeCompare(c.descricao,'pt-BR'));
+    document.getElementById('tab-serv').innerHTML = `
+      <thead><tr><th>Código</th><th>Descrição</th><th>Categoria</th><th>Unidade</th><th class="direita">Valor padrão</th><th>Situação</th><th></th></tr></thead>
+      <tbody>${lista.length ? lista.map(s => `
+        <tr>
+          <td class="suave">${esc(s.codigo)}</td><td>${esc(s.descricao)}</td><td>${esc(s.categoria)}</td><td>${esc(s.unidade)}</td>
+          <td class="direita">${moeda(s.valor)}</td><td>${s.ativo===false?'<span class="suave">Inativo</span>':'Ativo'}</td>
+          <td class="direita"><button class="botao pequeno" data-editar="${s.id}">Editar</button></td>
+        </tr>`).join('') : `<tr><td colspan="7" class="vazio">Nenhum serviço cadastrado.</td></tr>`}</tbody>`;
+  };
+  desenhar();
+  document.getElementById('busca-serv').oninput = desenhar;
+  document.getElementById('filtro-cat').onchange = desenhar;
+  document.getElementById('novo-serv').onclick = () => formServico();
+  document.getElementById('tab-serv').onclick = e => { const b = e.target.closest('[data-editar]'); if(b) formServico(S.servicos.find(s => s.id === b.dataset.editar)); };
+}
+
+function formServico(s){
+  const novo = !s;
+  s = s || {id:id(), codigo:'', descricao:'', categoria:'', unidade:'un', valor:0, ativo:true};
+  const categorias = [...new Set(S.servicos.map(x => x.categoria).filter(Boolean))];
+  const m = abrirModal(`
+    <h2>${novo?'Novo serviço':'Editar serviço'}</h2>
+    <div class="linha">
+      <div class="campo" style="flex:0 0 120px"><label>Código</label><input id="f-cod" value="${esc(s.codigo)}" placeholder="Opcional"></div>
+      <div class="campo" style="flex:3"><label>Descrição</label><input id="f-desc" value="${esc(s.descricao)}"></div>
+    </div>
+    <div class="linha" style="margin-top:10px">
+      <div class="campo"><label>Categoria</label><input id="f-cat" list="lista-cat" value="${esc(s.categoria)}"><datalist id="lista-cat">${categorias.map(c=>`<option value="${esc(c)}">`).join('')}</datalist></div>
+      <div class="campo" style="flex:0 0 110px"><label>Unidade</label><input id="f-un" value="${esc(s.unidade)}" placeholder="un, hora, m²"></div>
+      <div class="campo" style="flex:0 0 140px"><label>Valor padrão</label><input id="f-val" inputmode="decimal" value="${num(s.valor)}"></div>
+    </div>
+    <label style="display:flex;gap:6px;align-items:center;margin-top:12px"><input type="checkbox" id="f-ativo" style="width:auto" ${s.ativo!==false?'checked':''}> Ativo (aparece na busca do orçamento)</label>
+    <div class="acoes" style="margin-top:16px">
+      ${novo?'':'<button class="botao perigo" data-apagar>Apagar</button>'}
+      <span class="espaco"></span>
+      <button class="botao" data-cancelar>Cancelar</button>
+      <button class="botao principal" data-salvar>Salvar</button>
+    </div>`);
+  m.querySelector('[data-cancelar]').onclick = fecharModal;
+  m.querySelector('[data-salvar]').onclick = () => {
+    const desc = m.querySelector('#f-desc').value.trim();
+    if(!desc){ m.querySelector('#f-desc').focus(); return; }
+    Object.assign(s, {codigo:m.querySelector('#f-cod').value.trim(), descricao:desc, categoria:m.querySelector('#f-cat').value.trim(),
+      unidade:m.querySelector('#f-un').value.trim(), valor:lerNumero(m.querySelector('#f-val').value), ativo:m.querySelector('#f-ativo').checked});
+    if(novo) S.servicos.push(s);
+    salvar(); fecharModal(); telaServicos();
+  };
+  const ap = m.querySelector('[data-apagar]');
+  if(ap) ap.onclick = () => confirmar(`Apagar o serviço "${s.descricao}"? Os orçamentos já feitos com ele não mudam.`, () => {
+    S.servicos = S.servicos.filter(x => x.id !== s.id); salvar(); telaServicos();
+  });
+}
+
+/* =====================================================================
+   CLIENTES
+   ===================================================================== */
+
+function telaClientes(){
+  conteudo.innerHTML = `
+    <h1>Clientes</h1>
+    <div class="painel">
+      <div class="acoes" style="margin-bottom:12px">
+        <input id="busca-cli" placeholder="Buscar por nome, CPF, CNPJ, telefone ou e-mail" style="max-width:420px">
+        <span class="espaco"></span>
+        <button class="botao principal" id="novo-cli">Novo cliente</button>
+      </div>
+      <div class="rolagem"><table class="lista" id="tab-cli"></table></div>
+    </div>`;
+  const desenhar = () => {
+    const b = semAcento(document.getElementById('busca-cli').value);
+    const lista = S.clientes.filter(c => !b || semAcento([c.nome,c.documento,c.telefone,c.email].join(' ')).includes(b))
+      .sort((a,c) => a.nome.localeCompare(c.nome,'pt-BR'));
+    document.getElementById('tab-cli').innerHTML = `
+      <thead><tr><th>Nome</th><th>CPF ou CNPJ</th><th>Telefone</th><th>E-mail</th><th>Cidade</th><th class="direita">Orçamentos</th><th></th></tr></thead>
+      <tbody>${lista.length ? lista.map(c => {
+        const n = S.orcamentos.filter(o => o.clienteId === c.id).length;
+        return `<tr><td>${esc(c.nome)}</td><td>${esc(c.documento)}</td><td>${esc(c.telefone)}</td><td>${esc(c.email)}</td>
+          <td>${esc([c.cidade,c.uf].filter(Boolean).join(' / '))}</td><td class="direita">${n}</td>
+          <td class="direita"><button class="botao pequeno" data-editar="${c.id}">Editar</button></td></tr>`;
+      }).join('') : `<tr><td colspan="7" class="vazio">Nenhum cliente cadastrado.</td></tr>`}</tbody>`;
+  };
+  desenhar();
+  document.getElementById('busca-cli').oninput = desenhar;
+  document.getElementById('novo-cli').onclick = () => formCliente(null, telaClientes);
+  document.getElementById('tab-cli').onclick = e => { const b = e.target.closest('[data-editar]'); if(b) formCliente(cliente(b.dataset.editar), telaClientes); };
+}
+
+function formCliente(c, depois, nomeInicial){
+  const novo = !c;
+  c = c || {id:id(), nome:nomeInicial||'', documento:'', telefone:'', email:'', cep:'', logradouro:'', numero:'', complemento:'', bairro:'', cidade:'', uf:'', obs:''};
+  const campo = (k, rot, extra='') => `<div class="campo" ${extra}><label>${rot}</label><input id="c-${k}" value="${esc(c[k])}"></div>`;
+  const m = abrirModal(`
+    <h2>${novo?'Novo cliente':'Editar cliente'}</h2>
+    <div class="linha">${campo('nome','Nome ou razão social','style="flex:2"')}${campo('documento','CPF ou CNPJ')}</div>
+    <div class="linha" style="margin-top:10px">${campo('telefone','Telefone (WhatsApp)')}${campo('email','E-mail','style="flex:1.4"')}</div>
+    <div class="linha" style="margin-top:10px">${campo('cep','CEP','style="flex:0 0 130px"')}${campo('logradouro','Logradouro','style="flex:2"')}${campo('numero','Número','style="flex:0 0 90px"')}</div>
+    <div class="linha" style="margin-top:10px">${campo('complemento','Complemento')}${campo('bairro','Bairro')}${campo('cidade','Cidade')}${campo('uf','UF','style="flex:0 0 60px"')}</div>
+    <div class="campo" style="margin-top:10px"><label>Observações</label><textarea id="c-obs">${esc(c.obs)}</textarea></div>
+    <div class="dica" id="c-aviso" style="margin-top:6px">Ao digitar o CEP, o endereço é buscado sozinho.</div>
+    <div class="acoes" style="margin-top:14px">
+      ${novo?'':'<button class="botao perigo" data-apagar>Apagar</button>'}
+      <span class="espaco"></span>
+      <button class="botao" data-cancelar>Cancelar</button>
+      <button class="botao principal" data-salvar>Salvar</button>
+    </div>`, true);
+  const cep = m.querySelector('#c-cep');
+  cep.addEventListener('input', async () => {
+    const d = cep.value.replace(/\D/g,'');
+    if(d.length !== 8) return;
+    try{
+      const r = await (await fetch(`https://viacep.com.br/ws/${d}/json/`)).json();
+      if(r.erro){ m.querySelector('#c-aviso').textContent = 'CEP não encontrado.'; return; }
+      m.querySelector('#c-logradouro').value = r.logradouro||''; m.querySelector('#c-bairro').value = r.bairro||'';
+      m.querySelector('#c-cidade').value = r.localidade||''; m.querySelector('#c-uf').value = r.uf||'';
+      m.querySelector('#c-numero').focus();
+      m.querySelector('#c-aviso').textContent = 'Endereço preenchido pelo CEP.';
+    }catch(e){ m.querySelector('#c-aviso').textContent = 'Sem internet para buscar o CEP: preencha o endereço à mão.'; }
+  });
+  m.querySelector('[data-cancelar]').onclick = fecharModal;
+  m.querySelector('[data-salvar]').onclick = () => {
+    const nome = m.querySelector('#c-nome').value.trim();
+    if(!nome){ m.querySelector('#c-nome').focus(); return; }
+    ['nome','documento','telefone','email','cep','logradouro','numero','complemento','bairro','cidade','uf'].forEach(k => c[k] = m.querySelector('#c-'+k).value.trim());
+    c.obs = m.querySelector('#c-obs').value.trim();
+    if(novo) S.clientes.push(c);
+    salvar(); fecharModal(); depois && depois(c);
+  };
+  const ap = m.querySelector('[data-apagar]');
+  if(ap) ap.onclick = () => {
+    if(S.orcamentos.some(o => o.clienteId === c.id)){ alertar('Este cliente tem orçamentos e não pode ser apagado.'); return; }
+    confirmar(`Apagar o cliente "${c.nome}"?`, () => { S.clientes = S.clientes.filter(x => x.id !== c.id); salvar(); telaClientes(); });
+  };
+}
+
+/* =====================================================================
+   ORÇAMENTOS: lista
+   ===================================================================== */
+
+function telaOrcamentos(){
+  conteudo.innerHTML = `
+    <h1>Orçamentos</h1>
+    ${!S.servicos.length && !S.clientes.length ? `<div class="aviso">Comece cadastrando os dados da empresa, os serviços e os clientes. Para ver tudo funcionando antes, use "Carregar dados de exemplo" na aba Empresa.</div>` : ''}
+    <div class="painel">
+      <div class="acoes" style="margin-bottom:12px">
+        <input id="busca-orc" placeholder="Buscar número ou cliente" style="max-width:320px">
+        <select id="filtro-status" style="max-width:220px"><option value="">Todos os status</option>${STATUS.map(s=>`<option>${s.nome}</option>`).join('')}</select>
+        <span class="espaco"></span>
+        <button class="botao principal" id="novo-orc">Novo orçamento</button>
+      </div>
+      <div class="rolagem"><table class="lista" id="tab-orc"></table></div>
+    </div>`;
+  const desenhar = () => {
+    const b = semAcento(document.getElementById('busca-orc').value);
+    const st = document.getElementById('filtro-status').value;
+    const lista = S.orcamentos.filter(o => {
+      const c = cliente(o.clienteId);
+      return (!b || semAcento(o.numero+' '+(c?c.nome:'')).includes(b)) && (!st || o.status === st);
+    }).sort((a,c) => String(c.numero).localeCompare(String(a.numero)));
+    document.getElementById('tab-orc').innerHTML = `
+      <thead><tr><th>Nº</th><th>Data</th><th>Cliente</th><th>Status</th><th class="direita">Total</th><th></th></tr></thead>
+      <tbody>${lista.length ? lista.map(o => { const c = cliente(o.clienteId); return `
+        <tr><td><a href="#" data-abrir="${o.id}">${esc(o.numero)}</a></td><td>${dataBR(o.data)}</td><td>${esc(c?c.nome:'(sem cliente)')}</td>
+        <td>${etiqueta(o.status)}</td><td class="direita">${moeda(totais(o).total)}</td>
+        <td class="direita"><button class="botao pequeno" data-pdf="${o.id}">PDF</button> <button class="botao pequeno" data-abrir="${o.id}">Abrir</button></td></tr>`; }).join('')
+        : `<tr><td colspan="6" class="vazio">Nenhum orçamento.</td></tr>`}</tbody>`;
+  };
+  desenhar();
+  document.getElementById('busca-orc').oninput = desenhar;
+  document.getElementById('filtro-status').onchange = desenhar;
+  document.getElementById('novo-orc').onclick = () => abrirOrcamento(null);
+  document.getElementById('tab-orc').onclick = e => {
+    const a = e.target.closest('[data-abrir]'); if(a){ e.preventDefault(); abrirOrcamento(a.dataset.abrir); return; }
+    const p = e.target.closest('[data-pdf]'); if(p) mostrarPDF(S.orcamentos.find(o => o.id === p.dataset.pdf));
+  };
+}
+
+function abrirOrcamento(oid){
+  if(oid){
+    rascunho = structuredClone(S.orcamentos.find(o => o.id === oid));
+  } else {
+    rascunho = {id:null, numero:'', data:hoje(), clienteId:'', itens:[], obsCliente:'', obsInterna:'',
+      validade:S.empresa.validade, entrega:'', pagamento:'', origem:'', atendimento:'', status:STATUS_INICIAL,
+      aprovadoEm:'', followups:[], proximoFollowup:''};
+  }
+  irPara('montar');
+}
+
+/* =====================================================================
+   ORÇAMENTOS: montagem
+   ===================================================================== */
+
+function opcoes(lista, atual){
+  const todas = atual && !lista.includes(atual) ? [atual, ...lista] : lista;
+  return `<option value=""></option>` + todas.map(x => `<option ${x===atual?'selected':''}>${esc(x)}</option>`).join('');
+}
+
+function telaMontar(){
+  const o = rascunho;
+  const E = S.empresa;
+  conteudo.innerHTML = `
+    <div class="acoes" style="margin-bottom:12px">
+      <button class="botao" id="voltar">Voltar</button>
+      <h1 style="margin:0 8px">${o.id ? 'Orçamento nº '+esc(o.numero) : 'Novo orçamento'}</h1>
+      ${o.id ? etiqueta(o.status) : ''}
+      <span class="espaco"></span>
+      ${o.id ? '<button class="botao" id="duplicar">Duplicar</button><button class="botao perigo" id="apagar">Apagar</button>' : ''}
+      <button class="botao" id="ver-pdf">Ver PDF</button>
+      <button class="botao principal" id="salvar">Salvar orçamento</button>
+    </div>
+
+    <div class="painel">
+      <h2>Cliente</h2>
+      <div class="linha">
+        <div class="campo" style="flex:3"><label>Buscar por nome, CPF, CNPJ ou telefone</label><input id="busca-cliente" autocomplete="off"></div>
+        <button class="botao" id="cad-cliente">Cadastrar cliente</button>
+      </div>
+      <div id="cliente-escolhido" style="margin-top:10px"></div>
+    </div>
+
+    <div class="painel">
+      <h2>Dados do orçamento</h2>
+      <div class="linha">
+        <div class="campo"><label>Data</label><input type="date" id="o-data" value="${o.data}"></div>
+        <div class="campo"><label>Validade (dias)</label><input type="number" min="0" id="o-validade" value="${o.validade}"></div>
+        <div class="campo"><label>Previsão de entrega</label><input type="date" id="o-entrega" value="${o.entrega}"></div>
+        <div class="campo"><label>Forma de pagamento</label><select id="o-pagamento">${opcoes(E.pagamentos, o.pagamento)}</select></div>
+      </div>
+      <div class="linha" style="margin-top:10px">
+        <div class="campo"><label>Origem</label><select id="o-origem">${opcoes(E.origens, o.origem)}</select></div>
+        <div class="campo"><label>Atendimento por</label><select id="o-atendimento">${opcoes(E.atendentes, o.atendimento)}</select></div>
+        <div class="campo"><label>Status</label><select id="o-status">${STATUS.map(s => `<option ${s.nome===o.status?'selected':''}>${s.nome}</option>`).join('')}</select></div>
+        <div class="campo"><label>Aprovado em</label><input type="date" id="o-aprovado" value="${o.aprovadoEm}"></div>
+      </div>
+    </div>
+
+    <div class="painel">
+      <h2>Itens</h2>
+      <div class="linha">
+        <div class="campo" style="flex:3"><label>Serviço</label><input id="i-desc" autocomplete="off" placeholder="Digite para buscar no cadastro ou escreva um serviço avulso"></div>
+        <div class="campo" style="flex:0 0 90px"><label>Quantidade</label><input id="i-qtd" inputmode="decimal" value="1"></div>
+        <div class="campo" style="flex:0 0 120px"><label>Valor unitário</label><input id="i-val" inputmode="decimal" value="0,00"></div>
+        <div class="campo" style="flex:0 0 90px"><label>Desconto</label><input id="i-desc-v" inputmode="decimal" value="0"></div>
+        <div class="campo" style="flex:0 0 70px"><label>&nbsp;</label><select id="i-desc-t"><option>%</option><option>R$</option></select></div>
+        <button class="botao" id="add-item">Adicionar</button>
+      </div>
+      <div class="linha" style="margin-top:10px">
+        <div class="campo" style="flex:3"><label>Despesa reembolsável (frete, taxa, material)</label><input id="r-desc" placeholder="Ex.: frete para São Paulo"></div>
+        <div class="campo" style="flex:0 0 140px"><label>Valor</label><input id="r-val" inputmode="decimal" value="0,00"></div>
+        <button class="botao" id="add-reemb">Adicionar</button>
+      </div>
+      <div class="rolagem" style="margin-top:14px"><table class="lista" id="tab-itens"></table></div>
+      <div id="resumo-totais" style="margin-top:10px"></div>
+    </div>
+
+    <div class="painel">
+      <h2>Observações</h2>
+      <div class="linha">
+        <div class="campo"><label>Para o cliente (sai no PDF)</label><textarea id="o-obs-cli">${esc(o.obsCliente)}</textarea></div>
+        <div class="campo"><label>Só para a equipe</label><textarea id="o-obs-int">${esc(o.obsInterna)}</textarea></div>
+      </div>
+    </div>`;
+
+  /* cliente */
+  const desenharCliente = () => {
+    const c = cliente(o.clienteId);
+    document.getElementById('cliente-escolhido').innerHTML = c ? `
+      <div class="historico"><strong>${esc(c.nome)}</strong>${c.documento?' · '+esc(c.documento):''}<br>
+      <span class="suave">${esc([c.telefone,c.email].filter(Boolean).join(' · '))}</span><br>
+      <span class="suave">${esc(enderecoDe(c))}</span>
+      <div style="margin-top:6px"><button class="botao pequeno" id="editar-cli">Editar cliente</button> <button class="botao pequeno" id="trocar-cli">Trocar</button></div></div>`
+      : '<span class="suave">Nenhum cliente escolhido.</span>';
+    const ed = document.getElementById('editar-cli'); if(ed) ed.onclick = () => formCliente(c, desenharCliente);
+    const tr = document.getElementById('trocar-cli'); if(tr) tr.onclick = () => { o.clienteId = ''; desenharCliente(); document.getElementById('busca-cliente').focus(); };
+  };
+  desenharCliente();
+  const buscaCli = document.getElementById('busca-cliente');
+  autocompletar(buscaCli, t => {
+    const b = semAcento(t); if(!b) return [];
+    return S.clientes.filter(c => semAcento([c.nome,c.documento,c.telefone].join(' ')).includes(b)).slice(0,12)
+      .map(c => ({valor:c, html:`${esc(c.nome)} <span class="suave">${esc(c.documento||c.telefone||'')}</span>`}));
+  }, c => { o.clienteId = c.id; buscaCli.value = ''; desenharCliente(); });
+  document.getElementById('cad-cliente').onclick = () => formCliente(null, c => { o.clienteId = c.id; desenharCliente(); }, buscaCli.value.trim());
+
+  /* itens */
+  const iDesc = document.getElementById('i-desc');
+  let unidadeEscolhida = '';
+  autocompletar(iDesc, t => {
+    const b = semAcento(t); if(!b) return [];
+    return S.servicos.filter(s => s.ativo !== false && semAcento(s.descricao+' '+s.codigo+' '+s.categoria).includes(b))
+      .sort((a,c) => (semAcento(a.descricao).startsWith(b)?0:1) - (semAcento(c.descricao).startsWith(b)?0:1))
+      .slice(0,15).map(s => ({valor:s, html:`${esc(s.descricao)} <span class="suave">${moeda(s.valor)}${s.unidade?' / '+esc(s.unidade):''}</span>`}));
+  }, s => { iDesc.value = s.descricao; document.getElementById('i-val').value = num(s.valor); unidadeEscolhida = s.unidade||''; document.getElementById('i-qtd').select(); });
+  iDesc.addEventListener('input', () => unidadeEscolhida = '');
+
+  const desenharItens = () => {
+    const t = totais(o);
+    document.getElementById('tab-itens').innerHTML = `
+      <thead><tr><th>Descrição</th><th class="direita">Qtde</th><th class="direita">Valor unit.</th><th class="direita">Desconto</th><th class="direita">Total</th><th></th></tr></thead>
+      <tbody>${o.itens.length ? o.itens.map((i,k) => `
+        <tr>
+          <td><input data-k="${k}" data-f="descricao" value="${esc(i.descricao)}">${i.reembolso?'<div class="dica">Despesa reembolsável</div>':''}</td>
+          <td class="direita" style="width:80px"><input data-k="${k}" data-f="quantidade" class="direita" inputmode="decimal" value="${esc(String(i.quantidade).replace('.',','))}"></td>
+          <td class="direita" style="width:120px"><input data-k="${k}" data-f="valor" class="direita" inputmode="decimal" value="${num(i.valor)}"></td>
+          <td class="direita" style="width:175px">${i.reembolso?'':`<div style="display:flex;gap:4px"><input data-k="${k}" data-f="desconto" class="direita" inputmode="decimal" value="${esc(String(i.desconto||0).replace('.',','))}"><select data-k="${k}" data-f="tipoDesconto" style="width:76px;flex:0 0 76px"><option ${i.tipoDesconto==='%'?'selected':''}>%</option><option ${i.tipoDesconto==='R$'?'selected':''}>R$</option></select></div>`}</td>
+          <td class="direita" style="width:110px">${moeda(totalDoItem(i))}</td>
+          <td class="direita" style="width:90px"><button class="botao pequeno perigo" data-remover="${k}">Remover</button></td>
+        </tr>`).join('') : '<tr><td colspan="6" class="vazio">Nenhum item.</td></tr>'}</tbody>`;
+    document.getElementById('resumo-totais').innerHTML = `
+      <div class="cards" style="margin:0">
+        <div class="card"><div class="rotulo">Serviços</div><div class="valor">${moeda(t.servicos)}</div></div>
+        <div class="card"><div class="rotulo">Descontos</div><div class="valor">${moeda(t.descontos)}</div></div>
+        <div class="card"><div class="rotulo">Despesas reembolsáveis</div><div class="valor">${moeda(t.reembolsos)}</div></div>
+        <div class="card"><div class="rotulo">Total</div><div class="valor">${moeda(t.total)}</div></div>
+      </div>`;
+  };
+  desenharItens();
+  const tab = document.getElementById('tab-itens');
+  tab.addEventListener('change', e => {
+    const k = e.target.dataset.k; if(k === undefined) return;
+    const f = e.target.dataset.f, it = o.itens[Number(k)];
+    it[f] = ['quantidade','valor','desconto'].includes(f) ? lerNumero(e.target.value) : e.target.value;
+    desenharItens();
+  });
+  tab.addEventListener('click', e => { const b = e.target.closest('[data-remover]'); if(b){ o.itens.splice(Number(b.dataset.remover),1); desenharItens(); } });
+
+  document.getElementById('add-item').onclick = () => {
+    const d = iDesc.value.trim(); if(!d){ iDesc.focus(); return; }
+    o.itens.push({descricao:d, unidade:unidadeEscolhida, quantidade:lerNumero(document.getElementById('i-qtd').value)||1,
+      valor:lerNumero(document.getElementById('i-val').value), desconto:lerNumero(document.getElementById('i-desc-v').value),
+      tipoDesconto:document.getElementById('i-desc-t').value, reembolso:false});
+    iDesc.value = ''; document.getElementById('i-qtd').value = '1'; document.getElementById('i-val').value = '0,00'; document.getElementById('i-desc-v').value = '0';
+    unidadeEscolhida = ''; desenharItens(); iDesc.focus();
+  };
+  document.getElementById('add-reemb').onclick = () => {
+    const d = document.getElementById('r-desc').value.trim(); if(!d){ document.getElementById('r-desc').focus(); return; }
+    o.itens.push({descricao:d, quantidade:1, valor:lerNumero(document.getElementById('r-val').value), desconto:0, tipoDesconto:'%', reembolso:true});
+    document.getElementById('r-desc').value = ''; document.getElementById('r-val').value = '0,00'; desenharItens();
+  };
+
+  /* status aprovado preenche a data de aprovação */
+  document.getElementById('o-status').onchange = e => {
+    if(APROVADOS.includes(e.target.value) && !document.getElementById('o-aprovado').value) document.getElementById('o-aprovado').value = hoje();
+  };
+
+  const lerTela = () => {
+    o.data = document.getElementById('o-data').value || hoje();
+    o.validade = Number(document.getElementById('o-validade').value)||0;
+    o.entrega = document.getElementById('o-entrega').value;
+    o.pagamento = document.getElementById('o-pagamento').value;
+    o.origem = document.getElementById('o-origem').value;
+    o.atendimento = document.getElementById('o-atendimento').value;
+    o.status = document.getElementById('o-status').value;
+    o.aprovadoEm = document.getElementById('o-aprovado').value;
+    o.obsCliente = document.getElementById('o-obs-cli').value.trim();
+    o.obsInterna = document.getElementById('o-obs-int').value.trim();
+  };
+  const gravar = () => {
+    lerTela();
+    if(!o.clienteId){ alertar('Escolha ou cadastre o cliente antes de salvar.'); return null; }
+    if(!o.itens.length){ alertar('Adicione pelo menos um item.'); return null; }
+    if(!o.id){
+      o.id = id(); o.numero = proximoNumero(o.data); o.criadoEm = new Date().toISOString();
+      o.proximoFollowup = somarDias(o.data, S.empresa.diasFollowup);
+      S.orcamentos.push(o);
+    } else {
+      S.orcamentos[S.orcamentos.findIndex(x => x.id === o.id)] = o;
+    }
+    salvar();
+    rascunho = structuredClone(o);
+    return rascunho;
+  };
+
+  document.getElementById('voltar').onclick = () => irPara('orcamentos');
+  document.getElementById('salvar').onclick = () => { if(gravar()) telaMontar(); };
+  document.getElementById('ver-pdf').onclick = () => { lerTela(); mostrarPDF(o); };
+  const dup = document.getElementById('duplicar');
+  if(dup) dup.onclick = () => {
+    const c = structuredClone(o);
+    Object.assign(c, {id:null, numero:'', data:hoje(), status:STATUS_INICIAL, aprovadoEm:'', followups:[], proximoFollowup:''});
+    rascunho = c; telaMontar();
+  };
+  const ap = document.getElementById('apagar');
+  if(ap) ap.onclick = () => confirmar(`Apagar o orçamento nº ${o.numero}? Ele sai também da planilha e do follow-up.`, () => {
+    S.orcamentos = S.orcamentos.filter(x => x.id !== o.id); salvar(); irPara('orcamentos');
+  });
+}
+
+function enderecoDe(c){
+  if(!c) return '';
+  const l1 = [c.logradouro, c.numero].filter(Boolean).join(', ') + (c.complemento ? ' - ' + c.complemento : '');
+  return [l1, c.bairro, [c.cidade, c.uf].filter(Boolean).join('/'), c.cep ? 'CEP ' + c.cep : ''].filter(Boolean).join(', ');
+}
+
+/* =====================================================================
+   PDF
+   ===================================================================== */
+
+function htmlDoDocumento(o){
+  const E = S.empresa, c = cliente(o.clienteId) || {}, t = totais(o);
+  const servicos = o.itens.filter(i => !i.reembolso), reembolsos = o.itens.filter(i => i.reembolso);
+  const qtd = i => (Number(i.quantidade)||0).toLocaleString('pt-BR',{maximumFractionDigits:2}) + (i.unidade ? ' ' + esc(i.unidade) : '');
+  const temDesconto = servicos.some(i => Number(i.desconto));
+  const contatoEmpresa = [E.telefone, E.email, E.site].filter(Boolean).map(esc).join(' · ');
+  return `
+  <div class="folha" style="--cor-doc:${esc(E.cor||'#7a5c1e')}">
+    <div class="cab">
+      <div>
+        ${E.logo ? `<img src="${E.logo}" alt="">` : ''}
+        <div class="empresa-nome">${esc(E.nome)}</div>
+        ${E.documento ? `<div>${esc(E.documento)}</div>` : ''}
+        ${contatoEmpresa ? `<div>${contatoEmpresa}</div>` : ''}
+      </div>
+      <div class="titulo-doc">
+        <div class="t">Orçamento</div>
+        <div>Nº <strong>${esc(o.numero || '(a gerar ao salvar)')}</strong></div>
+        <div>Data: ${dataBR(o.data)}</div>
+        ${o.validade ? `<div>Válido até ${dataBR(somarDias(o.data, o.validade))}</div>` : ''}
+      </div>
+    </div>
+    <div class="bloco">
+      <h4>Cliente</h4>
+      <div><strong>${esc(c.nome || '')}</strong>${c.documento ? ' · ' + esc(c.documento) : ''}</div>
+      ${c.telefone || c.email ? `<div>${esc([c.telefone, c.email].filter(Boolean).join(' · '))}</div>` : ''}
+      ${enderecoDe(c) ? `<div>${esc(enderecoDe(c))}</div>` : ''}
+    </div>
+    <div class="bloco">
+      <h4>Serviços</h4>
+      <table>
+        <thead><tr><th>Descrição</th><th class="direita">Qtde</th><th class="direita">Valor unit.</th>${temDesconto?'<th class="direita">Desconto</th>':''}<th class="direita">Total</th></tr></thead>
+        <tbody>${servicos.map(i => `<tr><td>${esc(i.descricao)}</td><td class="direita">${qtd(i)}</td><td class="direita">${moeda(i.valor)}</td>${temDesconto?`<td class="direita">${Number(i.desconto)? (i.tipoDesconto==='%' ? num(i.desconto).replace(',00','')+'%' : moeda(i.desconto)) : ''}</td>`:''}<td class="direita">${moeda(totalDoItem(i))}</td></tr>`).join('')}</tbody>
+      </table>
+      ${reembolsos.length ? `
+      <h4 style="margin-top:10px">Despesas reembolsáveis</h4>
+      <table><tbody>${reembolsos.map(i => `<tr><td>${esc(i.descricao)}</td><td class="direita" style="width:120px">${moeda(totalDoItem(i))}</td></tr>`).join('')}</tbody></table>` : ''}
+      <div class="totais">
+        <div><span>Serviços</span><span>${moeda(t.servicos)}</span></div>
+        ${t.descontos ? `<div><span>Descontos</span><span>- ${moeda(t.descontos)}</span></div>` : ''}
+        ${t.reembolsos ? `<div><span>Despesas reembolsáveis</span><span>${moeda(t.reembolsos)}</span></div>` : ''}
+        <div class="final"><span>Total</span><span>${moeda(t.total)}</span></div>
+      </div>
+    </div>
+    ${o.entrega || o.pagamento ? `
+    <div class="duas bloco">
+      ${o.entrega ? `<div><h4>Previsão de entrega</h4>${dataBR(o.entrega)}</div>` : '<div></div>'}
+      ${o.pagamento ? `<div><h4>Forma de pagamento</h4>${esc(o.pagamento)}</div>` : ''}
+    </div>` : ''}
+    ${o.obsCliente ? `<div class="bloco"><h4>Observações</h4><div class="texto-livre">${esc(o.obsCliente)}</div></div>` : ''}
+    ${E.condicoes ? `<div class="bloco"><h4>Condições</h4><div class="texto-livre">${esc(E.condicoes)}</div></div>` : ''}
+    ${E.endereco ? `<div class="rodape">${esc(E.nome)} · ${esc(E.endereco)}</div>` : ''}
+  </div>`;
+}
+
+function mostrarPDF(o){
+  if(!o) return;
+  const m = abrirModal(`
+    <div class="acoes" style="margin-bottom:12px">
+      <h2 style="margin:0">Orçamento ${esc(o.numero||'')}</h2><span class="espaco"></span>
+      <button class="botao" data-fechar>Fechar</button>
+      <button class="botao principal" data-imprimir>Imprimir ou salvar em PDF</button>
+    </div>
+    <p class="dica" style="margin-top:0">Na janela de impressão, escolha "Salvar como PDF" para guardar o arquivo.</p>
+    <div style="overflow:auto;background:#e9e7e2;padding:16px;border-radius:8px">${htmlDoDocumento(o)}</div>`, true);
+  m.style.maxWidth = '900px';
+  m.querySelector('[data-fechar]').onclick = fecharModal;
+  m.querySelector('[data-imprimir]').onclick = () => imprimir(o);
+}
+
+function imprimir(o){
+  const area = document.getElementById('area-impressao');
+  area.innerHTML = htmlDoDocumento(o);
+  const c = cliente(o.clienteId);
+  const tituloAntes = document.title;
+  document.title = `Orçamento ${o.numero || ''}${c ? ' - ' + c.nome : ''}`;   // vira o nome do PDF
+  setTimeout(() => { window.print(); document.title = tituloAntes; }, 50);
+}
+
+/* =====================================================================
+   PLANILHA
+   ===================================================================== */
+
+const COLUNAS_PLANILHA = [
+  {k:'data', t:'Data', v:o => o.data, f:o => diaMes(o.data)},
+  {k:'aprovadoEm', t:'Aprovado', v:o => o.aprovadoEm||'', edit:'data'},
+  {k:'cliente', t:'Cliente', v:o => (cliente(o.clienteId)||{}).nome||''},
+  {k:'numero', t:'Nº', v:o => o.numero},
+  {k:'itens', t:'Itens', v:o => o.itens.filter(i=>!i.reembolso).reduce((s,i)=>s+(Number(i.quantidade)||0),0), num:true, f:o => String(o.itens.filter(i=>!i.reembolso).reduce((s,i)=>s+(Number(i.quantidade)||0),0)).replace('.',','), soma:true},
+  {k:'status', t:'Status', v:o => o.status, edit:'status'},
+  {k:'origem', t:'Origem', v:o => o.origem||'', edit:'origens'},
+  {k:'atendimento', t:'Atendimento', v:o => o.atendimento||'', edit:'atendentes'},
+  {k:'pagamento', t:'Pagamento', v:o => o.pagamento||'', edit:'pagamentos'},
+  {k:'entrega', t:'Entrega', v:o => o.entrega||'', f:o => diaMes(o.entrega)},
+  {k:'servicos', t:'Serviços', v:o => totais(o).servicos, num:true, dinheiro:true, soma:true},
+  {k:'descontos', t:'Descontos', v:o => totais(o).descontos, num:true, dinheiro:true, soma:true},
+  {k:'reembolsos', t:'Reembolsáveis', v:o => totais(o).reembolsos, num:true, dinheiro:true, soma:true},
+  {k:'total', t:'Total', v:o => totais(o).total, num:true, dinheiro:true, soma:true},
+];
+
+function mesesExistentes(){
+  const set = new Set(S.orcamentos.map(o => o.data.slice(0,7)));
+  set.add(hoje().slice(0,7));
+  return [...set].sort();
+}
+const nomeAba = ym => `${MESES[Number(ym.slice(5,7))-1]} ${ym.slice(2,4)}`;
+
+function telaPlanilha(){
+  const meses = mesesExistentes();
+  if(!mesPlanilha || !meses.includes(mesPlanilha)) mesPlanilha = hoje().slice(0,7);
+  let linhas = S.orcamentos.filter(o => o.data.slice(0,7) === mesPlanilha);
+  const busca = (document.getElementById('busca-plan')||{}).value || '';
+
+  const aprovados = linhas.filter(o => APROVADOS.includes(o.status));
+  const naoAprov = linhas.filter(o => ['Não aprovado','Cancelado'].includes(o.status));
+  const aguardando = linhas.filter(o => EM_ABERTO.includes(o.status));
+  const valorAprov = aprovados.reduce((s,o) => s + totais(o).total, 0);
+  const taxa = linhas.length ? Math.round(aprovados.length / linhas.length * 100) : 0;
+
+  conteudo.innerHTML = `
+    <h1>Planilha</h1>
+    <div class="mesas">${meses.map(m => `<button data-mes="${m}" class="${m===mesPlanilha?'ativa':''}">${nomeAba(m)}</button>`).join('')}</div>
+    <div class="cards">
+      <div class="card"><div class="rotulo">Orçamentos no mês</div><div class="valor">${linhas.length}</div></div>
+      <div class="card"><div class="rotulo">Aprovados</div><div class="valor">${aprovados.length}</div><div class="detalhe">${taxa}% dos orçamentos do mês</div></div>
+      <div class="card"><div class="rotulo">Aguardando retorno</div><div class="valor">${aguardando.length}</div><div class="detalhe">${moeda(aguardando.reduce((s,o)=>s+totais(o).total,0))} em aberto</div></div>
+      <div class="card"><div class="rotulo">Não aprovados ou cancelados</div><div class="valor">${naoAprov.length}</div></div>
+      <div class="card"><div class="rotulo">Valor aprovado</div><div class="valor">${moeda(valorAprov)}</div><div class="detalhe">Ticket médio ${moeda(aprovados.length ? valorAprov/aprovados.length : 0)}</div></div>
+    </div>
+    <div class="painel" style="padding:12px">
+      <div class="acoes" style="margin-bottom:10px">
+        <input id="busca-plan" placeholder="Buscar número ou cliente" style="max-width:280px" value="${esc(busca)}">
+        <span class="dica">Cada orçamento salvo entra sozinho na aba do mês da data dele. Status, aprovação, origem, atendimento e pagamento podem ser mudados aqui e voltam para o orçamento.</span>
+        <span class="espaco"></span>
+        <button class="botao" id="baixar-csv">Baixar planilha do mês</button>
+      </div>
+      <div class="rolagem"><table class="planilha" id="tab-plan"></table></div>
+    </div>`;
+
+  const desenhar = () => {
+    const b = semAcento(document.getElementById('busca-plan').value);
+    let ls = linhas.filter(o => !b || semAcento(o.numero + ' ' + ((cliente(o.clienteId)||{}).nome||'')).includes(b));
+    if(ordemPlanilha.col){
+      const col = COLUNAS_PLANILHA.find(c => c.k === ordemPlanilha.col);
+      ls = ls.slice().sort((a,c) => { const x = col.v(a), y = col.v(c); const r = col.num ? x - y : String(x).localeCompare(String(y),'pt-BR'); return ordemPlanilha.desc ? -r : r; });
+    } else ls = ls.slice().sort((a,c) => String(a.numero).localeCompare(String(c.numero)));
+    const celula = (col, o) => {
+      if(col.edit === 'status'){
+        const c = corStatus(o.status);
+        return `<td style="background:${c.cor}"><select data-o="${o.id}" data-f="status" style="color:${c.texto};font-weight:600">${STATUS.map(s => `<option ${s.nome===o.status?'selected':''}>${s.nome}</option>`).join('')}</select></td>`;
+      }
+      if(col.edit === 'data') return `<td><input type="date" data-o="${o.id}" data-f="${col.k}" value="${esc(col.v(o))}" style="min-width:130px"></td>`;
+      if(col.edit) return `<td><select data-o="${o.id}" data-f="${col.k}">${opcoes(S.empresa[col.edit], col.v(o))}</select></td>`;
+      if(col.k === 'cliente' || col.k === 'numero') return `<td><a href="#" data-abrir="${o.id}">${esc(col.v(o))}</a></td>`;
+      const v = col.f ? col.f(o) : col.dinheiro ? num(col.v(o)) : col.v(o);
+      return `<td class="${col.num?'direita':''}">${esc(v)}</td>`;
+    };
+    const somas = COLUNAS_PLANILHA.map(col => {
+      if(!col.soma) return '';
+      const s = ls.reduce((t,o) => t + Number(col.v(o)||0), 0);
+      return col.dinheiro ? num(s) : String(s).replace('.',',');
+    });
+    document.getElementById('tab-plan').innerHTML = `
+      <thead><tr>${COLUNAS_PLANILHA.map(c => `<th data-ord="${c.k}" class="${c.num?'direita':''}">${c.t}${ordemPlanilha.col===c.k?(ordemPlanilha.desc?' ↓':' ↑'):''}</th>`).join('')}</tr></thead>
+      <tbody>${ls.length ? ls.map(o => `<tr>${COLUNAS_PLANILHA.map(c => celula(c,o)).join('')}</tr>`).join('') : `<tr><td colspan="${COLUNAS_PLANILHA.length}" class="vazio">Nenhum orçamento em ${nomeAba(mesPlanilha)}.</td></tr>`}</tbody>
+      <tfoot><tr>${COLUNAS_PLANILHA.map((c,i) => `<td class="${c.num?'direita':''}">${i===2?'Total':somas[i]}</td>`).join('')}</tr></tfoot>`;
+    return ls;
+  };
+  desenhar();
+
+  document.getElementById('busca-plan').oninput = desenhar;
+  document.querySelector('.mesas').onclick = e => { const b = e.target.closest('[data-mes]'); if(b){ mesPlanilha = b.dataset.mes; telaPlanilha(); } };
+  const tab = document.getElementById('tab-plan');
+  tab.addEventListener('click', e => {
+    const a = e.target.closest('[data-abrir]'); if(a){ e.preventDefault(); abrirOrcamento(a.dataset.abrir); return; }
+    const th = e.target.closest('[data-ord]');
+    if(th){ ordemPlanilha = ordemPlanilha.col === th.dataset.ord ? {col:th.dataset.ord, desc:!ordemPlanilha.desc} : {col:th.dataset.ord, desc:false}; desenhar(); }
+  });
+  tab.addEventListener('change', e => {
+    const el = e.target.closest('[data-o]'); if(!el) return;
+    const o = S.orcamentos.find(x => x.id === el.dataset.o);
+    o[el.dataset.f] = el.value;
+    if(el.dataset.f === 'status' && APROVADOS.includes(el.value) && !o.aprovadoEm) o.aprovadoEm = hoje();
+    salvar(); telaPlanilha();
+  });
+  document.getElementById('baixar-csv').onclick = () => {
+    const ls = linhas.slice().sort((a,c) => String(a.numero).localeCompare(String(c.numero)));
+    const campo = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
+    const linhasCsv = [COLUNAS_PLANILHA.map(c => campo(c.t)).join(';')]
+      .concat(ls.map(o => COLUNAS_PLANILHA.map(c => {
+        const v = c.v(o);
+        if(c.dinheiro) return campo(num(v));
+        if(c.k === 'data' || c.k === 'aprovadoEm' || c.k === 'entrega') return campo(dataBR(v));
+        return campo(v);
+      }).join(';')));
+    baixar(`Planilha ${nomeAba(mesPlanilha)}.csv`, '﻿' + linhasCsv.join('\r\n'), 'text/csv;charset=utf-8');
+  };
+}
+
+/* =====================================================================
+   FOLLOW-UP
+   ===================================================================== */
+
+function telaFollowup(){
+  const abertos = S.orcamentos.filter(o => EM_ABERTO.includes(o.status));
+  const paraHoje = abertos.filter(o => !o.proximoFollowup || o.proximoFollowup <= hoje());
+  const encerrados = S.orcamentos.filter(o => (o.followups||[]).length && !EM_ABERTO.includes(o.status));
+  const valorAberto = abertos.reduce((s,o) => s + totais(o).total, 0);
+  const recuperados = encerrados.filter(o => APROVADOS.includes(o.status));
+
+  const lista = filtroFollowup === 'hoje' ? paraHoje : filtroFollowup === 'abertos' ? abertos : encerrados;
+  lista.sort((a,c) => (a.proximoFollowup||'').localeCompare(c.proximoFollowup||'') || a.data.localeCompare(c.data));
+
+  conteudo.innerHTML = `
+    <h1>Follow-up</h1>
+    <div class="cards">
+      <div class="card"><div class="rotulo">Para fazer hoje</div><div class="valor">${paraHoje.length}</div><div class="detalhe">incluindo os atrasados</div></div>
+      <div class="card"><div class="rotulo">Aguardando retorno</div><div class="valor">${abertos.length}</div><div class="detalhe">${moeda(valorAberto)} em aberto</div></div>
+      <div class="card"><div class="rotulo">Aprovados depois do follow-up</div><div class="valor">${recuperados.length}</div><div class="detalhe">${moeda(recuperados.reduce((s,o)=>s+totais(o).total,0))}</div></div>
+    </div>
+    <div class="painel">
+      <div class="mesas">
+        <button data-filtro="hoje" class="${filtroFollowup==='hoje'?'ativa':''}">Para hoje</button>
+        <button data-filtro="abertos" class="${filtroFollowup==='abertos'?'ativa':''}">Todos aguardando retorno</button>
+        <button data-filtro="encerrados" class="${filtroFollowup==='encerrados'?'ativa':''}">Encerrados</button>
+      </div>
+      <p class="dica" style="margin-top:0">Entram aqui os orçamentos com status "Aguardando retorno" na planilha. O primeiro follow-up fica marcado para ${S.empresa.diasFollowup} dia(s) depois da data do orçamento, e cada contato registrado marca o próximo.</p>
+      <div class="rolagem"><table class="lista" id="tab-fu"></table></div>
+    </div>`;
+
+  document.getElementById('tab-fu').innerHTML = `
+    <thead><tr><th>Próximo contato</th><th>Cliente</th><th>Contato</th><th>Orçamento</th><th class="direita">Total</th><th>Contatos feitos</th><th></th></tr></thead>
+    <tbody>${lista.length ? lista.map(o => {
+      const c = cliente(o.clienteId) || {};
+      const atraso = o.proximoFollowup ? diasEntre(o.proximoFollowup, hoje()) : 0;
+      const ultimo = (o.followups||[]).slice(-1)[0];
+      const quando = !EM_ABERTO.includes(o.status) ? etiqueta(o.status)
+        : `${dataBR(o.proximoFollowup)}${atraso>0?` <span style="color:var(--perigo)">(${atraso} dia(s) de atraso)</span>`:''}`;
+      return `<tr>
+        <td>${quando}</td>
+        <td><strong>${esc(c.nome||'')}</strong>${c.documento?`<div class="dica">${esc(c.documento)}</div>`:''}</td>
+        <td>${esc(c.telefone||'')}${c.email?`<div class="dica">${esc(c.email)}</div>`:''}</td>
+        <td><a href="#" data-abrir="${o.id}">${esc(o.numero)}</a><div class="dica">${dataBR(o.data)}, há ${diasEntre(o.data, hoje())} dia(s)</div></td>
+        <td class="direita">${moeda(totais(o).total)}</td>
+        <td>${(o.followups||[]).length}${ultimo?`<div class="dica">Último: ${dataBR(ultimo.data)} por ${esc(ultimo.canal)}</div>`:''}</td>
+        <td class="direita" style="white-space:nowrap">
+          ${c.telefone?`<button class="botao pequeno" data-wpp="${o.id}">WhatsApp</button>`:''}
+          ${c.email?`<button class="botao pequeno" data-mail="${o.id}">E-mail</button>`:''}
+          <button class="botao pequeno principal" data-registrar="${o.id}">${EM_ABERTO.includes(o.status)?'Registrar contato':'Ver contatos'}</button>
+        </td></tr>`;
+    }).join('') : `<tr><td colspan="7" class="vazio">${filtroFollowup==='hoje'?'Nenhum follow-up para hoje.':'Nada por aqui.'}</td></tr>`}</tbody>`;
+
+  document.querySelector('.mesas').onclick = e => { const b = e.target.closest('[data-filtro]'); if(b){ filtroFollowup = b.dataset.filtro; telaFollowup(); } };
+  document.getElementById('tab-fu').onclick = e => {
+    const a = e.target.closest('[data-abrir]'); if(a){ e.preventDefault(); abrirOrcamento(a.dataset.abrir); return; }
+    const w = e.target.closest('[data-wpp]'); if(w){ abrirWhatsApp(S.orcamentos.find(o => o.id === w.dataset.wpp)); return; }
+    const m = e.target.closest('[data-mail]'); if(m){ abrirEmail(S.orcamentos.find(o => o.id === m.dataset.mail)); return; }
+    const r = e.target.closest('[data-registrar]'); if(r) registrarContato(S.orcamentos.find(o => o.id === r.dataset.registrar));
+  };
+}
+
+function mensagemDe(o){
+  const c = cliente(o.clienteId) || {};
+  return (S.empresa.mensagem || '')
+    .replaceAll('{nome}', c.nome || '').replaceAll('{primeiro_nome}', (c.nome || '').split(' ')[0])
+    .replaceAll('{numero}', o.numero).replaceAll('{total}', moeda(totais(o).total)).replaceAll('{empresa}', S.empresa.nome || '');
+}
+function abrirWhatsApp(o){
+  const c = cliente(o.clienteId) || {};
+  let fone = (c.telefone || '').replace(/\D/g,'');
+  if(fone.length <= 11) fone = '55' + fone;
+  window.open(`https://wa.me/${fone}?text=${encodeURIComponent(mensagemDe(o))}`, '_blank');
+  registrarContato(o, 'WhatsApp');
+}
+function abrirEmail(o){
+  const c = cliente(o.clienteId) || {};
+  location.href = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent('Orçamento nº ' + o.numero)}&body=${encodeURIComponent(mensagemDe(o))}`;
+  registrarContato(o, 'E-mail');
+}
+
+function registrarContato(o, canalInicial){
+  const c = cliente(o.clienteId) || {};
+  const aberto = EM_ABERTO.includes(o.status);
+  const m = abrirModal(`
+    <h2>${esc(c.nome||'')} · orçamento ${esc(o.numero)}</h2>
+    <div class="dica">${esc([c.telefone, c.email].filter(Boolean).join(' · '))} · ${moeda(totais(o).total)}</div>
+    <h2 style="margin-top:14px;font-size:15px">Contatos feitos</h2>
+    ${(o.followups||[]).length ? o.followups.map(f => `<div class="historico"><strong>${dataBR(f.data)}</strong> por ${esc(f.canal)}${f.nota?'<br>'+esc(f.nota):''}</div>`).join('') : '<p class="suave">Nenhum contato registrado ainda.</p>'}
+    ${aberto ? `
+    <h2 style="margin-top:14px;font-size:15px">Registrar contato</h2>
+    <div class="linha">
+      <div class="campo"><label>Data</label><input type="date" id="fu-data" value="${hoje()}"></div>
+      <div class="campo"><label>Canal</label><select id="fu-canal">${CANAIS.map(x => `<option ${x===canalInicial?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="campo"><label>Próximo contato</label><input type="date" id="fu-prox" value="${somarDias(hoje(), S.empresa.diasFollowup)}"></div>
+    </div>
+    <div class="campo" style="margin-top:10px"><label>O que o cliente disse</label><textarea id="fu-nota" placeholder="Ex.: vai decidir na sexta"></textarea></div>
+    <div class="campo" style="margin-top:10px"><label>Resultado</label>
+      <select id="fu-res"><option value="">Continua aguardando retorno</option><option>Aprovado</option><option>Não aprovado</option></select></div>` : ''}
+    <div class="acoes" style="margin-top:16px">
+      <button class="botao" data-abrir>Abrir orçamento</button>
+      <span class="espaco"></span>
+      <button class="botao" data-fechar>${aberto?'Cancelar':'Fechar'}</button>
+      ${aberto ? '<button class="botao principal" data-salvar>Salvar contato</button>' : ''}
+    </div>`);
+  m.querySelector('[data-fechar]').onclick = fecharModal;
+  m.querySelector('[data-abrir]').onclick = () => { fecharModal(); abrirOrcamento(o.id); };
+  const s = m.querySelector('[data-salvar]');
+  if(s) s.onclick = () => {
+    o.followups = o.followups || [];
+    o.followups.push({data:m.querySelector('#fu-data').value || hoje(), canal:m.querySelector('#fu-canal').value, nota:m.querySelector('#fu-nota').value.trim()});
+    const res = m.querySelector('#fu-res').value;
+    if(res){ o.status = res; if(res === 'Aprovado' && !o.aprovadoEm) o.aprovadoEm = hoje(); o.proximoFollowup = ''; }
+    else o.proximoFollowup = m.querySelector('#fu-prox').value;
+    salvar(); fecharModal(); if(abaAtual === 'followup') telaFollowup();
+  };
+}
+
+/* =====================================================================
+   EMPRESA E DADOS
+   ===================================================================== */
+
+function telaEmpresa(){
+  const E = S.empresa;
+  const campo = (k, rot, extra='') => `<div class="campo" ${extra}><label>${rot}</label><input id="e-${k}" value="${esc(E[k])}"></div>`;
+  conteudo.innerHTML = `
+    <h1>Empresa</h1>
+    <div class="painel">
+      <h2>Dados que saem no PDF</h2>
+      <div class="linha">${campo('nome','Nome da empresa','style="flex:2"')}${campo('documento','CNPJ ou CPF')}</div>
+      <div class="linha" style="margin-top:10px">${campo('telefone','Telefone')}${campo('email','E-mail')}${campo('site','Site ou Instagram')}</div>
+      <div class="linha" style="margin-top:10px">${campo('endereco','Endereço (rodapé do PDF)','style="flex:3"')}
+        <div class="campo" style="flex:0 0 120px"><label>Cor do PDF</label><input type="color" id="e-cor" value="${esc(E.cor||'#7a5c1e')}" style="height:36px;padding:2px"></div></div>
+      <div class="linha" style="margin-top:10px;align-items:center">
+        <div class="campo" style="flex:0 0 auto"><label>Logo</label><input type="file" id="e-logo" accept="image/*"></div>
+        ${E.logo ? `<img src="${E.logo}" style="max-height:50px"><button class="botao pequeno perigo" id="tirar-logo">Tirar logo</button>` : ''}
+      </div>
+      <div class="campo" style="margin-top:10px"><label>Condições (saem em todo PDF)</label><textarea id="e-condicoes">${esc(E.condicoes)}</textarea></div>
+    </div>
+    <div class="painel">
+      <h2>Orçamento e follow-up</h2>
+      <div class="linha">
+        <div class="campo" style="flex:0 0 170px"><label>Validade padrão (dias)</label><input type="number" min="0" id="e-validade" value="${E.validade}"></div>
+        <div class="campo" style="flex:0 0 220px"><label>Dias entre um follow-up e outro</label><input type="number" min="1" id="e-diasFollowup" value="${E.diasFollowup}"></div>
+      </div>
+      <div class="campo" style="margin-top:10px"><label>Mensagem do follow-up</label><textarea id="e-mensagem">${esc(E.mensagem)}</textarea>
+        <span class="dica">Pode usar {primeiro_nome}, {nome}, {numero}, {total} e {empresa}.</span></div>
+    </div>
+    <div class="painel">
+      <h2>Listas da planilha</h2>
+      <p class="dica" style="margin-top:0">Uma opção por linha.</p>
+      <div class="linha">
+        <div class="campo"><label>Origens</label><textarea id="e-origens" style="min-height:120px">${esc(E.origens.join('\n'))}</textarea></div>
+        <div class="campo"><label>Atendimento por</label><textarea id="e-atendentes" style="min-height:120px">${esc(E.atendentes.join('\n'))}</textarea></div>
+        <div class="campo"><label>Formas de pagamento</label><textarea id="e-pagamentos" style="min-height:120px">${esc(E.pagamentos.join('\n'))}</textarea></div>
+      </div>
+    </div>
+    <div class="acoes" style="margin-bottom:24px"><span class="espaco"></span><button class="botao principal" id="salvar-empresa">Salvar dados da empresa</button></div>
+    <div class="painel">
+      <h2>Dados guardados</h2>
+      <p class="dica" style="margin-top:0">Tudo fica guardado neste navegador, neste computador. Baixe uma cópia de vez em quando e use a cópia para levar os dados para outro computador.</p>
+      <div class="acoes">
+        <button class="botao" id="exportar">Baixar cópia dos dados</button>
+        <label class="botao" style="cursor:pointer">Abrir cópia dos dados<input type="file" id="importar" accept=".json" hidden></label>
+        <button class="botao" id="exemplo">Carregar dados de exemplo</button>
+        <span class="espaco"></span>
+        <button class="botao perigo" id="limpar">Apagar todos os dados</button>
+      </div>
+    </div>`;
+
+  document.getElementById('e-logo').onchange = e => {
+    const arq = e.target.files[0]; if(!arq) return;
+    const leitor = new FileReader();
+    leitor.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 400, k = Math.min(1, max / Math.max(img.width, img.height));
+        const cv = document.createElement('canvas'); cv.width = Math.round(img.width*k); cv.height = Math.round(img.height*k);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        S.empresa.logo = cv.toDataURL('image/png'); salvar(); telaEmpresa();
+      };
+      img.src = leitor.result;
+    };
+    leitor.readAsDataURL(arq);
+  };
+  const tl = document.getElementById('tirar-logo'); if(tl) tl.onclick = () => { S.empresa.logo = ''; salvar(); telaEmpresa(); };
+  document.getElementById('salvar-empresa').onclick = () => {
+    ['nome','documento','telefone','email','site','endereco','cor'].forEach(k => E[k] = document.getElementById('e-'+k).value.trim());
+    E.condicoes = document.getElementById('e-condicoes').value.trim();
+    E.mensagem = document.getElementById('e-mensagem').value.trim();
+    E.validade = Number(document.getElementById('e-validade').value)||0;
+    E.diasFollowup = Math.max(1, Number(document.getElementById('e-diasFollowup').value)||1);
+    ['origens','atendentes','pagamentos'].forEach(k => E[k] = document.getElementById('e-'+k).value.split('\n').map(x => x.trim()).filter(Boolean));
+    salvar(); atualizarMarca(); alertar('Dados da empresa salvos.');
+  };
+  document.getElementById('exportar').onclick = () => baixar(`Cópia dos dados do CRM ${hoje()}.json`, JSON.stringify(S, null, 2), 'application/json');
+  document.getElementById('importar').onchange = e => {
+    const arq = e.target.files[0]; if(!arq) return;
+    arq.text().then(t => {
+      try{
+        const d = JSON.parse(t);
+        if(!d || !Array.isArray(d.orcamentos) || !Array.isArray(d.clientes)) throw 0;
+        confirmar('Abrir esta cópia substitui todos os dados que estão neste navegador. Continuar?', () => {
+          S = Object.assign(structuredClone(PADRAO), d, {empresa:Object.assign(structuredClone(PADRAO.empresa), d.empresa||{})});
+          salvar(); atualizarMarca(); telaEmpresa();
+        });
+      }catch(_){ alertar('Este arquivo não é uma cópia dos dados do CRM.'); }
+    });
+  };
+  document.getElementById('exemplo').onclick = () => {
+    const temDados = S.orcamentos.length || S.clientes.length || S.servicos.length;
+    const fazer = () => { S = dadosDeExemplo(); salvar(); atualizarMarca(); irPara('planilha'); };
+    temDados ? confirmar('Os dados de exemplo substituem os dados atuais. Continuar?', fazer) : fazer();
+  };
+  document.getElementById('limpar').onclick = () => confirmar('Apagar todos os serviços, clientes, orçamentos e dados da empresa deste navegador? Baixe uma cópia antes, se quiser guardar.', () => {
+    S = structuredClone(PADRAO); salvar(); atualizarMarca(); telaEmpresa();
+  });
+}
+
+function baixar(nome, conteudoArq, tipo){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([conteudoArq], {type:tipo}));
+  a.download = nome; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* ---------------- dados de exemplo (fictícios) ---------------- */
+
+function dadosDeExemplo(){
+  const d = structuredClone(PADRAO);
+  Object.assign(d.empresa, {nome:'Estúdio Exemplo', documento:'CNPJ 00.000.000/0001-00', telefone:'(21) 90000-0000',
+    email:'contato@exemplo.com.br', site:'@estudioexemplo', endereco:'Rua Exemplo, 100, Centro, Rio de Janeiro/RJ'});
+  const serv = [
+    ['CON01','Consultoria (hora)','Consultoria','hora',250],
+    ['CON02','Diagnóstico inicial','Consultoria','un',600],
+    ['DES01','Identidade visual completa','Design','un',2400],
+    ['DES02','Arte para redes sociais','Design','un',90],
+    ['SIT01','Página de vendas','Site','un',1800],
+    ['SIT02','Manutenção mensal do site','Site','mês',300],
+    ['TRE01','Treinamento de equipe (turma)','Treinamento','un',1500],
+  ];
+  d.servicos = serv.map(([codigo,descricao,categoria,unidade,valor]) => ({id:id(), codigo, descricao, categoria, unidade, valor, ativo:true}));
+  const cli = [
+    ['Ana Souza','111.111.111-11','(21) 98888-1111','ana@exemplo.com','Rio de Janeiro','RJ'],
+    ['Padaria Bom Dia Ltda','11.111.111/0001-11','(21) 97777-2222','compras@padariaexemplo.com','Niterói','RJ'],
+    ['Carlos Lima','222.222.222-22','(11) 96666-3333','carlos@exemplo.com','São Paulo','SP'],
+    ['Clínica Bem Estar','22.222.222/0001-22','(31) 95555-4444','adm@clinicaexemplo.com','Belo Horizonte','MG'],
+    ['Júlia Martins','333.333.333-33','(21) 94444-5555','julia@exemplo.com','Rio de Janeiro','RJ'],
+  ];
+  d.clientes = cli.map(([nome,documento,telefone,email,cidade,uf]) => ({id:id(), nome, documento, telefone, email, cep:'', logradouro:'', numero:'', complemento:'', bairro:'', cidade, uf, obs:''}));
+  const s = k => d.servicos.find(x => x.codigo === k);
+  const item = (k, q, desc=0) => ({descricao:s(k).descricao, unidade:s(k).unidade, quantidade:q, valor:s(k).valor, desconto:desc, tipoDesconto:'%', reembolso:false});
+  const base = hoje();
+  const mesAnt = (() => { const x = new Date(base+'T12:00:00'); x.setMonth(x.getMonth()-1); return x.toISOString().slice(0,10); })();
+  const planos = [
+    [0, somarDias(base,-12), [item('CON02',1), item('CON01',4)], 'Aprovado', 'Instagram'],
+    [1, somarDias(base,-9),  [item('DES01',1,10)], 'Aguardando retorno', 'Indicação'],
+    [2, somarDias(base,-6),  [item('SIT01',1), item('SIT02',3)], 'Aguardando retorno', 'Google'],
+    [3, somarDias(base,-4),  [item('TRE01',2)], 'Em execução', 'Cliente antigo'],
+    [4, somarDias(base,-2),  [item('DES02',10,5)], 'Aguardando retorno', 'Instagram'],
+    [1, somarDias(mesAnt,-3),[item('CON01',2)], 'Entregue', 'Indicação'],
+    [4, somarDias(mesAnt,-1),[item('CON02',1)], 'Não aprovado', 'Instagram'],
+  ];
+  d.orcamentos = [];
+  planos.forEach(([ci, data, itens, status, origem], k) => {
+    const pref = data.slice(2,4) + data.slice(5,7);
+    const seq = d.orcamentos.filter(o => o.numero.startsWith(pref)).length + 1;
+    d.orcamentos.push({id:id(), numero:pref + String(seq).padStart(3,'0'), data, clienteId:d.clientes[ci].id, itens,
+      obsCliente:'', obsInterna:'', validade:7, entrega:somarDias(data,10), pagamento:k%2?'Cartão de crédito':'Pix',
+      origem, atendimento:d.empresa.atendentes[k%2], status, aprovadoEm:APROVADOS.includes(status)?somarDias(data,2):'',
+      followups:status==='Aguardando retorno' && k===1 ? [{data:somarDias(data,3), canal:'WhatsApp', nota:'Pediu para falar de novo na semana seguinte.'}] : [],
+      proximoFollowup:status==='Aguardando retorno' ? (k===1 ? somarDias(base,-1) : somarDias(data,3)) : ''});
+  });
+  if(d.orcamentos[2]) d.orcamentos[2].itens.push({descricao:'Registro do domínio', quantidade:1, valor:40, desconto:0, tipoDesconto:'%', reembolso:true});
+  return d;
+}
+
+/* ---------------- início ---------------- */
+S = dadosDeExemplo(); /* demonstração: sempre abre com os dados de exemplo */
+atualizarMarca();
+irPara('orcamentos');
+</script>
+</body>
+</html>
